@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | PrimeVerse LMS</title>
+    <link rel="icon" type="image/png" href="../assets/login.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: var(--navy-deep);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--navy);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            margin-bottom: 3rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .nav-bottom {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--gray);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--glass);
+            color: var(--gold);
+        }
+
+        .nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* --- Main Content --- */
+        .main-dash {
+            flex: 1;
+            overflow-y: auto;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--glass);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-weight: 900;
+        }
+
+        /* --- Profile Dropdown --- */
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 15px);
+            right: 0;
+            width: 280px;
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            animation: slideDown 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+            color: #333;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-dropdown.active {
+            display: flex;
+        }
+
+        .dropdown-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .dropdown-header span {
+            font-size: 0.65rem;
+            color: #999;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .dropdown-header h4 {
+            font-size: 1.1rem;
+            color: #000;
+            margin-top: 0.2rem;
+        }
+
+        .dropdown-body {
+            padding: 1rem 0;
+        }
+
+        .dropdown-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #F9F9F9;
+            color: var(--gold);
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            height: 18px;
+            color: #999;
+        }
+
+        .dropdown-item.sign-out {
+            color: var(--red);
+            border-top: 1px solid #F0F0F0;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .dropdown-item.sign-out i {
+            color: var(--red);
+        }
+
+        /* --- Video Section --- */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, var(--navy-deep), var(--navy-accent));
+            cursor: pointer;
+        }
+
+        .play-btn-dash {
+            width: 80px;
+            height: 80px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 30px var(--gold-glow);
+            margin-bottom: 1.5rem;
+            transition: 0.3s;
+        }
+
+        .play-btn-dash:hover {
+            transform: scale(1.1);
+        }
+
+        .play-btn-dash i {
+            width: 35px;
+            height: 35px;
+            color: #000;
+            fill: #000;
+        }
+
+        /* --- Course Modules --- */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .module-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .module-thumb {
+            width: 100%;
+            height: 150px;
+            background: var(--navy-accent);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold-muted);
+        }
+
+        .module-tag {
+            font-size: 0.7rem;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .module-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-progress {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            transition: 1s;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px;">
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-top">
+                <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="#" class="nav-item"><i data-lucide="book-open"></i> My Courses</a>
+                <a href="#" class="nav-item"><i data-lucide="message-square"></i> Chat</a>
+            </div>
+
+            <div class="nav-bottom">
+                <a href="index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i>
+                    Logout</a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-dash">
+        <div class="dash-header">
+            <div>
+                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Program: <span class="gold-gradient"
+                        id="currentCourseName">Mastery Program</span></h1>
+                <p style="color: var(--gray); font-size: 0.9rem;">Active Enrollment &bull; Level: Beginner</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 2rem;">
+                <div class="user-profile" id="profileTrigger"
+                    style="cursor: pointer; transition: 0.3s; padding-left: 1.5rem; position: relative;">
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--white);">Ganesh Kumar</div>
+                        <div style="font-size: 0.65rem; color: var(--gold); font-weight: 700; letter-spacing: 1px;">
+                            PREMIUM MEMBER</div>
+                    </div>
+                    <div class="user-avatar" style="border: 2px solid var(--gold-glow);">G</div>
+
+                    <!-- Dropdown Menu -->
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="dropdown-header">
+                            <span>MY PROFILE</span>
+                            <h4>Ganeshkumar</h4>
+                            <p style="font-size: 0.75rem; color: #999;">Display Name</p>
+                        </div>
+                        <div class="dropdown-body">
+                            <div class="dropdown-item">
+                                <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
+                                <span
+                                    style="font-size: 0.75rem; word-break: break-all;">ganeshkumar934291@gmail.com</span>
+                            </div>
+                            <div class="dropdown-item">
+                                <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
+                                <span style="font-size: 0.85rem;">9342919596</span>
+                            </div>
+                            <div style="height: 1px; background: #F0F0F0; margin: 0.5rem 1.5rem;"></div>
+                            <a href="#" class="dropdown-item">
+                                <i data-lucide="key"></i>
+                                <span>Change Password</span>
+                            </a>
+                            <a href="index.html" class="dropdown-item sign-out">
+                                <i data-lucide="log-out"></i>
+                                <span>Sign Out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Video Section -->
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+            <i data-lucide="play-circle" style="color: var(--gold);"></i> Current Lesson
+        </h2>
+        <div class="video-container">
+            <!-- Simulated Video Player -->
+            <div class="video-placeholder" id="mainVideo">
+                <div class="play-btn-dash">
+                    <i data-lucide="play"></i>
+                </div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;" id="lessonTitle">Day 01: Getting Started</h3>
+                <p style="color: var(--gray); font-size: 0.9rem;">Click to start learning</p>
+            </div>
+            <!-- In a real app, you'd use <video> or <iframe> -->
+            <video id="videoPlayer" width="100%" height="100%" controls style="display: none;">
+                <source src="../video/Screen Recording 2025-09-04 202308.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Continue Learning</h2>
+        <div class="modules-grid">
+            <div class="module-card">
+                <div class="module-thumb"><i data-lucide="video" style="width: 40px; height: 40px;"></i></div>
+                <span class="module-tag">Day 01</span>
+                <h4>Introduction to Trading Psychology</h4>
+                <div class="module-progress">
+                    <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+                <p style="font-size: 0.7rem; color: var(--gold); margin-top: 0.5rem; text-align: right;">COMPLETED</p>
+            </div>
+            <div class="module-card" onclick="playLesson('Day 02: Candlestick Mastery')">
+                <div class="module-thumb"><i data-lucide="video" style="width: 40px; height: 40px;"></i></div>
+                <span class="module-tag">Day 02</span>
+                <h4>Technical Analysis Foundations</h4>
+                <div class="module-progress">
+                    <div class="progress-bar" style="width: 40%;"></div>
+                </div>
+                <p style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; text-align: right;">40% COMPLETE
+                </p>
+            </div>
+            <div class="module-card">
+                <div class="module-thumb"><i data-lucide="lock" style="width: 40px; height: 40px;"></i></div>
+                <span class="module-tag">Day 03</span>
+                <h4>Risk Management Framework</h4>
+                <div class="module-progress">
+                    <div class="progress-bar" style="width: 0%;"></div>
+                </div>
+                <p style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; text-align: right;">LOCKED</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+
+            const videoPlaceholder = document.getElementById('mainVideo');
+            const videoPlayer = document.getElementById('videoPlayer');
+
+            videoPlaceholder.addEventListener('click', () => {
+                videoPlaceholder.style.display = 'none';
+                videoPlayer.style.display = 'block';
+                videoPlayer.play();
+            });
+
+            // Update progress bar based on video playback
+            videoPlayer.addEventListener('timeupdate', () => {
+                const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+                
+                // Find the current day's module card
+                const selectedCourse = localStorage.getItem('selectedCourse');
+                const enrollDateStr = localStorage.getItem('enrollDate');
+                if (enrollDateStr) {
+                    const enrollDate = new Date(enrollDateStr);
+                    const today = new Date();
+                    const diffTime = Math.abs(today - enrollDate);
+                    const currentDay = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    
+                    const modules = document.querySelectorAll('.module-card');
+                    const currentModule = modules[currentDay - 1];
+                    if (currentModule) {
+                        const progressBar = currentModule.querySelector('.progress-bar');
+                        const status = currentModule.querySelector('p:last-child');
+                        const isAlreadyCompleted = localStorage.getItem(`completed_day_${currentDay}`) === 'true';
+
+                        if (isAlreadyCompleted) {
+                            progressBar.style.width = '100%';
+                            status.innerText = 'COMPLETED';
+                            status.style.color = 'var(--gold)';
+                            return; // Don't overwrite if already completed
+                        }
+                        
+                        if (percentage < 100) {
+                            progressBar.style.width = percentage + '%';
+                            status.innerText = Math.floor(percentage) + '% COMPLETE';
+                        } else {
+                            progressBar.style.width = '100%';
+                            status.innerText = 'COMPLETED';
+                            status.style.color = 'var(--gold)';
+                            // Save completion status
+                            localStorage.setItem(`completed_day_${currentDay}`, 'true');
+                        }
+                    }
+                }
+            });
+
+            // Display selected course info from localStorage
+            const selectedCourse = localStorage.getItem('selectedCourse');
+            const enrollDateStr = localStorage.getItem('enrollDate');
+
+            if (selectedCourse) {
+                document.getElementById('currentCourseName').innerText = selectedCourse;
+            }
+
+            // Daily Unlock Logic
+            if (enrollDateStr) {
+                const enrollDate = new Date(enrollDateStr);
+                const today = new Date();
+                const diffTime = Math.abs(today - enrollDate);
+                const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                // Unlock Day 01 immediately, Day 02 after 24h, etc.
+                const currentDay = daysSinceEnroll + 1;
+
+                document.getElementById('lessonTitle').innerText = "Day 0" + currentDay + ": Lesson for " + (selectedCourse || "Program");
+
+                const modules = document.querySelectorAll('.module-card');
+                modules.forEach((module, index) => {
+                    const moduleDay = index + 1;
+                    const status = module.querySelector('p:last-child');
+                    const thumb = module.querySelector('.module-thumb');
+                    const progressBar = module.querySelector('.progress-bar');
+                    const progressContainer = module.querySelector('.module-progress');
+
+                    const isPreviousDayCompleted = moduleDay === 1 || localStorage.getItem(`completed_day_${moduleDay - 1}`) === 'true';
+
+                    if (moduleDay <= currentDay && isPreviousDayCompleted) {
+                        // Unlock
+                        module.style.opacity = '1';
+                        module.style.pointerEvents = 'auto';
+                        thumb.innerHTML = '<i data-lucide="video" style="width: 40px; height: 40px;"></i>';
+                        if (progressContainer) progressContainer.style.display = 'block';
+                        
+                        const isCompleted = localStorage.getItem(`completed_day_${moduleDay}`) === 'true';
+                        
+                        if (isCompleted) {
+                            status.innerText = 'COMPLETED';
+                            status.style.color = 'var(--gold)';
+                            progressBar.style.width = '100%';
+                        } else {
+                            status.innerText = '0% COMPLETE';
+                            status.style.color = '#28a745';
+                            progressBar.style.width = '0%';
+                        }
+                    } else {
+                        // Lock
+                        module.style.opacity = '0.6';
+                        module.style.pointerEvents = 'none';
+                        thumb.innerHTML = '<i data-lucide="lock" style="width: 40px; height: 40px;"></i>';
+                        if (progressContainer) progressContainer.style.display = 'none';
+
+                        if (!isPreviousDayCompleted) {
+                            status.innerText = 'FINISH PREVIOUS DAY';
+                        } else {
+                            const hoursRemaining = 24 - (Math.floor((diffTime / (1000 * 60 * 60)) % 24));
+                            status.innerText = `OPENS IN ${hoursRemaining}H`;
+                        }
+                        status.style.color = 'var(--gray)';
+                    }
+                });
+            }
+
+            if (window.lucide) window.lucide.createIcons();
+
+            // Profile Dropdown Toggle
+            const profileTrigger = document.getElementById('profileTrigger');
+            const profileDropdown = document.getElementById('profileDropdown');
+
+            profileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('active');
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+
+            document.addEventListener('click', () => {
+                profileDropdown.classList.remove('active');
+            });
+        });
+
+        function playLesson(title) {
+            document.querySelector('.main-dash h3').innerText = title;
+            document.getElementById('mainVideo').style.display = 'flex';
+            document.getElementById('videoPlayer').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>
