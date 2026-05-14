@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Simulate purchase and redirect
             btn.innerText = 'Redirecting...';
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                window.location.href = 'html/dashboard.html';
             }, 1000);
         }
     };

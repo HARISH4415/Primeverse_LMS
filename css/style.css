@@ -406,10 +406,7 @@ h3 {
 
 /* --- Solution Section (Blueprint Style) --- */
 .blueprint-section {
-    background: linear-gradient(rgba(5, 14, 28, 0.9), rgba(5, 14, 28, 0.9)), url('trading_blueprint_schematic_1777993004920.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background: linear-gradient(rgba(5, 14, 28, 0.9), rgba(5, 14, 28, 0.9));
     padding: 10rem 10%;
     border-top: 1px solid var(--gold-muted);
     border-bottom: 1px solid var(--gold-muted);
