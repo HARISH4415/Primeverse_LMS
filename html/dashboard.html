@@ -11,22 +11,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --sidebar-width: 280px;
         }
 
         body {
-            background-color: var(--navy-deep);
+            background-color: var(--navy);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
             display: flex;
             height: 100vh;
             overflow: hidden;
+            color: var(--white);
         }
 
         /* --- Sidebar --- */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--navy);
+            background: var(--navy-dark);
             border-right: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
@@ -35,7 +39,28 @@
         }
 
         .sidebar-logo {
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-menu-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .purple-dot {
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, var(--gold), #c29d2f);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
         }
 
         .nav-menu {
@@ -68,6 +93,7 @@
         .nav-item.active {
             background: var(--glass);
             color: var(--gold);
+            border-radius: 8px;
         }
 
         .nav-item i {
@@ -83,35 +109,239 @@
             position: relative;
         }
 
-        .dash-header {
+        /* --- Premium Dashboard Header --- */
+        .dashboard-header-premium {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3.5rem;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .welcome-title {
+            font-size: 3.2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .gradient-text-blue {
+            background: linear-gradient(135deg, #FFF, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-quote {
+            color: var(--gray);
+            font-style: italic;
+            font-size: 1rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            padding-left: 1.5rem;
+        }
+
+        .active-objective-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            backdrop-filter: blur(10px);
+            max-width: 320px;
+        }
+
+        .objective-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+        }
+
+        .objective-tag {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        .objective-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-top: 4px;
+        }
+
+        /* --- Stats Grid Premium --- */
+        .stats-grid-premium {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .stats-card-premium {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: 0.3s;
+        }
+
+        .stats-card-premium:hover {
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-5px);
+        }
+
+        .card-header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        .card-icon-faded {
+            width: 20px;
+            height: 20px;
+            color: var(--gold);
+            opacity: 0.8;
+        }
+
+        .card-main-val {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-sub-val {
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .streak-val {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .unlock-timer {
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .completion-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .circular-progress-mini {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circular-chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 3.8;
+        }
+
+        .circle {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 3.8;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+        }
+
+        .progress-text-inner {
+            position: absolute;
+            font-size: 0.4rem;
+            font-weight: 900;
+            color: var(--gold);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* --- Chart Section --- */
+        .chart-container-premium {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
             margin-bottom: 3rem;
         }
 
-        .user-profile {
+        .chart-header-flex {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-            background: var(--glass);
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            border: 1px solid var(--glass-border);
+            margin-bottom: 2rem;
         }
 
-        .user-avatar {
-            width: 35px;
-            height: 35px;
+        .chart-filters {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active {
             background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             color: #000;
-            font-weight: 900;
         }
 
+        .filter-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
         /* --- Profile Dropdown --- */
         .profile-dropdown {
             position: absolute;
@@ -327,11 +557,15 @@
             <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px;">
         </div>
 
+
         <nav class="nav-menu">
             <div class="nav-top">
                 <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-                <a href="#" class="nav-item"><i data-lucide="book-open"></i> My Courses</a>
-                <a href="#" class="nav-item"><i data-lucide="message-square"></i> Chat</a>
+                <a href="#" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
+                <a href="#" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
+                <a href="#" class="nav-item"><i data-lucide="book-marked"></i> Execution Journal</a>
+                <a href="#" class="nav-item"><i data-lucide="users"></i> PrimeVerse Community</a>
+                <a href="#" class="nav-item"><i data-lucide="settings"></i> Account Settings</a>
             </div>
 
             <div class="nav-bottom">
@@ -342,53 +576,81 @@
     </aside>
 
     <main class="main-dash">
-        <div class="dash-header">
-            <div>
-                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Program: <span class="gold-gradient"
-                        id="currentCourseName">Mastery Program</span></h1>
-                <p style="color: var(--gray); font-size: 0.9rem;">Active Enrollment &bull; Level: Beginner</p>
+        <header class="dashboard-header-premium">
+            <div class="header-left">
+                <div class="header-badge">
+                    <i data-lucide="gem" style="width: 14px; height: 14px; color: #3b82f6;"></i>
+                    <span>PRIMEVERSE DASHBOARD</span>
+                </div>
+                <h1 class="welcome-title">Welcome Back, <span class="gradient-text-blue">Alex Carter</span> 👋</h1>
+                <p class="header-quote">"The market rewards disciplined execution — not emotional decisions."</p>
             </div>
-            <div style="display: flex; align-items: center; gap: 2rem;">
-                <div class="user-profile" id="profileTrigger"
-                    style="cursor: pointer; transition: 0.3s; padding-left: 1.5rem; position: relative;">
-                    <div style="text-align: right;">
-                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--white);">Ganesh Kumar</div>
-                        <div style="font-size: 0.65rem; color: var(--gold); font-weight: 700; letter-spacing: 1px;">
-                            PREMIUM MEMBER</div>
-                    </div>
-                    <div class="user-avatar" style="border: 2px solid var(--gold-glow);">G</div>
+            
 
-                    <!-- Dropdown Menu -->
-                    <div class="profile-dropdown" id="profileDropdown">
-                        <div class="dropdown-header">
-                            <span>MY PROFILE</span>
-                            <h4>Ganeshkumar</h4>
-                            <p style="font-size: 0.75rem; color: #999;">Display Name</p>
-                        </div>
-                        <div class="dropdown-body">
-                            <div class="dropdown-item">
-                                <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
-                                <span
-                                    style="font-size: 0.75rem; word-break: break-all;">ganeshkumar934291@gmail.com</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
-                                <span style="font-size: 0.85rem;">9342919596</span>
-                            </div>
-                            <div style="height: 1px; background: #F0F0F0; margin: 0.5rem 1.5rem;"></div>
-                            <a href="#" class="dropdown-item">
-                                <i data-lucide="key"></i>
-                                <span>Change Password</span>
-                            </a>
-                            <a href="../index.html" class="dropdown-item sign-out">
-                                <i data-lucide="log-out"></i>
-                                <span>Sign Out</span>
-                            </a>
-                        </div>
+        </header>
+
+        <div class="stats-grid-premium">
+            <div class="stats-card-premium">
+                <div class="card-header-top">
+                    <span class="card-tag">CURRENT STAGE</span>
+                    <i data-lucide="map" class="card-icon-faded"></i>
+                </div>
+                <h2 class="card-main-val">Day 07</h2>
+                <p class="card-sub-val">Key Levels & Liquidity</p>
+            </div>
+
+            <div class="stats-card-premium">
+                <div class="card-header-top">
+                    <span class="card-tag">EXECUTION STREAK</span>
+                    <i data-lucide="zap" class="card-icon-faded" style="color: #f59e0b;"></i>
+                </div>
+                <h2 class="card-main-val streak-val">12 DAYS</h2>
+                <p class="card-sub-val">Consistent discipline</p>
+            </div>
+
+            <div class="stats-card-premium">
+                <div class="card-header-top">
+                    <span class="card-tag">COMPLETION</span>
+                </div>
+                <div class="completion-flex">
+                    <h2 class="card-main-val">68%</h2>
+                    <div class="circular-progress-mini">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="68, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <span class="progress-text-inner">PROGRESS</span>
                     </div>
                 </div>
             </div>
+
+            <div class="stats-card-premium">
+                <div class="card-header-top">
+                    <span class="card-tag">NEXT UNLOCK</span>
+                    <i data-lucide="lock" class="card-icon-faded" style="color: #a855f7;"></i>
+                </div>
+                <h2 class="card-main-val unlock-timer">08:22:48</h2>
+                <p class="card-sub-val">HOURS : MINS : SECS</p>
+            </div>
         </div>
+
+        <!-- Performance Chart Section -->
+        <div class="chart-container-premium">
+            <div class="chart-header-flex">
+                <h2 style="font-size: 1.5rem; display: flex; align-items: center; gap: 10px; margin: 0;">
+                    <i data-lucide="trending-up" style="color: var(--gold);"></i> Performance Analytics
+                </h2>
+                <div class="chart-filters">
+                    <button class="filter-btn active">1W</button>
+                    <button class="filter-btn">1M</button>
+                    <button class="filter-btn">ALL</button>
+                </div>
+            </div>
+            <div style="height: 300px; width: 100%; position: relative;">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
         <!-- Video Section -->
         <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
             <i data-lucide="play-circle" style="color: var(--gold);"></i> Current Lesson
@@ -444,6 +706,78 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Countdown Timer Logic (Counts down to midnight) ---
+            const timerDisplay = document.querySelector('.unlock-timer');
+            if (timerDisplay) {
+                function updateTimer() {
+                    const now = new Date();
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(now.getDate() + 1);
+                    tomorrow.setHours(0, 0, 0, 0);
+                    
+                    const diff = tomorrow - now;
+                    
+                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                    const seconds = Math.floor((diff / 1000) % 60);
+                    
+                    const h = hours.toString().padStart(2, '0');
+                    const m = minutes.toString().padStart(2, '0');
+                    const s = seconds.toString().padStart(2, '0');
+                    
+                    timerDisplay.textContent = `${h}:${m}:${s}`;
+                }
+
+                updateTimer(); // Initial call
+                setInterval(updateTimer, 1000);
+            }
+
+            // --- Performance Chart Initialization ---
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
+            gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Trading Performance',
+                        data: [65, 59, 80, 81, 56, 85, 95],
+                        borderColor: '#D4AF37',
+                        borderWidth: 3,
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#D4AF37',
+                        pointBorderColor: '#0A1D37',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#A0A0A0', font: { family: 'Montserrat' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#A0A0A0', font: { family: 'Montserrat' } }
+                        }
+                    }
+                }
+            });
+
+            // --- Other Dashboard Logic ---
             if (window.lucide) {
                 window.lucide.createIcons();
             }
@@ -503,7 +837,20 @@
             const enrollDateStr = localStorage.getItem('enrollDate');
 
             if (selectedCourse) {
-                document.getElementById('currentCourseName').innerText = selectedCourse;
+                const currentCourseNameEl = document.getElementById('currentCourseName');
+                if (currentCourseNameEl) {
+                    currentCourseNameEl.innerText = selectedCourse;
+                }
+
+                if (selectedCourse.includes('Mastery')) {
+                    document.getElementById('nav-mastery').style.display = 'flex';
+                } else if (selectedCourse.includes('Mentorship')) {
+                    document.getElementById('nav-mentorship').style.display = 'flex';
+                } else {
+                    document.getElementById('nav-mastery').style.display = 'flex';
+                }
+            } else {
+                document.getElementById('nav-mastery').style.display = 'flex';
             }
 
             // Daily Unlock Logic
@@ -581,6 +928,7 @@
             document.addEventListener('click', () => {
                 profileDropdown.classList.remove('active');
             });
+
         });
 
         function playLesson(title) {
