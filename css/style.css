@@ -1673,15 +1673,15 @@ h6 {
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .auth-submit:hover {
-    background: #c29d2f;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background: var(--gold) !important;
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.45), 0 0 25px rgba(212, 175, 55, 0.5), 0 0 50px rgba(212, 175, 55, 0.2);
 }
 
 /* --- Premium Structure Cards --- */
