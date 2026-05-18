@@ -1664,6 +1664,8 @@ h6 {
 }
 
 .auth-submit {
+    position: relative;
+    overflow: hidden; /* Crucial for hiding the line when outside */
     width: 100%;
     padding: 1.2rem;
     background: var(--gold);
@@ -1673,15 +1675,76 @@ h6 {
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
+    z-index: 1; /* For overlay stacking */
+}
+
+/* GPU-accelerated moving diagonal shine */
+.auth-submit::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 60px;
+    height: 300%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    filter: blur(4px);
+    /* GPU-accelerated initial position (completely outside button to the left) */
+    transform: translate3d(-200%, -50%, 0) rotate(35deg);
+    /* transition transform solely for maximum 60fps performance */
+    transition: transform 1.5s cubic-bezier(0.25, 1, 0.3, 1);
+    z-index: -1;
+}
+
+/* Butter-smooth GPU-accelerated wavy trading chart graph animation */
+.auth-submit::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 50%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'><path d='M0,10 Q25,3 50,10 T100,10 T150,10 T200,10 L200,20 L0,20 Z' fill='rgba(255,255,255,0.15)'/></svg>");
+    background-size: 50% 100%;
+    background-repeat: repeat-x;
+    pointer-events: none;
+    opacity: 0.4;
+    /* GPU-accelerated horizontal scroll */
+    transform: translate3d(0, 0, 0);
+    animation: waveMove 5s linear infinite;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
 .auth-submit:hover {
-    background: var(--gold) !important;
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.45), 0 0 25px rgba(212, 175, 55, 0.5), 0 0 50px rgba(212, 175, 55, 0.2);
+    background: #c29d2f;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.auth-submit:hover::before {
+    /* GPU-accelerated final position (completely outside button to the right) */
+    transform: translate3d(600%, -50%, 0) rotate(35deg);
+}
+
+.auth-submit:hover::after {
+    opacity: 0.8;
+}
+
+@keyframes waveMove {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        transform: translate3d(-50%, 0, 0);
+    }
 }
 
 /* --- Premium Structure Cards --- */
@@ -1811,32 +1874,4 @@ h6 {
         text-align: center !important;
         margin-top: 0 !important;
     }
-}
-
-/* Custom premium hover animations only for Navbar Auth Buttons */
-#loginBtnNav, 
-#signupBtnNav,
-#loginBtnNavMobile,
-#signupBtnNavMobile {
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Hover state for Sign Up Button (Solid gold) */
-#signupBtnNav:hover,
-#signupBtnNavMobile:hover {
-    transform: translateY(-3px) scale(1.05) !important;
-    background: var(--gold) !important;
-    box-shadow: 0 12px 25px rgba(212, 175, 55, 0.4), 0 0 15px rgba(212, 175, 55, 0.2) !important;
-}
-
-/* Hover state for Sign In Button (Outline/Secondary) */
-#loginBtnNav:hover,
-#loginBtnNavMobile:hover {
-    transform: translateY(-3px) scale(1.05) !important;
-    background: rgba(212, 175, 55, 0.1) !important;
-    border-color: var(--gold) !important;
-    color: var(--gold) !important;
-    box-shadow: 0 12px 25px rgba(212, 175, 55, 0.15) !important;
 }

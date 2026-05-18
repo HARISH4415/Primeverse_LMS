@@ -61,7 +61,85 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Auth Form Logic ---
-    let isLoggedIn = false;
+    let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    const loginBtnNav = document.getElementById('loginBtnNav');
+    const signupBtnNav = document.getElementById('signupBtnNav');
+    const loginBtnNavMobile = document.getElementById('loginBtnNavMobile');
+    const signupBtnNavMobile = document.getElementById('signupBtnNavMobile');
+
+    const updateAuthUI = () => {
+        const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const viewProgramBtn = document.getElementById('viewProgramBtn');
+        const applyNowBtn = document.getElementById('applyNowBtn');
+
+        if (loggedIn) {
+            // Desk Nav
+            if (loginBtnNav) {
+                loginBtnNav.innerText = 'DASHBOARD';
+                loginBtnNav.style.background = 'rgba(255, 255, 255, 0.05)';
+            }
+            if (signupBtnNav) {
+                signupBtnNav.innerText = 'SIGN OUT';
+                signupBtnNav.style.background = 'var(--gold)';
+                signupBtnNav.style.color = '#000';
+            }
+            // Mobile Nav
+            if (loginBtnNavMobile) {
+                loginBtnNavMobile.innerText = 'DASHBOARD';
+            }
+            if (signupBtnNavMobile) {
+                signupBtnNavMobile.innerText = 'SIGN OUT';
+            }
+            // Program Action Buttons Green Color
+            if (viewProgramBtn) {
+                viewProgramBtn.style.background = '#28a745';
+                viewProgramBtn.style.borderColor = '#28a745';
+                viewProgramBtn.style.boxShadow = '0 0 25px rgba(40, 167, 69, 0.4)';
+                viewProgramBtn.style.color = '#ffffff';
+            }
+            if (applyNowBtn) {
+                applyNowBtn.style.background = '#28a745';
+                applyNowBtn.style.borderColor = '#28a745';
+                applyNowBtn.style.boxShadow = '0 0 25px rgba(40, 167, 69, 0.4)';
+                applyNowBtn.style.color = '#ffffff';
+            }
+        } else {
+            // Desk Nav Restores
+            if (loginBtnNav) {
+                loginBtnNav.innerText = 'Sign In';
+                loginBtnNav.style.background = '';
+            }
+            if (signupBtnNav) {
+                signupBtnNav.innerText = 'Sign Up';
+                signupBtnNav.style.background = '';
+                signupBtnNav.style.color = '';
+            }
+            // Mobile Nav Restores
+            if (loginBtnNavMobile) {
+                loginBtnNavMobile.innerText = 'Sign In';
+            }
+            if (signupBtnNavMobile) {
+                signupBtnNavMobile.innerText = 'Sign Up';
+            }
+            // Program Action Buttons Gold Restores
+            if (viewProgramBtn) {
+                viewProgramBtn.style.background = '';
+                viewProgramBtn.style.borderColor = '';
+                viewProgramBtn.style.boxShadow = '';
+                viewProgramBtn.style.color = '';
+            }
+            if (applyNowBtn) {
+                applyNowBtn.style.background = '';
+                applyNowBtn.style.borderColor = '';
+                applyNowBtn.style.boxShadow = '';
+                applyNowBtn.style.color = '';
+            }
+        }
+    };
+
+    // Initial Trigger
+    updateAuthUI();
 
     const authForm = document.getElementById('authForm');
     if (authForm) {
@@ -72,26 +150,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             setTimeout(() => {
                 isLoggedIn = true;
+                localStorage.setItem('isLoggedIn', 'true');
                 closeModal();
+                updateAuthUI();
                 
-                // Update buttons to "Enroll Now"
-                const triggers = ['viewProgramBtn', 'applyNowBtn', 'joinBtn'];
-                triggers.forEach(id => {
-                    const btn = document.getElementById(id);
-                    if (btn) {
-                        btn.innerText = 'ENROLL NOW';
-                        btn.style.background = '#28a745'; // Green for action
-                        btn.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.4)';
-                    }
-                });
-
-                alert("Account verified! You can now enroll in your chosen program.");
+                // If there's an action, we can load target page or let them click
+                alert("Account verified! You can now access program details.");
             }, 1000);
         });
     }
 
     const handleActionClick = (e) => {
-        if (!isLoggedIn) {
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
             openModal();
         } else {
             // Identify selected course
@@ -115,35 +185,70 @@ document.addEventListener('DOMContentLoaded', () => {
         loginBtn.addEventListener('click', openModal);
     }
     
-    const loginBtnNav = document.getElementById('loginBtnNav');
-    const signupBtnNav = document.getElementById('signupBtnNav');
-    
     if (loginBtnNav) {
         loginBtnNav.addEventListener('click', () => {
-            if (!isLogin) toggleAuthMode();
-            openModal();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                window.location.href = 'html/dashboard.html';
+            } else {
+                if (!isLogin) toggleAuthMode();
+                openModal();
+            }
         });
     }
     
     if (signupBtnNav) {
         signupBtnNav.addEventListener('click', () => {
-            if (isLogin) toggleAuthMode();
-            openModal();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('hasAccessToMastery');
+                localStorage.removeItem('hasAccessToMentorship');
+                location.reload();
+            } else {
+                if (isLogin) toggleAuthMode();
+                openModal();
+            }
         });
     }
 
     if (document.getElementById('joinBtn')) {
         document.getElementById('joinBtn').addEventListener('click', handleActionClick);
     }
+    
+    // Gated View Program Navigation
     if (document.getElementById('viewProgramBtn')) {
-        document.getElementById('viewProgramBtn').addEventListener('click', handleActionClick);
+        document.getElementById('viewProgramBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                window.location.href = 'html/mastery-program.html';
+            } else {
+                if (!isLogin) toggleAuthMode();
+                openModal();
+            }
+        });
     }
+    
+    // Gated Apply Now Navigation
     if (document.getElementById('applyNowBtn')) {
-        document.getElementById('applyNowBtn').addEventListener('click', handleActionClick);
+        document.getElementById('applyNowBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                window.location.href = 'html/pro-mentorship.html';
+            } else {
+                if (!isLogin) toggleAuthMode();
+                openModal();
+            }
+        });
     }
 
     closeAuth.addEventListener('click', closeModal);
     switchAuth.addEventListener('click', toggleAuthMode);
+
+    // Deep link redirect parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('login') === 'true') {
+        if (!isLogin) toggleAuthMode();
+        openModal();
+    }
 
     // --- Mobile Hamburger Menu Toggle ---
     const navToggle = document.getElementById('navToggle');
@@ -192,32 +297,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Mobile Auth Button Listeners ---
-    const loginBtnNavMobile = document.getElementById('loginBtnNavMobile');
-    const signupBtnNavMobile = document.getElementById('signupBtnNavMobile');
-
     if (loginBtnNavMobile) {
         loginBtnNavMobile.addEventListener('click', () => {
-            if (!isLogin) toggleAuthMode();
-            openModal();
-            mobileMenuDropdown.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            if (icon && window.lucide) {
-                icon.setAttribute('data-lucide', 'menu');
-                window.lucide.createIcons();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                window.location.href = 'html/dashboard.html';
+            } else {
+                if (!isLogin) toggleAuthMode();
+                openModal();
             }
+            mobileMenuDropdown.classList.remove('active');
         });
     }
 
     if (signupBtnNavMobile) {
         signupBtnNavMobile.addEventListener('click', () => {
-            if (isLogin) toggleAuthMode();
-            openModal();
-            mobileMenuDropdown.classList.remove('active');
-            const icon = navToggle.querySelector('i');
-            if (icon && window.lucide) {
-                icon.setAttribute('data-lucide', 'menu');
-                window.lucide.createIcons();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('hasAccessToMastery');
+                localStorage.removeItem('hasAccessToMentorship');
+                location.reload();
+            } else {
+                if (isLogin) toggleAuthMode();
+                openModal();
             }
+            mobileMenuDropdown.classList.remove('active');
         });
     }
 
