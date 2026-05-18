@@ -236,6 +236,7 @@
             font-size: 0.85rem;
             text-decoration: line-through;
             opacity: 0.6;
+            white-space: nowrap;
         }
 
         .final-price {
@@ -244,52 +245,10 @@
             font-weight: 900;
             font-family: 'Satoshi', sans-serif;
             line-height: 1;
+            white-space: nowrap;
         }
 
-        .coupon-wrapper {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 0.8rem;
-            margin-bottom: 2rem;
-        }
 
-        .coupon-input {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 1rem;
-            color: var(--white);
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .coupon-input:focus {
-            border-color: rgba(212, 175, 55, 0.4);
-            background: rgba(255, 255, 255, 0.06);
-            outline: none;
-        }
-
-        .coupon-btn {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            padding: 0 1.8rem;
-            font-weight: 800;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .coupon-btn:hover {
-            background: #c29d2f;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-        }
 
         .access-list {
             display: flex;
@@ -343,6 +302,7 @@
             font-weight: 900;
             color: var(--gold);
             font-family: 'Satoshi', sans-serif;
+            white-space: nowrap;
         }
 
         .amount-subtext {
@@ -597,18 +557,11 @@
                         <span style="font-size: 0.95rem; font-weight: 800; color: var(--white);">PrimeVerse Mastery Program</span>
                     </div>
                     <div class="price-label-group" style="text-align: right;">
-                        <span class="original-price">Rs. 69,999</span>
                         <span class="final-price" id="displayPrice">Rs. 49,999</span>
                     </div>
                 </div>
 
-                <!-- Coupon System -->
-                <div style="font-weight: 800; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray); font-family: 'Satoshi', sans-serif; margin-bottom: 0.6rem;">Apply Coupon</div>
-                <div class="coupon-wrapper">
-                    <input type="text" placeholder="Enter Code" class="coupon-input" id="couponInput">
-                    <button type="button" class="coupon-btn" id="couponBtn">Apply</button>
-                </div>
-                <div id="couponFeedback" style="font-size: 0.8rem; font-weight: 700; margin-top: -1.5rem; margin-bottom: 2rem; display: none;"></div>
+
 
                 <!-- Total Amount Container Box -->
                 <div class="amount-box">
@@ -650,9 +603,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const couponInput = document.getElementById('couponInput');
-            const couponBtn = document.getElementById('couponBtn');
-            const couponFeedback = document.getElementById('couponFeedback');
             const displayPrice = document.getElementById('displayPrice');
             const totalAmount = document.getElementById('totalAmount');
             const buildSystemBtn = document.getElementById('buildSystemBtn');
@@ -662,50 +612,27 @@
             const loaderTitle = document.getElementById('loaderTitle');
             const loaderMessage = document.getElementById('loaderMessage');
 
-            let finalPriceValue = 49999;
-            let couponApplied = false;
-
-            // Simple Coupon Code Engine
-            couponBtn.addEventListener('click', () => {
-                if (couponApplied) {
-                    couponFeedback.style.color = '#e53e3e';
-                    couponFeedback.innerText = 'Coupon already applied!';
-                    couponFeedback.style.display = 'block';
-                    return;
-                }
-
-                const code = couponInput.value.trim().toUpperCase();
-
-                if (code === 'PRIME50') {
-                    finalPriceValue = 24999;
-                    couponApplied = true;
-                    
-                    displayPrice.innerText = 'Rs. 24,999';
-                    totalAmount.innerText = 'Rs. 24,999';
-                    
-                    couponFeedback.style.color = '#28a745';
-                    couponFeedback.innerText = 'Coupon Applied Successfully! 50% Off Granted.';
-                    couponFeedback.style.display = 'block';
-                } else if (code === 'WELCOME') {
-                    finalPriceValue = 39999;
-                    couponApplied = true;
-                    
-                    displayPrice.innerText = 'Rs. 39,999';
-                    totalAmount.innerText = 'Rs. 39,999';
-                    
-                    couponFeedback.style.color = '#28a745';
-                    couponFeedback.innerText = 'Coupon Applied Successfully! Rs. 10,000 Off Granted.';
-                    couponFeedback.style.display = 'block';
-                } else {
-                    couponFeedback.style.color = '#e53e3e';
-                    couponFeedback.innerText = 'Invalid coupon code! Try "PRIME50" or "WELCOME".';
-                    couponFeedback.style.display = 'block';
-                }
-            });
-
             // Action Checkout Simulation Flow
             buildSystemBtn.addEventListener('click', () => {
-                window.location.href = 'https://rzp.io/rzp/xhomBLqF';
+                loaderOverlay.classList.add('active');
+                paymentSpinner.style.display = 'block';
+                paymentSuccessIcon.style.display = 'none';
+                loaderTitle.innerText = "Verifying Transaction";
+                loaderMessage.innerText = "Please do not close or refresh this page. Securing your trading system node...";
+                
+                localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+                localStorage.setItem('enrollDate', new Date().toISOString());
+                
+                setTimeout(() => {
+                    paymentSpinner.style.display = 'none';
+                    paymentSuccessIcon.style.display = 'flex';
+                    loaderTitle.innerText = "Transaction Success";
+                    loaderMessage.innerText = "Welcome to PrimeVerse! Redirecting to your learning dashboard...";
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                }, 3000);
             });
         });
     </script>

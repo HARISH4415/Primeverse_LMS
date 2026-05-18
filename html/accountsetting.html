@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings | PrimeVerse LMS</title>
+    <link rel="icon" type="image/png" href="../assets/login.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: var(--navy);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--white);
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--navy-dark);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            margin-bottom: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .nav-bottom {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--gray);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--glass);
+            color: var(--gold);
+            border-radius: 8px;
+        }
+
+        .nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* --- Main Content --- */
+        .main-dash {
+            flex: 1;
+            overflow-y: auto;
+            padding: 3rem;
+            position: relative;
+        }
+
+        /* --- Premium Dashboard Header --- */
+        .dashboard-header-premium {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3.5rem;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .welcome-title {
+            font-size: 3.2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .gradient-text-blue {
+            background: linear-gradient(135deg, #FFF, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-quote {
+            color: var(--gray);
+            font-style: italic;
+            font-size: 1rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            padding-left: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow-x: hidden;
+                overflow-y: auto !important;
+            }
+
+            .sidebar {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                z-index: 1000;
+                box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            .mobile-nav-bar {
+                display: flex !important;
+            }
+
+            .main-dash {
+                padding: 2rem !important;
+                margin-top: 0;
+                overflow-y: visible !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-dash {
+                padding: 1.5rem !important;
+            }
+
+            .mobile-nav-bar {
+                margin: -1.5rem -1.5rem 1.5rem -1.5rem !important;
+            }
+
+            .dashboard-header-premium {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .cyber-form-wrapper {
+                padding: 2rem 1.5rem !important;
+            }
+
+            .holographic-profile-hub {
+                padding: 2rem 1rem !important;
+            }
+        }
+
+        /* --- Innovative Cybernetic Settings Layout --- */
+        .innovative-settings-container {
+            margin-top: 1rem;
+        }
+
+        .settings-title-glow {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+            font-family: 'Satoshi', sans-serif;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            text-transform: uppercase;
+        }
+
+        .title-icon-spin {
+            color: var(--gold);
+            width: 32px;
+            height: 32px;
+            animation: pulse-glow 2s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from { filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.4)); }
+            to { filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.8)); }
+        }
+
+        .settings-grid-split {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .settings-grid-split {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Left Column: Holographic Hub --- */
+        .holographic-profile-hub {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 3rem 2rem;
+            border-radius: 24px;
+            backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .glow-orb {
+            position: absolute;
+            top: -20px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .avatar-dynamic-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin-bottom: 1.5rem;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-ring-dashed {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed rgba(212, 175, 55, 0.4);
+            border-radius: 50%;
+            animation: spin-dash 20s linear infinite;
+        }
+
+        .avatar-ring-solid {
+            position: absolute;
+            width: 88%;
+            height: 88%;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        @keyframes spin-dash {
+            100% { transform: rotate(360deg); }
+        }
+
+        .avatar-initials-dynamic {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--white);
+            font-family: 'Satoshi', sans-serif;
+            background: linear-gradient(135deg, var(--gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            z-index: 2;
+        }
+
+        .avatar-hud-glitch {
+            position: absolute;
+            bottom: -5px;
+            background: var(--navy-dark);
+            border: 1px solid var(--glass-border);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--gray);
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+        }
+
+        .profile-display-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 0.4rem;
+            font-family: 'Satoshi', sans-serif;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .trader-tier-tag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 1px;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            z-index: 1;
+        }
+
+        .trader-tier-tag i {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Achievements section */
+        .achievements-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            z-index: 1;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            color: var(--gray);
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .achievement-item.active {
+            background: rgba(212, 175, 55, 0.03);
+            border-color: rgba(212, 175, 55, 0.15);
+            color: var(--white);
+        }
+
+        .achievement-item.active i {
+            color: var(--gold);
+        }
+
+        .achievement-item i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Status panel */
+        .sys-status-panel {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            z-index: 1;
+        }
+
+        .status-indicator-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .status-indicator-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-indicator-line span.active-pulse {
+            color: #28a745;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-indicator-line span.active-pulse::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #28a745;
+            animation: status-ping 1.5s infinite;
+        }
+
+        @keyframes status-ping {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* --- Right Column: Cyber Form --- */
+        .cyber-form-wrapper {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 3.5rem;
+            border-radius: 24px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .cyber-input-group {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .cyber-input-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .cyber-input-group label i {
+            width: 14px;
+            height: 14px;
+            color: var(--gold);
+        }
+
+        .input-glow-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-glow-wrapper input {
+            width: 100%;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .input-glow-wrapper input:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.5) !important;
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.08);
+        }
+
+        .input-line-effect {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translateX(-50%);
+        }
+
+        .input-glow-wrapper input:focus + .input-line-effect {
+            width: 100%;
+        }
+
+        /* --- Futuristic Buttons --- */
+        .cyber-submit-btn {
+            position: relative;
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--gold);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
+        }
+
+        .cyber-submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cyber-submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .cyber-submit-btn:hover {
+            transform: translateY(-2px);
+            background: #fff;
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4);
+        }
+
+        .cyber-submit-btn:hover .btn-text {
+            color: #000;
+        }
+
+        .cyber-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: 0.3s;
+            z-index: 1;
+        }
+
+        .btn-text i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* --- Glitch Overlay Sync Effect --- */
+        .hologram-sync-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 29, 55, 0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .hologram-sync-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sync-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 3rem;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 480px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sync-scanner {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-ring 1.5s infinite;
+        }
+
+        .sync-scanner i {
+            width: 36px;
+            height: 36px;
+            color: var(--gold);
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="dashboard.html" class="logo-wrap" style="gap: 8px !important;">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px; display: block;">
+                <div class="logo-info">
+                    <div class="logo-text">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
+                    <div class="logo-tagline" style="font-size: 0.45rem; letter-spacing: 0.5px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                </div>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-top">
+                <a href="dashboard.html" class="nav-item" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="dashboard.html" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
+                <a href="dashboard.html" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
+                <a href="#" class="nav-item"><i data-lucide="book-marked"></i> Execution Journal</a>
+                <a href="#" class="nav-item"><i data-lucide="users"></i> PrimeVerse Community</a>
+                <a href="accountsetting.html" class="nav-item active" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
+            </div>
+            <div class="nav-bottom">
+                <a href="../index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i> Logout</a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-dash">
+        <!-- Mobile Navigation Header -->
+        <div class="mobile-nav-bar" style="display: none; justify-content: space-between; align-items: center; background: var(--navy-dark); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 99; margin: -3rem -3rem 3rem -3rem; backdrop-filter: blur(10px);">
+            <a href="dashboard.html" class="logo-wrap" style="gap: 8px !important;">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 30px; display: block;">
+                <div class="logo-info">
+                    <div class="logo-text" style="font-size: 1.1rem !important;">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
+                    <div class="logo-tagline" style="font-size: 0.4rem; letter-spacing: 0.3px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                </div>
+            </a>
+            <button id="mobileMenuBtn" style="background: transparent; border: none; color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none;">
+                <i data-lucide="menu" style="width: 26px; height: 26px;"></i>
+            </button>
+        </div>
+
+        <header class="dashboard-header-premium">
+            <div class="header-left">
+                <div class="header-badge">
+                    <i data-lucide="gem" style="width: 14px; height: 14px; color: #3b82f6;"></i>
+                    <span>PRIMEVERSE DASHBOARD</span>
+                </div>
+                <h1 class="welcome-title">Welcome Back, <span class="gradient-text-blue" id="welcomeUserName">Alex Carter</span> 👋</h1>
+                <p class="header-quote">"The market rewards disciplined execution — not emotional decisions."</p>
+            </div>
+        </header>
+
+        <!-- Account Settings View (Innovative Split Interface) -->
+        <div id="settings-view" class="innovative-settings-container">
+            <h2 class="settings-title-glow">
+                <i data-lucide="shield-check" class="title-icon-spin"></i> PrimeVerse Identity
+            </h2>
+
+            <div class="settings-grid-split">
+                <!-- Left Column: Holographic Avatar Hub & Achievements -->
+                <div class="holographic-profile-hub">
+                    <div class="glow-orb"></div>
+                    <div class="avatar-dynamic-wrapper">
+                        <div class="avatar-ring-dashed"></div>
+                        <div class="avatar-ring-solid"></div>
+                        <div id="avatarInitials" class="avatar-initials-dynamic">AC</div>
+                        <div class="avatar-hud-glitch">CORE MODULE</div>
+                    </div>
+
+                    <h3 id="profileSubName" class="profile-display-name">Alex Carter</h3>
+                    <div class="trader-tier-tag"><i data-lucide="zap"></i> VERIFIED TRADER</div>
+
+                    <!-- Achievements & Status Indicators -->
+                    <div class="achievements-section">
+                        <div class="achievement-item active" title="Risk Management Certification">
+                            <i data-lucide="shield"></i>
+                            <span>Risk Controller</span>
+                        </div>
+                        <div class="achievement-item active" title="Consistency Streak">
+                            <i data-lucide="flame"></i>
+                            <span>Discipline Node</span>
+                        </div>
+                        <div class="achievement-item active" title="100% Completion Badge">
+                            <i data-lucide="award"></i>
+                            <span>Elite Protocol</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Premium Glowing Form -->
+                <div class="cyber-form-wrapper">
+                    <form id="settingsForm">
+                        <div class="cyber-input-group">
+                            <label><i data-lucide="user"></i> TRADER CALLSIGN (FULL NAME)</label>
+                            <div class="input-glow-wrapper">
+                                <input type="text" id="settingsName" required autocomplete="off">
+                                <span class="input-line-effect"></span>
+                            </div>
+                        </div>
+
+                        <div class="cyber-input-group">
+                            <label><i data-lucide="mail"></i> COMMUNICATIONS VECTOR (EMAIL)</label>
+                            <div class="input-glow-wrapper">
+                                <input type="email" id="settingsEmail" required autocomplete="off">
+                                <span class="input-line-effect"></span>
+                            </div>
+                        </div>
+
+                        <div class="cyber-input-group">
+                            <label><i data-lucide="smartphone"></i> SECURE CALLSIGN LINE (PHONE)</label>
+                            <div class="input-glow-wrapper">
+                                <input type="tel" id="settingsPhone" required autocomplete="off">
+                                <span class="input-line-effect"></span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="cyber-submit-btn">
+                            <span class="btn-text"><i data-lucide="save"></i> UPDATE</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Holographic Sync Scan Overlay -->
+    <div class="hologram-sync-overlay" id="syncOverlay">
+        <div class="sync-card">
+            <div class="sync-scanner">
+                <i data-lucide="refresh-cw" style="animation: spin 2s linear infinite;"></i>
+            </div>
+            <h2 style="font-size: 1.6rem; font-weight: 800; font-family: 'Satoshi', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white); margin-bottom: 0.8rem;">
+                SYNCING IDENTITY CORE
+            </h2>
+            <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.6; max-width: 320px; margin: 0 auto;">
+                Calibrating callsigns, communications vectors, and secure line nodes. Do not interrupt synchronization...
+            </p>
+        </div>
+    </div>
+
+    <script>
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.replace('../index.html?login=true');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+
+            // Mobile menu drawer
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.querySelector('.sidebar');
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('active');
+                });
+
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        sidebar.classList.remove('active');
+                    });
+                });
+            }
+
+            // Show selected course in sidebar if active
+            const selectedCourse = localStorage.getItem('selectedCourse');
+            const navMastery = document.getElementById('nav-mastery');
+            const navMentorship = document.getElementById('nav-mentorship');
+            if (selectedCourse) {
+                if (selectedCourse.includes('Mastery')) {
+                    if (navMastery) navMastery.style.display = 'flex';
+                } else if (selectedCourse.includes('Mentorship')) {
+                    if (navMentorship) navMentorship.style.display = 'flex';
+                }
+            }
+
+            // --- Interactive Account Settings Logic ---
+            const welcomeUserName = document.getElementById('welcomeUserName');
+            const profileSubName = document.getElementById('profileSubName');
+            const avatarInitials = document.getElementById('avatarInitials');
+            const settingsForm = document.getElementById('settingsForm');
+            const settingsNameInput = document.getElementById('settingsName');
+            const settingsEmailInput = document.getElementById('settingsEmail');
+            const settingsPhoneInput = document.getElementById('settingsPhone');
+            const syncOverlay = document.getElementById('syncOverlay');
+
+            // Load saved user details or use defaults
+            const savedName = localStorage.getItem('userName') || 'Alex Carter';
+            const savedEmail = localStorage.getItem('userEmail') || 'alex.carter@example.com';
+            const savedPhone = localStorage.getItem('userPhone') || '+1 (555) 019-2834';
+
+            // Calculate initials
+            function getInitials(name) {
+                return name
+                    .split(' ')
+                    .filter(w => w.length > 0)
+                    .map(word => word[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2);
+            }
+
+            // Populate inputs & hub nodes
+            if (settingsNameInput) settingsNameInput.value = savedName;
+            if (settingsEmailInput) settingsEmailInput.value = savedEmail;
+            if (settingsPhoneInput) settingsPhoneInput.value = savedPhone;
+
+            if (welcomeUserName) welcomeUserName.innerText = savedName;
+            if (profileSubName) profileSubName.innerText = savedName;
+            if (avatarInitials) avatarInitials.innerText = getInitials(savedName);
+
+            // Handle Futuristic Save Changes Sequence
+            if (settingsForm) {
+                settingsForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const newName = settingsNameInput.value.trim();
+                    const newEmail = settingsEmailInput.value.trim();
+                    const newPhone = settingsPhoneInput.value.trim();
+
+                    if (newName && newEmail && newPhone) {
+                        // Activate cyber sync scanner
+                        if (syncOverlay) syncOverlay.classList.add('active');
+
+                        localStorage.setItem('userName', newName);
+                        localStorage.setItem('userEmail', newEmail);
+                        localStorage.setItem('userPhone', newPhone);
+
+                        // Calibrate UI details in background
+                        if (welcomeUserName) welcomeUserName.innerText = newName;
+                        if (profileSubName) profileSubName.innerText = newName;
+                        if (avatarInitials) avatarInitials.innerText = getInitials(newName);
+
+                        // Play dynamic visual sync pause before returning
+                        setTimeout(() => {
+                            if (syncOverlay) syncOverlay.classList.remove('active');
+                            window.location.href = 'dashboard.html';
+                        }, 2500);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

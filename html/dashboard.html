@@ -12,7 +12,7 @@
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         :root {
             --sidebar-width: 280px;
@@ -613,6 +613,22 @@
                 gap: 0.5rem !important;
             }
         }
+
+        /* --- Account Settings --- */
+        .settings-card input:focus {
+            border-color: var(--gold) !important;
+            outline: none;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+        .settings-submit-btn:hover {
+            background: #c29d2f !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4) !important;
+        }
+        .settings-submit-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -621,7 +637,13 @@
 
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px;">
+            <a href="dashboard.html" class="logo-wrap" style="gap: 8px !important;">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px; display: block;">
+                <div class="logo-info">
+                    <div class="logo-text">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
+                    <div class="logo-tagline" style="font-size: 0.45rem; letter-spacing: 0.5px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                </div>
+            </a>
         </div>
 
         <nav class="nav-menu">
@@ -631,7 +653,7 @@
                 <a href="#" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
                 <a href="#" class="nav-item"><i data-lucide="book-marked"></i> Execution Journal</a>
                 <a href="#" class="nav-item"><i data-lucide="users"></i> PrimeVerse Community</a>
-                <a href="#" class="nav-item"><i data-lucide="settings"></i> Account Settings</a>
+                <a href="accountsetting.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
             </div>
             <div class="nav-bottom">
                 <a href="../index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i>
@@ -643,10 +665,13 @@
     <main class="main-dash">
         <!-- Mobile Navigation Header -->
         <div class="mobile-nav-bar" style="display: none; justify-content: space-between; align-items: center; background: var(--navy-dark); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 99; margin: -3rem -3rem 3rem -3rem; backdrop-filter: blur(10px);">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 30px;">
-                <span style="font-family: 'Satoshi', sans-serif; font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; color: var(--white);">PRIME<span style="color: var(--gold);">VERSE</span></span>
-            </div>
+            <a href="dashboard.html" class="logo-wrap" style="gap: 8px !important;">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 30px; display: block;">
+                <div class="logo-info">
+                    <div class="logo-text" style="font-size: 1.1rem !important;">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
+                    <div class="logo-tagline" style="font-size: 0.4rem; letter-spacing: 0.3px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                </div>
+            </a>
             <button id="mobileMenuBtn" style="background: transparent; border: none; color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none;">
                 <i data-lucide="menu" style="width: 26px; height: 26px;"></i>
             </button>
@@ -658,7 +683,7 @@
                     <i data-lucide="gem" style="width: 14px; height: 14px; color: #3b82f6;"></i>
                     <span>PRIMEVERSE DASHBOARD</span>
                 </div>
-                <h1 class="welcome-title">Welcome Back, <span class="gradient-text-blue">Alex Carter</span> 👋</h1>
+                <h1 class="welcome-title">Welcome Back, <span class="gradient-text-blue" id="welcomeUserName">Alex Carter</span> 👋</h1>
                 <p class="header-quote">"The market rewards disciplined execution — not emotional decisions."</p>
             </div>
             
@@ -711,22 +736,7 @@
             </div>
         </div>
 
-        <!-- Performance Chart Section -->
-        <div class="chart-container-premium">
-            <div class="chart-header-flex">
-                <h2 style="font-size: 1.5rem; display: flex; align-items: center; gap: 10px; margin: 0;">
-                    <i data-lucide="trending-up" style="color: var(--gold);"></i> Performance Analytics
-                </h2>
-                <div class="chart-filters">
-                    <button class="filter-btn active">1W</button>
-                    <button class="filter-btn">1M</button>
-                    <button class="filter-btn">ALL</button>
-                </div>
-            </div>
-            <div style="height: 300px; width: 100%; position: relative;">
-                <canvas id="performanceChart"></canvas>
-            </div>
-        </div>
+
         </div>
 
         <div id="course-view" style="display: none;">
@@ -802,9 +812,22 @@
             </div>
         </div>
         </div>
+
     </main>
 
     <script>
+        // Enforce Login & Course Enrollment/Selection to access Dashboard
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.replace('../index.html?login=true');
+        } else {
+            if (!localStorage.getItem('selectedCourse')) {
+                localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+            }
+            if (!localStorage.getItem('enrollDate')) {
+                localStorage.setItem('enrollDate', new Date().toISOString());
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // --- Countdown Timer Logic (Counts down to midnight) ---
             const timerDisplay = document.querySelector('.unlock-timer');
@@ -832,50 +855,7 @@
                 setInterval(updateTimer, 1000);
             }
 
-            // --- Performance Chart Initialization ---
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
-            gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Trading Performance',
-                        data: [65, 59, 80, 81, 56, 85, 95],
-                        borderColor: '#D4AF37',
-                        borderWidth: 3,
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#D4AF37',
-                        pointBorderColor: '#0A1D37',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#A0A0A0', font: { family: 'Montserrat' } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#A0A0A0', font: { family: 'Montserrat' } }
-                        }
-                    }
-                }
-            });
 
             // --- Other Dashboard Logic ---
             if (window.lucide) {
@@ -1095,7 +1075,7 @@
             }
 
             // --- Navigation Logic ---
-            function switchView(viewId, activeNavId) {
+            window.switchView = function(viewId, activeNavId) {
                 dashboardView.style.display = 'none';
                 courseView.style.display = 'none';
                 
@@ -1108,24 +1088,30 @@
                 document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
                 const activeNav = document.getElementById(activeNavId);
                 if (activeNav) activeNav.classList.add('active');
-            }
+            };
 
             navDashboardLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                switchView('dashboard-view', 'nav-dashboard-link');
+                window.switchView('dashboard-view', 'nav-dashboard-link');
             });
 
             if (navMastery) {
                 navMastery.addEventListener('click', (e) => {
                     e.preventDefault();
-                    switchView('course-view', 'nav-mastery');
+                    window.switchView('course-view', 'nav-mastery');
                 });
+            }
+
+            // Load saved user name dynamically for the dashboard welcome header
+            const welcomeUserName = document.getElementById('welcomeUserName');
+            if (welcomeUserName) {
+                welcomeUserName.innerText = localStorage.getItem('userName') || 'Alex Carter';
             }
 
             if (navMentorship) {
                 navMentorship.addEventListener('click', (e) => {
                     e.preventDefault();
-                    switchView('course-view', 'nav-mentorship');
+                    window.switchView('course-view', 'nav-mentorship');
                 });
             }
 

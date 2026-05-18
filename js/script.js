@@ -19,11 +19,40 @@ document.addEventListener('DOMContentLoaded', () => {
         window.lucide.createIcons();
     }
 
+    // --- Custom Snackbar Helper ---
+    const showSnackbar = (message, type = 'success') => {
+        let snackbar = document.getElementById('primeSnackbar');
+        if (!snackbar) {
+            snackbar = document.createElement('div');
+            snackbar.id = 'primeSnackbar';
+            snackbar.className = 'prime-snackbar';
+            document.body.appendChild(snackbar);
+        }
+
+        const iconHTML = type === 'success' 
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#D4AF37;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; color:#FF4D4D;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+
+        snackbar.innerHTML = `
+            <div class="prime-snackbar-icon">${iconHTML}</div>
+            <div class="prime-snackbar-message">${message}</div>
+        `;
+
+        // Trigger active state
+        setTimeout(() => {
+            snackbar.classList.add('active');
+        }, 10);
+
+        // Hide after 3 seconds
+        setTimeout(() => {
+            snackbar.classList.remove('active');
+        }, 3000);
+    };
+
     // --- Auth Modal Logic ---
     const authModal = document.getElementById('authModal');
     const loginBtn = document.getElementById('loginBtn');
     const closeAuth = document.getElementById('closeAuth');
-    const switchAuth = document.getElementById('switchAuth');
     const authTitle = document.getElementById('authTitle');
     const authSubtitle = document.getElementById('authSubtitle');
     const signupFields = document.getElementById('signupFields');
@@ -31,7 +60,65 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePass = document.getElementById('togglePass');
     const passwordInput = document.getElementById('passwordInput');
 
-    let isLogin = true;
+    if (togglePass && passwordInput) {
+        togglePass.addEventListener('click', () => {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            togglePass.innerHTML = isPassword ? '<i data-lucide="eye-off"></i>' : '<i data-lucide="eye"></i>';
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    }
+
+    let authState = 'login'; // 'login', 'signup', 'forgot'
+
+    const setAuthState = (state) => {
+        authState = state;
+        const passGroup = passwordInput ? passwordInput.closest('.input-group') : null;
+        const loginMeta = document.getElementById('loginMeta');
+
+        if (state === 'login') {
+            authTitle.innerText = 'Login Account';
+            authSubtitle.innerHTML = "Don't Have an Account? <a href='javascript:void(0)' id='switchAuth'>Create Account</a>";
+            if (signupFields) signupFields.style.display = 'none';
+            if (passGroup) passGroup.style.display = 'block';
+            if (passwordInput) passwordInput.required = true;
+            if (loginMeta) loginMeta.style.display = 'block';
+            authSubmitBtn.innerText = 'LOGIN NOW';
+        } else if (state === 'signup') {
+            authTitle.innerText = 'Create Account';
+            authSubtitle.innerHTML = "Already Have an Account? <a href='javascript:void(0)' id='switchAuth'>Login Now</a>";
+            if (signupFields) signupFields.style.display = 'block';
+            if (passGroup) passGroup.style.display = 'block';
+            if (passwordInput) passwordInput.required = true;
+            if (loginMeta) loginMeta.style.display = 'none';
+            authSubmitBtn.innerText = 'SIGN UP NOW';
+        } else if (state === 'forgot') {
+            authTitle.innerText = 'Reset Password';
+            authSubtitle.innerHTML = "Remembered Password? <a href='javascript:void(0)' id='switchAuth'>Login Now</a>";
+            if (signupFields) signupFields.style.display = 'none';
+            if (passGroup) passGroup.style.display = 'none';
+            if (passwordInput) passwordInput.required = false;
+            if (loginMeta) loginMeta.style.display = 'none';
+            authSubmitBtn.innerText = 'RESET PASSWORD';
+        }
+
+        // Re-attach switch listener
+        const switchBtn = document.getElementById('switchAuth');
+        if (switchBtn) {
+            switchBtn.addEventListener('click', () => {
+                if (authState === 'forgot') {
+                    setAuthState('login');
+                } else if (authState === 'login') {
+                    setAuthState('signup');
+                } else {
+                    setAuthState('login');
+                }
+            });
+        }
+    };
 
     const openModal = () => {
         authModal.classList.add('active');
@@ -41,23 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = () => {
         authModal.classList.remove('active');
         document.body.style.overflow = 'auto';
-    };
-
-    const toggleAuthMode = () => {
-        isLogin = !isLogin;
-        if (isLogin) {
-            authTitle.innerText = 'Login Account';
-            authSubtitle.innerHTML = "Don't Have an Account? <a href='javascript:void(0)' id='switchAuth'>Create Account</a>";
-            signupFields.style.display = 'none';
-            authSubmitBtn.innerText = 'LOGIN NOW';
-        } else {
-            authTitle.innerText = 'Create Account';
-            authSubtitle.innerHTML = "Already Have an Account? <a href='javascript:void(0)' id='switchAuth'>Login Now</a>";
-            signupFields.style.display = 'block';
-            authSubmitBtn.innerText = 'SIGN UP NOW';
-        }
-        // Re-attach listener to the new link
-        document.getElementById('switchAuth').addEventListener('click', toggleAuthMode);
     };
 
     // --- Auth Form Logic ---
@@ -149,13 +219,16 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerText = 'Processing...';
             
             setTimeout(() => {
-                isLoggedIn = true;
-                localStorage.setItem('isLoggedIn', 'true');
-                closeModal();
-                updateAuthUI();
-                
-                // If there's an action, we can load target page or let them click
-                alert("Account verified! You can now access program details.");
+                if (authState === 'forgot') {
+                    showSnackbar("A password reset link has been sent to your email!", "success");
+                    setAuthState('login');
+                } else {
+                    isLoggedIn = true;
+                    localStorage.setItem('isLoggedIn', 'true');
+                    closeModal();
+                    updateAuthUI();
+                    showSnackbar("Account verified! Welcome back.", "success");
+                }
             }, 1000);
         });
     }
@@ -182,7 +255,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (loginBtn) {
-        loginBtn.addEventListener('click', openModal);
+        loginBtn.addEventListener('click', () => {
+            setAuthState('login');
+            openModal();
+        });
     }
     
     if (loginBtnNav) {
@@ -190,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 window.location.href = 'html/dashboard.html';
             } else {
-                if (!isLogin) toggleAuthMode();
+                setAuthState('login');
                 openModal();
             }
         });
@@ -202,9 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('hasAccessToMastery');
                 localStorage.removeItem('hasAccessToMentorship');
+                localStorage.removeItem('selectedCourse');
+                localStorage.removeItem('enrollDate');
                 location.reload();
             } else {
-                if (isLogin) toggleAuthMode();
+                setAuthState('signup');
                 openModal();
             }
         });
@@ -221,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 window.location.href = 'html/mastery-program.html';
             } else {
-                if (!isLogin) toggleAuthMode();
+                setAuthState('login');
                 openModal();
             }
         });
@@ -234,19 +312,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 window.location.href = 'html/pro-mentorship.html';
             } else {
-                if (!isLogin) toggleAuthMode();
+                setAuthState('login');
                 openModal();
             }
         });
     }
 
     closeAuth.addEventListener('click', closeModal);
-    switchAuth.addEventListener('click', toggleAuthMode);
+
+    // Initial state setup for switchAuth and forgotLink
+    setAuthState('login');
+    const forgotLink = document.querySelector('.forgot-link');
+    if (forgotLink) {
+        forgotLink.addEventListener('click', () => {
+            setAuthState('forgot');
+        });
+    }
 
     // Deep link redirect parameters
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('login') === 'true') {
-        if (!isLogin) toggleAuthMode();
+        setAuthState('login');
         openModal();
     }
 
@@ -302,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 window.location.href = 'html/dashboard.html';
             } else {
-                if (!isLogin) toggleAuthMode();
+                setAuthState('login');
                 openModal();
             }
             mobileMenuDropdown.classList.remove('active');
@@ -315,9 +401,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('hasAccessToMastery');
                 localStorage.removeItem('hasAccessToMentorship');
+                localStorage.removeItem('selectedCourse');
+                localStorage.removeItem('enrollDate');
                 location.reload();
             } else {
-                if (isLogin) toggleAuthMode();
+                setAuthState('signup');
                 openModal();
             }
             mobileMenuDropdown.classList.remove('active');

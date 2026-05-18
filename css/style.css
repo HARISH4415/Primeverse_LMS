@@ -1771,9 +1771,6 @@ h6 {
     .nav-toggle {
         display: flex !important;
     }
-    .logo-tagline {
-        display: none !important;
-    }
 }
 
 @media (max-width: 768px) {
@@ -1874,4 +1871,50 @@ h6 {
         text-align: center !important;
         margin-top: 0 !important;
     }
+}
+
+/* --- Premium Custom Snackbar --- */
+.prime-snackbar {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(5, 14, 28, 0.95);
+    border: 1.5px solid var(--gold);
+    border-radius: 16px;
+    padding: 1.2rem 2.2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 10000;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(212, 175, 55, 0.2);
+    backdrop-filter: blur(15px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    max-width: 90vw;
+    width: max-content;
+}
+
+.prime-snackbar.active {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.prime-snackbar-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    width: 24px;
+    height: 24px;
+}
+
+.prime-snackbar-message {
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
 }
