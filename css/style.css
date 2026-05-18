@@ -168,16 +168,30 @@ h6 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem 5% !important; /* Premium wide padding */
-    position: absolute;
+    padding: 1.2rem 8% !important; /* Premium wide padding edge-to-edge */
+    position: fixed; /* Fixed position so it floats on scroll! */
+    top: 0;
+    left: 0;
+    transform: none;
     width: 100%;
-    z-index: 100;
+    max-width: none;
+    z-index: 1000;
+    background: rgba(13, 21, 33, 0.85); /* Deep navy translucent glass */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25); /* Glowing bottom gold line! */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .nav-content-desktop {
     display: flex;
     align-items: center;
-    gap: 4rem;
+    gap: 3.5rem;
 }
 
 .nav-auth {
@@ -211,13 +225,14 @@ h6 {
     flex-direction: column;
     gap: 2rem;
     background: rgba(5, 14, 28, 0.98);
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 0;
     padding: 3rem 10% 2.5rem;
-    position: absolute;
-    top: 90px;
+    position: fixed;
+    top: 76px; /* Sits perfectly below the full edge-to-edge navbar */
     left: 0;
     width: 100%;
-    z-index: 99;
+    z-index: 999;
     backdrop-filter: blur(20px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -898,8 +913,10 @@ h6 {
     transition: 0.3s;
 }
 
-.blueprint-list li i {
-    color: #4A90E2; /* Matches the diamond badge */
+.blueprint-list li i,
+.blueprint-list li svg {
+    color: #10b981 !important;
+    stroke: #10b981 !important;
     width: 20px;
     height: 20px;
     flex-shrink: 0;
@@ -1693,7 +1710,8 @@ h6 {
 
 @media (max-width: 768px) {
     .nav-unique {
-        padding: 1.5rem 1rem !important;
+        padding: 0.8rem 1.5rem !important;
+        top: 0 !important;
     }
     .logo-text {
         font-size: 1.2rem !important;
