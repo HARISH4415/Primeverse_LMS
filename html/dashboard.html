@@ -542,9 +542,75 @@
             transition: 1s;
         }
 
+        body {
+            overflow: auto !important;
+        }
+
         @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow-x: hidden;
+            }
+
             .sidebar {
-                display: none;
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                z-index: 1000;
+                box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            .mobile-nav-bar {
+                display: flex !important;
+            }
+
+            .main-dash {
+                padding: 2rem !important;
+                margin-top: 0;
+            }
+            
+            .stats-grid-premium {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-dash {
+                padding: 1.5rem !important;
+            }
+
+            .mobile-nav-bar {
+                margin: -1.5rem -1.5rem 1.5rem -1.5rem !important;
+            }
+
+            .dashboard-header-premium {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .stats-grid-premium {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .video-parts-selector {
+                flex-direction: column !important;
+                max-width: 100% !important;
+                gap: 0.5rem !important;
             }
         }
     </style>
@@ -575,6 +641,17 @@
     </aside>
 
     <main class="main-dash">
+        <!-- Mobile Navigation Header -->
+        <div class="mobile-nav-bar" style="display: none; justify-content: space-between; align-items: center; background: var(--navy-dark); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 99; margin: -3rem -3rem 3rem -3rem; backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 30px;">
+                <span style="font-family: 'Satoshi', sans-serif; font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; color: var(--white);">PRIME<span style="color: var(--gold);">VERSE</span></span>
+            </div>
+            <button id="mobileMenuBtn" style="background: transparent; border: none; color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none;">
+                <i data-lucide="menu" style="width: 26px; height: 26px;"></i>
+            </button>
+        </div>
+
         <header class="dashboard-header-premium">
             <div class="header-left">
                 <div class="header-badge">
@@ -1126,26 +1203,46 @@
             const profileTrigger = document.getElementById('profileTrigger');
             const profileDropdown = document.getElementById('profileDropdown');
 
-            profileTrigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('active');
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
-            });
+            if (profileTrigger && profileDropdown) {
+                profileTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    profileDropdown.classList.toggle('active');
+                    if (window.lucide) {
+                        window.lucide.createIcons();
+                    }
+                });
+            }
 
             document.addEventListener('click', () => {
-                profileDropdown.classList.remove('active');
+                if (profileDropdown) profileDropdown.classList.remove('active');
             });
 
-        });
+            // --- Mobile Sliding Menu Drawer Toggle ---
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('active');
+                });
 
-        function playLesson(title) {
-            document.querySelector('.main-dash h3').innerText = title;
-            document.getElementById('mainVideo').style.display = 'flex';
-            document.getElementById('videoPlayer').style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+                // Auto-close menu drawer when selecting any navigation link
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        sidebar.classList.remove('active');
+                    });
+                });
+
+                // Close when clicking main body content outside
+                document.querySelector('.main-dash').addEventListener('click', (e) => {
+                    if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+
+        });
     </script>
 </body>
 

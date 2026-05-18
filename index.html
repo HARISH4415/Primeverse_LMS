@@ -19,26 +19,47 @@
     <div class="bg-glow"></div>
 
     <nav class="nav-unique">
-        <div class="nav-left">
-            <a href="index.html" class="logo-wrap">
-                <img src="assets/logo.png" alt="PrimeVerse Logo" style="height: 40px; display: block;">
-                <div class="logo-info">
-                    <div class="logo-text">PRIME<span class="gold-text">VERSE</span></div>
-                    <div class="logo-tagline">CLARITY • DISCIPLINE • CONSISTENCY</div>
-                </div>
-            </a>
+        <a href="index.html" class="logo-wrap">
+            <img src="assets/logo.png" alt="PrimeVerse Logo" style="height: 40px; display: block;">
+            <div class="logo-info">
+                <div class="logo-text">PRIME<span class="gold-text">VERSE</span></div>
+                <div class="logo-tagline">CLARITY • DISCIPLINE • CONSISTENCY</div>
+            </div>
+        </a>
+        
+        <!-- Desktop Navigation Content -->
+        <div class="nav-content-desktop">
             <div class="nav-links">
                 <a href="#structure">Structure</a>
                 <a href="#blueprint">Blueprint</a>
                 <a href="#program">Program</a>
                 <a href="#faq">FAQ</a>
             </div>
+            <div class="nav-auth">
+                <a href="javascript:void(0)" class="btn-prime secondary btn-sm" id="loginBtnNav">Sign In</a>
+                <a href="javascript:void(0)" class="btn-prime btn-sm" id="signupBtnNav">Sign Up</a>
+            </div>
         </div>
-        <div class="nav-auth">
-            <a href="javascript:void(0)" class="btn-prime secondary btn-sm" id="loginBtnNav">Sign In</a>
-            <a href="javascript:void(0)" class="btn-prime btn-sm" id="signupBtnNav">Sign Up</a>
-        </div>
+
+        <!-- Mobile Hamburg Toggle Button -->
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+            <i data-lucide="menu"></i>
+        </button>
     </nav>
+
+    <!-- Mobile Dropdown Menu Drawer -->
+    <div class="mobile-menu-dropdown" id="mobileMenuDropdown">
+        <div class="mobile-nav-links">
+            <a href="#structure">Structure</a>
+            <a href="#blueprint">Blueprint</a>
+            <a href="#program">Program</a>
+            <a href="#faq">FAQ</a>
+        </div>
+        <div class="mobile-nav-auth">
+            <a href="javascript:void(0)" class="btn-prime secondary btn-sm" id="loginBtnNavMobile">Sign In</a>
+            <a href="javascript:void(0)" class="btn-prime btn-sm" id="signupBtnNavMobile">Sign Up</a>
+        </div>
+    </div>
 
     <main>
         <section id="about" class="hero-unique">

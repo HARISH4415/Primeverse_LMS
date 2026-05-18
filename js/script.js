@@ -145,6 +145,82 @@ document.addEventListener('DOMContentLoaded', () => {
     closeAuth.addEventListener('click', closeModal);
     switchAuth.addEventListener('click', toggleAuthMode);
 
+    // --- Mobile Hamburger Menu Toggle ---
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenuDropdown = document.getElementById('mobileMenuDropdown');
+
+    if (navToggle && mobileMenuDropdown) {
+        navToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileMenuDropdown.classList.toggle('active');
+            
+            // Toggle icon visual
+            const icon = navToggle.querySelector('i');
+            if (icon && window.lucide) {
+                if (mobileMenuDropdown.classList.contains('active')) {
+                    icon.setAttribute('data-lucide', 'x');
+                } else {
+                    icon.setAttribute('data-lucide', 'menu');
+                }
+                window.lucide.createIcons();
+            }
+        });
+
+        // Close mobile dropdown when clicking any navigation link
+        mobileMenuDropdown.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuDropdown.classList.remove('active');
+                const icon = navToggle.querySelector('i');
+                if (icon && window.lucide) {
+                    icon.setAttribute('data-lucide', 'menu');
+                    window.lucide.createIcons();
+                }
+            });
+        });
+
+        // Close mobile dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !mobileMenuDropdown.contains(e.target)) {
+                mobileMenuDropdown.classList.remove('active');
+                const icon = navToggle.querySelector('i');
+                if (icon && window.lucide) {
+                    icon.setAttribute('data-lucide', 'menu');
+                    window.lucide.createIcons();
+                }
+            }
+        });
+    }
+
+    // --- Mobile Auth Button Listeners ---
+    const loginBtnNavMobile = document.getElementById('loginBtnNavMobile');
+    const signupBtnNavMobile = document.getElementById('signupBtnNavMobile');
+
+    if (loginBtnNavMobile) {
+        loginBtnNavMobile.addEventListener('click', () => {
+            if (!isLogin) toggleAuthMode();
+            openModal();
+            mobileMenuDropdown.classList.remove('active');
+            const icon = navToggle.querySelector('i');
+            if (icon && window.lucide) {
+                icon.setAttribute('data-lucide', 'menu');
+                window.lucide.createIcons();
+            }
+        });
+    }
+
+    if (signupBtnNavMobile) {
+        signupBtnNavMobile.addEventListener('click', () => {
+            if (isLogin) toggleAuthMode();
+            openModal();
+            mobileMenuDropdown.classList.remove('active');
+            const icon = navToggle.querySelector('i');
+            if (icon && window.lucide) {
+                icon.setAttribute('data-lucide', 'menu');
+                window.lucide.createIcons();
+            }
+        });
+    }
+
     // --- FAQ Toggle Logic ---
     const faqCards = document.querySelectorAll('.faq-card-unique');
     faqCards.forEach(card => {
