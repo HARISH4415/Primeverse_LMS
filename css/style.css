@@ -1295,6 +1295,10 @@ h6 {
 .footer-social-btn i {
     width: 18px;
     height: 18px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer-contacts {
