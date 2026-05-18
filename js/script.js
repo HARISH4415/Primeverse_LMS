@@ -111,8 +111,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    loginBtn.addEventListener('click', openModal);
+    if (loginBtn) {
+        loginBtn.addEventListener('click', openModal);
+    }
     
+    const loginBtnNav = document.getElementById('loginBtnNav');
+    const signupBtnNav = document.getElementById('signupBtnNav');
+    
+    if (loginBtnNav) {
+        loginBtnNav.addEventListener('click', () => {
+            if (!isLogin) toggleAuthMode();
+            openModal();
+        });
+    }
+    
+    if (signupBtnNav) {
+        signupBtnNav.addEventListener('click', () => {
+            if (isLogin) toggleAuthMode();
+            openModal();
+        });
+    }
+
     if (document.getElementById('joinBtn')) {
         document.getElementById('joinBtn').addEventListener('click', handleActionClick);
     }

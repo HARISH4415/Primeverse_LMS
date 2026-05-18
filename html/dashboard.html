@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -557,17 +558,15 @@
             <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px;">
         </div>
 
-
         <nav class="nav-menu">
             <div class="nav-top">
-                <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="#" class="nav-item active" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
                 <a href="#" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
                 <a href="#" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
                 <a href="#" class="nav-item"><i data-lucide="book-marked"></i> Execution Journal</a>
                 <a href="#" class="nav-item"><i data-lucide="users"></i> PrimeVerse Community</a>
                 <a href="#" class="nav-item"><i data-lucide="settings"></i> Account Settings</a>
             </div>
-
             <div class="nav-bottom">
                 <a href="../index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i>
                     Logout</a>
@@ -589,7 +588,8 @@
 
         </header>
 
-        <div class="stats-grid-premium">
+        <div id="dashboard-view">
+            <div class="stats-grid-premium">
             <div class="stats-card-premium">
                 <div class="card-header-top">
                     <span class="card-tag">CURRENT STAGE</span>
@@ -650,7 +650,9 @@
                 <canvas id="performanceChart"></canvas>
             </div>
         </div>
+        </div>
 
+        <div id="course-view" style="display: none;">
         <!-- Video Section -->
         <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
             <i data-lucide="play-circle" style="color: var(--gold);"></i> Current Lesson
@@ -671,36 +673,57 @@
             </video>
         </div>
 
+        <!-- Premium Two Videos Selector UI -->
+        <div class="video-parts-selector" style="display: flex; gap: 1rem; margin-bottom: 3rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: 8px; border-radius: 16px; max-width: 500px; backdrop-filter: blur(10px);">
+            <button id="btn-part-1" onclick="switchPart(1)" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--gold); color: #000; border: none; padding: 0.9rem 1.2rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; text-transform: uppercase; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);">
+                <i data-lucide="play-circle" style="width: 18px; height: 18px;"></i>
+                <span>Part 1: Concept Setup</span>
+            </button>
+            <button id="btn-part-2" onclick="switchPart(2)" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: var(--gray); border: none; padding: 0.9rem 1.2rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; text-transform: uppercase; cursor: pointer; transition: 0.3s;">
+                <i data-lucide="video" style="width: 18px; height: 18px;"></i>
+                <span>Part 2: Live Execution</span>
+            </button>
+        </div>
+
         <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Continue Learning</h2>
         <div class="modules-grid">
-            <div class="module-card">
+            <div class="module-card" onclick="loadLesson(1)">
                 <div class="module-thumb"><i data-lucide="video" style="width: 40px; height: 40px;"></i></div>
-                <span class="module-tag">Day 01</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span class="module-tag" style="margin-bottom: 0;">Day 01</span>
+                    <span style="font-size: 0.65rem; background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 2px 8px; border-radius: 4px; font-weight: 700;">2 VIDEOS</span>
+                </div>
                 <h4>Introduction to Trading Psychology</h4>
                 <div class="module-progress">
                     <div class="progress-bar" style="width: 100%;"></div>
                 </div>
                 <p style="font-size: 0.7rem; color: var(--gold); margin-top: 0.5rem; text-align: right;">COMPLETED</p>
             </div>
-            <div class="module-card" onclick="playLesson('Day 02: Candlestick Mastery')">
+            <div class="module-card" onclick="loadLesson(2)">
                 <div class="module-thumb"><i data-lucide="video" style="width: 40px; height: 40px;"></i></div>
-                <span class="module-tag">Day 02</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span class="module-tag" style="margin-bottom: 0;">Day 02</span>
+                    <span style="font-size: 0.65rem; background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 2px 8px; border-radius: 4px; font-weight: 700;">2 VIDEOS</span>
+                </div>
                 <h4>Technical Analysis Foundations</h4>
                 <div class="module-progress">
                     <div class="progress-bar" style="width: 40%;"></div>
                 </div>
-                <p style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; text-align: right;">40% COMPLETE
-                </p>
+                <p style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; text-align: right;">40% COMPLETE</p>
             </div>
-            <div class="module-card">
+            <div class="module-card" onclick="loadLesson(3)">
                 <div class="module-thumb"><i data-lucide="lock" style="width: 40px; height: 40px;"></i></div>
-                <span class="module-tag">Day 03</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span class="module-tag" style="margin-bottom: 0;">Day 03</span>
+                    <span style="font-size: 0.65rem; background: rgba(255, 255, 255, 0.05); color: var(--gray); padding: 2px 8px; border-radius: 4px; font-weight: 700;">2 VIDEOS</span>
+                </div>
                 <h4>Risk Management Framework</h4>
                 <div class="module-progress">
                     <div class="progress-bar" style="width: 0%;"></div>
                 </div>
                 <p style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; text-align: right;">LOCKED</p>
             </div>
+        </div>
         </div>
     </main>
 
@@ -785,48 +808,183 @@
             const videoPlaceholder = document.getElementById('mainVideo');
             const videoPlayer = document.getElementById('videoPlayer');
 
-            videoPlaceholder.addEventListener('click', () => {
-                videoPlaceholder.style.display = 'none';
-                videoPlayer.style.display = 'block';
-                videoPlayer.play();
-            });
+            // --- Lessons Database (2 Videos per Day) ---
+            const lessonsDatabase = {
+                1: {
+                    title: "Introduction to Trading Psychology",
+                    part1: { title: "Day 01 - Part 1: Emotional Traps & Hard Truths", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 01 - Part 2: Building Emotional Control", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                2: {
+                    title: "Technical Analysis Foundations",
+                    part1: { title: "Day 02 - Part 1: Market Structure & Trend Cycles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 02 - Part 2: Liquidity & Supply/Demand Zones", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                3: {
+                    title: "Risk Management Framework",
+                    part1: { title: "Day 03 - Part 1: Position Sizing & Calculation Model", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 03 - Part 2: Dynamic R:R Optimization", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                }
+            };
 
-            // Update progress bar based on video playback
-            videoPlayer.addEventListener('timeupdate', () => {
-                const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100;
-                
-                // Find the current day's module card
+            let activeDayNum = 1;
+            let activePartNum = 1;
+
+            window.loadLesson = function(dayNumber) {
+                // Check daily unlock first
                 const selectedCourse = localStorage.getItem('selectedCourse');
                 const enrollDateStr = localStorage.getItem('enrollDate');
                 if (enrollDateStr) {
                     const enrollDate = new Date(enrollDateStr);
                     const today = new Date();
                     const diffTime = Math.abs(today - enrollDate);
-                    const currentDay = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    const currentDay = daysSinceEnroll + 1;
+                    
+                    const isPreviousDayCompleted = dayNumber === 1 || localStorage.getItem(`completed_day_${dayNumber - 1}`) === 'true';
+                    if (dayNumber > currentDay || !isPreviousDayCompleted) {
+                        return; // card is locked
+                    }
+                }
+
+                activeDayNum = dayNumber;
+                activePartNum = 1;
+
+                // Reset Tab Highlights
+                const btn1 = document.getElementById('btn-part-1');
+                const btn2 = document.getElementById('btn-part-2');
+                if (btn1 && btn2) {
+                    btn1.style.background = 'var(--gold)';
+                    btn1.style.color = '#000';
+                    btn1.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.25)';
+                    
+                    btn2.style.background = 'transparent';
+                    btn2.style.color = 'var(--gray)';
+                    btn2.style.boxShadow = 'none';
+                }
+
+                const lessonData = lessonsDatabase[dayNumber];
+                if (lessonData) {
+                    document.getElementById('lessonTitle').innerText = lessonData.part1.title;
+                    const h3Title = document.querySelector('#course-view h2');
+                    if (h3Title) {
+                        h3Title.innerHTML = `<i data-lucide="play-circle" style="color: var(--gold);"></i> Current Lesson: Day 0${dayNumber}`;
+                    }
+
+                    const videoPlayer = document.getElementById('videoPlayer');
+                    const videoPlaceholder = document.getElementById('mainVideo');
+                    if (videoPlayer && videoPlaceholder) {
+                        videoPlaceholder.style.display = 'flex';
+                        videoPlayer.style.display = 'none';
+                        videoPlayer.src = lessonData.part1.src;
+                        videoPlayer.load();
+                    }
+
+                    // Scroll player smoothly into viewport
+                    const playerContainer = document.querySelector('.video-container');
+                    if (playerContainer) {
+                        playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+                if (window.lucide) window.lucide.createIcons();
+            };
+
+            window.switchPart = function(partNumber) {
+                activePartNum = partNumber;
+                const btn1 = document.getElementById('btn-part-1');
+                const btn2 = document.getElementById('btn-part-2');
+                if (btn1 && btn2) {
+                    if (partNumber === 1) {
+                        btn1.style.background = 'var(--gold)';
+                        btn1.style.color = '#000';
+                        btn1.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.25)';
+                        
+                        btn2.style.background = 'transparent';
+                        btn2.style.color = 'var(--gray)';
+                        btn2.style.boxShadow = 'none';
+                    } else {
+                        btn2.style.background = 'var(--gold)';
+                        btn2.style.color = '#000';
+                        btn2.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.25)';
+                        
+                        btn1.style.background = 'transparent';
+                        btn1.style.color = 'var(--gray)';
+                        btn1.style.boxShadow = 'none';
+                    }
+                }
+
+                const lessonData = lessonsDatabase[activeDayNum];
+                if (lessonData) {
+                    const partData = partNumber === 1 ? lessonData.part1 : lessonData.part2;
+                    document.getElementById('lessonTitle').innerText = partData.title;
+
+                    const videoPlayer = document.getElementById('videoPlayer');
+                    const videoPlaceholder = document.getElementById('mainVideo');
+                    if (videoPlayer && videoPlaceholder) {
+                        videoPlaceholder.style.display = 'flex';
+                        videoPlayer.style.display = 'none';
+                        videoPlayer.src = partData.src;
+                        videoPlayer.load();
+                    }
+                }
+            };
+
+            videoPlaceholder.addEventListener('click', () => {
+                videoPlaceholder.style.display = 'none';
+                videoPlayer.style.display = 'block';
+                videoPlayer.play();
+            });
+
+            // Update progress bar based on video playback of both parts
+            videoPlayer.addEventListener('timeupdate', () => {
+                const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+                
+                if (percentage >= 98) {
+                    localStorage.setItem(`completed_day_${activeDayNum}_part_${activePartNum}`, 'true');
+                    
+                    const p1 = localStorage.getItem(`completed_day_${activeDayNum}_part_1`) === 'true';
+                    const p2 = localStorage.getItem(`completed_day_${activeDayNum}_part_2`) === 'true';
+                    
+                    let totalProg = 0;
+                    if (p1) totalProg += 50;
+                    if (p2) totalProg += 50;
                     
                     const modules = document.querySelectorAll('.module-card');
-                    const currentModule = modules[currentDay - 1];
+                    const currentModule = modules[activeDayNum - 1];
                     if (currentModule) {
                         const progressBar = currentModule.querySelector('.progress-bar');
                         const status = currentModule.querySelector('p:last-child');
-                        const isAlreadyCompleted = localStorage.getItem(`completed_day_${currentDay}`) === 'true';
-
-                        if (isAlreadyCompleted) {
-                            progressBar.style.width = '100%';
-                            status.innerText = 'COMPLETED';
-                            status.style.color = 'var(--gold)';
-                            return; // Don't overwrite if already completed
-                        }
                         
-                        if (percentage < 100) {
-                            progressBar.style.width = percentage + '%';
-                            status.innerText = Math.floor(percentage) + '% COMPLETE';
-                        } else {
-                            progressBar.style.width = '100%';
+                        progressBar.style.width = totalProg + '%';
+                        if (totalProg === 100) {
                             status.innerText = 'COMPLETED';
                             status.style.color = 'var(--gold)';
-                            // Save completion status
-                            localStorage.setItem(`completed_day_${currentDay}`, 'true');
+                            localStorage.setItem(`completed_day_${activeDayNum}`, 'true');
+                        } else {
+                            status.innerText = totalProg + '% COMPLETE';
+                            status.style.color = '#28a745';
+                        }
+                    }
+                } else {
+                    const p1 = localStorage.getItem(`completed_day_${activeDayNum}_part_1`) === 'true';
+                    const p2 = localStorage.getItem(`completed_day_${activeDayNum}_part_2`) === 'true';
+                    
+                    let baseProg = 0;
+                    if (activePartNum === 1 && p2) baseProg = 50;
+                    if (activePartNum === 2 && p1) baseProg = 50;
+                    
+                    const currentProg = baseProg + (percentage * 0.5);
+                    const modules = document.querySelectorAll('.module-card');
+                    const currentModule = modules[activeDayNum - 1];
+                    if (currentModule) {
+                        const progressBar = currentModule.querySelector('.progress-bar');
+                        const status = currentModule.querySelector('p:last-child');
+                        
+                        const isAlreadyCompleted = localStorage.getItem(`completed_day_${activeDayNum}`) === 'true';
+                        if (!isAlreadyCompleted) {
+                            progressBar.style.width = currentProg + '%';
+                            status.innerText = Math.floor(currentProg) + '% COMPLETE';
+                            status.style.color = '#28a745';
                         }
                     }
                 }
@@ -836,6 +994,12 @@
             const selectedCourse = localStorage.getItem('selectedCourse');
             const enrollDateStr = localStorage.getItem('enrollDate');
 
+            const navMastery = document.getElementById('nav-mastery');
+            const navMentorship = document.getElementById('nav-mentorship');
+            const navDashboardLink = document.getElementById('nav-dashboard-link');
+            const dashboardView = document.getElementById('dashboard-view');
+            const courseView = document.getElementById('course-view');
+
             if (selectedCourse) {
                 const currentCourseNameEl = document.getElementById('currentCourseName');
                 if (currentCourseNameEl) {
@@ -843,14 +1007,49 @@
                 }
 
                 if (selectedCourse.includes('Mastery')) {
-                    document.getElementById('nav-mastery').style.display = 'flex';
+                    navMastery.style.display = 'flex';
                 } else if (selectedCourse.includes('Mentorship')) {
-                    document.getElementById('nav-mentorship').style.display = 'flex';
+                    navMentorship.style.display = 'flex';
                 } else {
-                    document.getElementById('nav-mastery').style.display = 'flex';
+                    navMastery.style.display = 'flex';
                 }
             } else {
-                document.getElementById('nav-mastery').style.display = 'flex';
+                navMastery.style.display = 'flex';
+            }
+
+            // --- Navigation Logic ---
+            function switchView(viewId, activeNavId) {
+                dashboardView.style.display = 'none';
+                courseView.style.display = 'none';
+                
+                if (viewId === 'dashboard-view') {
+                    dashboardView.style.display = 'block';
+                } else if (viewId === 'course-view') {
+                    courseView.style.display = 'block';
+                }
+
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                const activeNav = document.getElementById(activeNavId);
+                if (activeNav) activeNav.classList.add('active');
+            }
+
+            navDashboardLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchView('dashboard-view', 'nav-dashboard-link');
+            });
+
+            if (navMastery) {
+                navMastery.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchView('course-view', 'nav-mastery');
+                });
+            }
+
+            if (navMentorship) {
+                navMentorship.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchView('course-view', 'nav-mentorship');
+                });
             }
 
             // Daily Unlock Logic
@@ -860,10 +1059,15 @@
                 const diffTime = Math.abs(today - enrollDate);
                 const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-                // Unlock Day 01 immediately, Day 02 after 24h, etc.
                 const currentDay = daysSinceEnroll + 1;
 
-                document.getElementById('lessonTitle').innerText = "Day 0" + currentDay + ": Lesson for " + (selectedCourse || "Program");
+                const initialLessonData = lessonsDatabase[currentDay];
+                if (initialLessonData) {
+                    document.getElementById('lessonTitle').innerText = initialLessonData.part1.title;
+                    activeDayNum = currentDay;
+                } else {
+                    document.getElementById('lessonTitle').innerText = "Day 0" + currentDay + ": Lesson for " + (selectedCourse || "Program");
+                }
 
                 const modules = document.querySelectorAll('.module-card');
                 modules.forEach((module, index) => {
@@ -882,16 +1086,21 @@
                         thumb.innerHTML = '<i data-lucide="video" style="width: 40px; height: 40px;"></i>';
                         if (progressContainer) progressContainer.style.display = 'block';
                         
-                        const isCompleted = localStorage.getItem(`completed_day_${moduleDay}`) === 'true';
+                        const p1 = localStorage.getItem(`completed_day_${moduleDay}_part_1`) === 'true';
+                        const p2 = localStorage.getItem(`completed_day_${moduleDay}_part_2`) === 'true';
                         
-                        if (isCompleted) {
+                        let totalProg = 0;
+                        if (p1) totalProg += 50;
+                        if (p2) totalProg += 50;
+                        
+                        progressBar.style.width = totalProg + '%';
+                        if (totalProg === 100) {
                             status.innerText = 'COMPLETED';
                             status.style.color = 'var(--gold)';
-                            progressBar.style.width = '100%';
+                            localStorage.setItem(`completed_day_${moduleDay}`, 'true');
                         } else {
-                            status.innerText = '0% COMPLETE';
+                            status.innerText = totalProg + '% COMPLETE';
                             status.style.color = '#28a745';
-                            progressBar.style.width = '0%';
                         }
                     } else {
                         // Lock
