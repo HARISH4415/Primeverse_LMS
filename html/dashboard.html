@@ -20,7 +20,7 @@
 
         body {
             background-color: var(--navy);
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Satoshi', sans-serif;
             font-weight: 500;
             display: flex;
             height: 100vh;
@@ -299,6 +299,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
         /* --- Chart Section --- */
         .chart-container-premium {
             background: rgba(255, 255, 255, 0.02);
@@ -343,6 +344,7 @@
         .filter-btn:hover:not(.active) {
             background: rgba(255, 255, 255, 0.1);
         }
+
         /* --- Profile Dropdown --- */
         .profile-dropdown {
             position: absolute;
@@ -502,6 +504,12 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
+        .module-card.active-module-card {
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+            background: rgba(212, 175, 55, 0.03);
+        }
+
         .module-thumb {
             width: 100%;
             height: 150px;
@@ -577,7 +585,7 @@
                 padding: 2rem !important;
                 margin-top: 0;
             }
-            
+
             .stats-grid-premium {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 1rem !important;
@@ -606,7 +614,7 @@
             .stats-grid-premium {
                 grid-template-columns: 1fr !important;
             }
-            
+
             .video-parts-selector {
                 flex-direction: column !important;
                 max-width: 100% !important;
@@ -621,14 +629,844 @@
             background: rgba(255, 255, 255, 0.08) !important;
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
         }
+
         .settings-submit-btn:hover {
             background: #c29d2f !important;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4) !important;
         }
-        .settings-submit-btn:active {
-            transform: translateY(0);
+
+        /* --- Premium Split Dashboard Grid --- */
+        .dashboard-grid-split {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+            margin-bottom: 4rem;
+            align-items: start;
         }
+
+        @media (min-width: 1200px) {
+            .dashboard-grid-split {
+                display: grid;
+                grid-template-columns: 1.2fr 1fr;
+                gap: 2.5rem;
+            }
+            .dashboard-grid-split .current-lesson-card {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem;
+            }
+            .dashboard-grid-split .lesson-info-title {
+                font-size: 1.8rem;
+            }
+            .dashboard-grid-split .lesson-info-desc {
+                font-size: 0.88rem;
+                line-height: 1.5;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* --- Program Roadmap Card --- */
+        .roadmap-card {
+            background: #090f1d;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .roadmap-card:hover {
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        .roadmap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .roadmap-toggle-btn {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--gold);
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s ease;
+            outline: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .roadmap-toggle-btn:hover {
+            color: #e5bd42;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .roadmap-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 6px;
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .roadmap-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .roadmap-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .roadmap-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .roadmap-list:not(.collapsed) {
+            max-height: 800px;
+        }
+
+        .roadmap-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .roadmap-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .roadmap-circle-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .roadmap-circle-icon.completed {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .roadmap-circle-icon.completed i {
+            width: 11px;
+            height: 11px;
+            stroke-width: 4;
+        }
+
+        .roadmap-circle-icon.active {
+            border: 2px solid var(--gold);
+            background: transparent;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+        }
+
+        .roadmap-circle-icon.locked {
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: transparent;
+        }
+
+        .roadmap-item-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #a3b1c6;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .roadmap-item.active .roadmap-item-name {
+            color: var(--white);
+            font-weight: 800;
+        }
+
+        .roadmap-item.completed .roadmap-item-name {
+            color: #d1dce8;
+        }
+
+        .roadmap-item-percent {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--gray);
+            flex-shrink: 0;
+        }
+
+        .roadmap-item.active .roadmap-item-percent {
+            color: var(--gold);
+        }
+
+        .roadmap-item.completed .roadmap-item-percent {
+            color: var(--white);
+        }
+
+        .roadmap-progress-track {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .roadmap-progress-bar {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .roadmap-item.locked .roadmap-progress-bar {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Active highlight container */
+        .roadmap-item.active-module {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.03);
+            padding: 12px 14px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.05);
+        }
+
+        /* Collapsed list rule to show only first 4 items */
+        .roadmap-list.collapsed .roadmap-item:nth-child(n+5) {
+            display: none;
+        }
+
+        /* --- Premium Course Page Header --- */
+        .course-header-premium {
+            background: linear-gradient(135deg, rgba(9, 15, 29, 0.75), rgba(5, 10, 20, 0.85));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .course-header-content {
+            max-width: 65%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .course-header-badge {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: var(--gold);
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.08);
+        }
+
+        .course-header-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .course-header-title span {
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+        }
+
+        .course-header-subtitle {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #d1dce8;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-header-tagline {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .course-header-desc {
+            font-size: 0.95rem;
+            color: var(--gray);
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .course-header-graphic {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 45%;
+            height: 100%;
+            opacity: 0.9;
+            pointer-events: none;
+            z-index: 1;
+            mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+            -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .course-header-graphic-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Innovative Mastery Timeline --- */
+        .mastery-timeline-container {
+            margin-top: 3.5rem;
+            margin-bottom: 5rem;
+            position: relative;
+            background: linear-gradient(180deg, rgba(9, 15, 29, 0.4), rgba(5, 10, 20, 0.4));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .mastery-timeline-track {
+            position: absolute;
+            left: 5.25rem;
+            top: 4rem;
+            bottom: 4rem;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold) 60%, rgba(212, 175, 55, 0.1) 60%);
+            z-index: 1;
+        }
+
+        .mastery-timeline-item {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 1.5rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .mastery-timeline-item:hover {
+            background: rgba(212, 175, 55, 0.02);
+            border-color: rgba(212, 175, 55, 0.15);
+            transform: translateX(5px);
+        }
+
+        .mastery-timeline-item.active-item {
+            background: rgba(212, 175, 55, 0.04);
+            border-color: rgba(212, 175, 55, 0.35);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
+        }
+
+        .mastery-timeline-header {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            gap: 1.5rem;
+        }
+
+        .mastery-timeline-node {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .mastery-timeline-node.completed {
+            background: #10b981;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .mastery-timeline-node.active {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+        }
+
+        .mastery-timeline-node.locked {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            color: var(--gray);
+        }
+
+        .mastery-timeline-day {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 1px;
+            min-width: 65px;
+            text-align: center;
+        }
+
+        .mastery-timeline-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--white);
+            flex: 1;
+            transition: color 0.3s;
+        }
+
+        .mastery-timeline-item.active-item .mastery-timeline-title {
+            color: var(--gold);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .mastery-timeline-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .mastery-timeline-status {
+            font-weight: 800;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+        }
+
+        .mastery-timeline-status.completed {
+            color: var(--gold);
+        }
+
+        .mastery-timeline-status.active {
+            color: var(--gold);
+            animation: pulseText 1.5s infinite alternate;
+        }
+
+        .mastery-timeline-status.locked {
+            color: var(--gray);
+        }
+
+        .mastery-timeline-arrow {
+            color: var(--gray);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mastery-timeline-item.expanded .mastery-timeline-arrow {
+            transform: rotate(90deg);
+            color: var(--gold);
+        }
+
+        /* Expanded Details Area */
+        .mastery-timeline-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0);
+            padding: 0 2rem;
+        }
+
+        .mastery-timeline-item.expanded .mastery-timeline-details {
+            max-height: 500px;
+            padding: 1.5rem 2rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mastery-details-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .mastery-parts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mastery-part-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 0.75rem 1.25rem;
+            transition: 0.3s;
+        }
+
+        .mastery-part-row:hover {
+            background: rgba(212, 175, 55, 0.03);
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .mastery-part-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #d1dce8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mastery-part-title i {
+            color: var(--gold);
+        }
+
+        .mastery-play-badge {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulseText {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .mastery-timeline-track {
+                display: none;
+            }
+            .mastery-timeline-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .mastery-timeline-meta {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 0.5rem;
+            }
+        }
+
+        @keyframes pulseSpark {
+            0% { transform: scale(0.9); opacity: 0.4; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+            100% { transform: scale(0.9); opacity: 0.4; }
+        }
+
+        .pulse-spark {
+            animation: pulseSpark 2.5s infinite ease-in-out;
+            transform-origin: 380px 30px;
+        }
+
+        @media (max-width: 992px) {
+            .course-header-premium {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 2.5rem;
+            }
+            .course-header-content {
+                max-width: 100%;
+            }
+            .course-header-graphic {
+                position: relative;
+                width: 100%;
+                height: 180px;
+                right: 0;
+                bottom: 0;
+                margin-top: 1.5rem;
+            }
+        }
+
+        /* --- Premium Current Lesson Card --- */
+        .current-lesson-section {
+            margin-top: 2.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .current-lesson-header {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .current-lesson-card {
+            background: #090f1d;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            display: grid;
+            grid-template-columns: 42% 1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .current-lesson-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.35);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .lesson-thumbnail-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1.5px solid rgba(212, 175, 55, 0.2);
+            aspect-ratio: 16 / 9;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lesson-thumbnail-wrapper:hover {
+            border-color: var(--gold);
+            transform: scale(1.025);
+        }
+
+        .lesson-thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lesson-thumbnail-wrapper:hover .lesson-thumbnail-img {
+            transform: scale(1.06);
+        }
+
+        .thumbnail-text-badge {
+            position: absolute;
+            bottom: 1.25rem;
+            left: 1.25rem;
+            background: rgba(5, 14, 28, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .badge-title {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .badge-subtitle {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .thumbnail-play-btn {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%) scale(0.9);
+            width: 64px;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.55);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2;
+        }
+
+        .lesson-thumbnail-wrapper:hover .thumbnail-play-btn {
+            background: var(--gold);
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        .thumbnail-play-btn i {
+            width: 24px;
+            height: 24px;
+            color: var(--gold);
+            fill: var(--gold);
+            margin-left: 2px;
+            /* Visual center adjustment */
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lesson-thumbnail-wrapper:hover .thumbnail-play-btn i {
+            color: #000;
+            fill: #000;
+        }
+
+        .lesson-info-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .lesson-day-badge {
+            background: var(--gold);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .lesson-info-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .lesson-info-desc {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            max-width: 520px;
+        }
+
+        .lesson-duration-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #a3b1c6;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-duration-row i {
+            width: 18px;
+            height: 18px;
+            color: var(--gold);
+        }
+
+        .lesson-continue-btn {
+            width: 100%;
+            max-width: 320px;
+            background: linear-gradient(135deg, var(--gold) 0%, #bfa030 100%);
+            color: #000;
+            border: none;
+            padding: 1.1rem 2rem;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+
+        .lesson-continue-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 25px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #e5bd42 0%, #d4af37 100%);
+        }
+
+        .lesson-continue-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .lesson-continue-btn i {
+            width: 18px;
+            height: 18px;
+            color: #000;
+            transition: transform 0.3s ease;
+        }
+
+        .lesson-continue-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 1200px) {
+            .current-lesson-card {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+                padding: 2rem;
+            }
+
+            .lesson-thumbnail-wrapper {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .lesson-continue-btn {
+                max-width: 100%;
+            }
+        }
+
     </style>
 </head>
 
@@ -641,19 +1479,24 @@
                 <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px; display: block;">
                 <div class="logo-info">
                     <div class="logo-text">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
-                    <div class="logo-tagline" style="font-size: 0.45rem; letter-spacing: 0.5px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                    <div class="logo-tagline" style="font-size: 0.45rem; letter-spacing: 0.5px;">CLARITY • DISCIPLINE •
+                        CONSISTENCY</div>
                 </div>
             </a>
         </div>
 
         <nav class="nav-menu">
             <div class="nav-top">
-                <a href="#" class="nav-item active" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-                <a href="#" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
-                <a href="#" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
-                <a href="#" class="nav-item"><i data-lucide="book-marked"></i> Execution Journal</a>
-                <a href="#" class="nav-item"><i data-lucide="users"></i> PrimeVerse Community</a>
-                <a href="accountsetting.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
+                <a href="#" class="nav-item active" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i>
+                    Dashboard</a>
+                <a href="#" class="nav-item" id="nav-mastery" style="display: none;"><i
+                        data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
+                <a href="#" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i>
+                    PrimeVerse Pro Mentorship</a>
+                <a href="executionjournal.html" class="nav-item" id="nav-journal"><i data-lucide="book-marked"></i> Execution Journal</a>
+                <a href="communitypage.html" class="nav-item" id="nav-community"><i data-lucide="users"></i> PrimeVerse Community</a>
+                <a href="accountsetting.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Account
+                    Settings</a>
             </div>
             <div class="nav-bottom">
                 <a href="../index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i>
@@ -664,15 +1507,19 @@
 
     <main class="main-dash">
         <!-- Mobile Navigation Header -->
-        <div class="mobile-nav-bar" style="display: none; justify-content: space-between; align-items: center; background: var(--navy-dark); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 99; margin: -3rem -3rem 3rem -3rem; backdrop-filter: blur(10px);">
+        <div class="mobile-nav-bar"
+            style="display: none; justify-content: space-between; align-items: center; background: var(--navy-dark); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 99; margin: -3rem -3rem 3rem -3rem; backdrop-filter: blur(10px);">
             <a href="dashboard.html" class="logo-wrap" style="gap: 8px !important;">
                 <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 30px; display: block;">
                 <div class="logo-info">
-                    <div class="logo-text" style="font-size: 1.1rem !important;">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
-                    <div class="logo-tagline" style="font-size: 0.4rem; letter-spacing: 0.3px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                    <div class="logo-text" style="font-size: 1.1rem !important;">PRIME<span class="gold-text"
+                            style="color: var(--gold);">VERSE</span></div>
+                    <div class="logo-tagline" style="font-size: 0.4rem; letter-spacing: 0.3px;">CLARITY • DISCIPLINE •
+                        CONSISTENCY</div>
                 </div>
             </a>
-            <button id="mobileMenuBtn" style="background: transparent; border: none; color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none;">
+            <button id="mobileMenuBtn"
+                style="background: transparent; border: none; color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none;">
                 <i data-lucide="menu" style="width: 26px; height: 26px;"></i>
             </button>
         </div>
@@ -683,134 +1530,890 @@
                     <i data-lucide="gem" style="width: 14px; height: 14px; color: #3b82f6;"></i>
                     <span>PRIMEVERSE DASHBOARD</span>
                 </div>
-                <h1 class="welcome-title">Welcome Back, <span class="gradient-text-blue" id="welcomeUserName">Alex Carter</span> 👋</h1>
+                <h1 class="welcome-title">Welcome Back, <span class="gradient-text-blue" id="welcomeUserName">Alex
+                        Carter</span> 👋</h1>
                 <p class="header-quote">"The market rewards disciplined execution — not emotional decisions."</p>
             </div>
-            
+
 
         </header>
 
         <div id="dashboard-view">
             <div class="stats-grid-premium">
-            <div class="stats-card-premium">
-                <div class="card-header-top">
-                    <span class="card-tag">CURRENT STAGE</span>
-                    <i data-lucide="map" class="card-icon-faded"></i>
+                <!-- Program Progress -->
+                <div class="stats-card-premium">
+                    <div class="card-header-top">
+                        <span class="card-tag">PROGRAM PROGRESS</span>
+                    </div>
+                    <div class="completion-flex">
+                        <div>
+                            <h2 class="card-main-val" style="margin-bottom: 2px;">65%</h2>
+                            <p class="card-sub-val" style="margin-top: 0;">Completed</p>
+                        </div>
+                        <div class="circular-progress-mini">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle" stroke-dasharray="65, 100"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <span class="progress-text-inner" style="font-size: 0.55rem; font-weight: 800;">6%</span>
+                        </div>
+                    </div>
                 </div>
-                <h2 class="card-main-val">Day 07</h2>
-                <p class="card-sub-val">Key Levels & Liquidity</p>
+
+                <!-- Current Stage -->
+                <div class="stats-card-premium">
+                    <div class="card-header-top">
+                        <span class="card-tag">CURRENT STAGE</span>
+                        <i data-lucide="graduation-cap" class="card-icon-faded"></i>
+                    </div>
+                    <h2 class="card-main-val">DAY 11</h2>
+                    <p class="card-sub-val">Liquidity Sweep Execution</p>
+                </div>
+
+                <!-- Modules Completed -->
+                <div class="stats-card-premium">
+                    <div class="card-header-top">
+                        <span class="card-tag">MODULES COMPLETED</span>
+                        <i data-lucide="check-square" class="card-icon-faded" style="color: #10b981;"></i>
+                    </div>
+                    <h2 class="card-main-val">10 / 18</h2>
+                    <p class="card-sub-val">Keep it up!</p>
+                </div>
+
+                <!-- Next Unlock Countdown -->
+                <div class="stats-card-premium">
+                    <div class="card-header-top">
+                        <span class="card-tag">NEXT UNLOCK</span>
+                        <i data-lucide="lock" class="card-icon-faded" style="color: #a855f7;"></i>
+                    </div>
+                    <h2 class="card-main-val unlock-timer">08:22:48</h2>
+                    <p class="card-sub-val">HOURS : MINS : SECS</p>
+                </div>
             </div>
 
-            <div class="stats-card-premium">
-                <div class="card-header-top">
-                    <span class="card-tag">EXECUTION STREAK</span>
-                    <i data-lucide="zap" class="card-icon-faded" style="color: #f59e0b;"></i>
+            <!-- Split Grid for Current Lesson & Roadmap -->
+            <div class="dashboard-grid-split">
+                <!-- Left: Current Lesson Section -->
+                <div class="current-lesson-section" style="margin-top: 0; margin-bottom: 0;">
+                    <h3 class="current-lesson-header">
+                        <span class="purple-dot"></span> CURRENT LESSON
+                    </h3>
+                    <div class="current-lesson-card">
+                        <div class="lesson-thumbnail-wrapper" onclick="window.switchView('course-view', 'nav-mastery')">
+                            <img src="../assets/lesson_thumbnail.png" alt="Liquidity Sweep Execution"
+                                class="lesson-thumbnail-img">
+                            <div class="thumbnail-text-badge">
+                                <div class="badge-title">Liquidity Sweep</div>
+                                <div class="badge-subtitle">Execution</div>
+                            </div>
+                            <div class="thumbnail-play-btn">
+                                <i data-lucide="play"></i>
+                            </div>
+                        </div>
+                        <div class="lesson-info-wrapper">
+                            <div class="lesson-day-badge">Day 11</div>
+                            <h2 class="lesson-info-title">Liquidity Sweep <span class="gold-text">Execution</span></h2>
+                            <p class="lesson-info-desc">Learn how smart money traps emotional traders before expansion
+                                moves.</p>
+                            <div class="lesson-duration-row">
+                                <i data-lucide="clock"></i>
+                                <span>18 Minutes</span>
+                            </div>
+                            <button class="lesson-continue-btn" onclick="window.switchView('course-view', 'nav-mastery')">
+                                <span>Continue Learning</span>
+                                <i data-lucide="chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <h2 class="card-main-val streak-val">12 DAYS</h2>
-                <p class="card-sub-val">Consistent discipline</p>
-            </div>
 
-            <div class="stats-card-premium">
-                <div class="card-header-top">
-                    <span class="card-tag">COMPLETION</span>
-                </div>
-                <div class="completion-flex">
-                    <h2 class="card-main-val">68%</h2>
-                    <div class="circular-progress-mini">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="circle" stroke-dasharray="68, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        </svg>
-                        <span class="progress-text-inner">PROGRESS</span>
+                <!-- Right: Program Roadmap Section -->
+                <div class="roadmap-section">
+                    <h3 class="current-lesson-header">
+                        <span class="purple-dot"></span> PROGRAM ROADMAP
+                    </h3>
+                    <div class="roadmap-card">
+                        <div class="roadmap-header">
+                            <div class="roadmap-title">
+                                <i data-lucide="compass" style="width: 16px; height: 16px; color: var(--gold); margin-right: 4px;"></i>
+                                <span style="font-family: 'Satoshi', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--white); letter-spacing: 2px;">ROADMAP</span>
+                            </div>
+                            <button class="roadmap-toggle-btn" id="roadmapToggleBtn" onclick="window.toggleRoadmap()">View Full Roadmap</button>
+                        </div>
+                        <div class="roadmap-list collapsed" id="roadmapList">
+                            <!-- Module 1 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 01 — Financial Market Foundations">MODULE 01 — Financial Market Foundations</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 2 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 02 — Charting & Trading Fundamentals">MODULE 02 — Charting & Trading Fundamentals</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 3 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 03 — Trading Execution Essentials">MODULE 03 — Trading Execution Essentials</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 4 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 04 — Trade Management & Market Analysis">MODULE 04 — Trade Management & Market Analysis</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 5 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 05 — Market Structure">MODULE 05 — Market Structure</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 6 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 06 — Trend Analysis & Market Direction">MODULE 06 — Trend Analysis & Market Direction</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 7 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 07 — Key Levels & Market Reaction Zones">MODULE 07 — Key Levels & Market Reaction Zones</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 8 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 08 — Expansion & Retracement, Internal & External Market Structure">MODULE 08 — Expansion & Retracement ,  Internal & External Market Structure</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 9 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 09 — Fibonacci Framework & Market Strength Analysis">MODULE 09 — Fibonacci Framework & Market Strength Analysis</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 10 -->
+                            <div class="roadmap-item completed">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon completed">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span class="roadmap-item-name" title="MODULE 10 — Fibonacci Optimal Trade Entry (OTE)">MODULE 10 — Fibonacci Optimal Trade Entry (OTE)</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">100%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 11 (Active!) -->
+                            <div class="roadmap-item active active-module">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon active"></div>
+                                        <span class="roadmap-item-name" title="MODULE 11 — Structure Break, Liquidity, Stop Hunt & Failure Swing">MODULE 11 — Structure Break, Liquidity, Stop Hunt & Failure Swing</span>
+                                    </div>
+                                    <span class="roadmap-item-percent" style="font-weight: 900;">65%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 65%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 12 -->
+                            <div class="roadmap-item locked">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon locked"></div>
+                                        <span class="roadmap-item-name" title="MODULE 12 — Power of Two Confirmation Patterns">MODULE 12 — Power of Two Confirmation Patterns</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">0%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 13 -->
+                            <div class="roadmap-item locked">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon locked"></div>
+                                        <span class="roadmap-item-name" title="MODULE 13 — Risk Management & Trading Journal Framework">MODULE 13 — Risk Management & Trading Journal Framework</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">0%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 14 -->
+                            <div class="roadmap-item locked">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon locked"></div>
+                                        <span class="roadmap-item-name" title="MODULE 14 — Trading Psychology & Emotional Discipline">MODULE 14 — Trading Psychology & Emotional Discipline</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">0%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 15 -->
+                            <div class="roadmap-item locked">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon locked"></div>
+                                        <span class="roadmap-item-name" title="MODULE 15 — Capital Growth & Compounding Method">MODULE 15 — Capital Growth & Compounding Methoad</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">0%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 16 -->
+                            <div class="roadmap-item locked">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon locked"></div>
+                                        <span class="roadmap-item-name" title="MODULE 16 — Market Recap & Complete Market Flow">MODULE 16 — Market Recap & Complete Market Flow</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">0%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 17 -->
+                            <div class="roadmap-item locked">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon locked"></div>
+                                        <span class="roadmap-item-name" title="MODULE 17 — - Real-Time Trade Execution Examples">MODULE 17 — - Real-Time Trade Execution Examples</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">0%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <!-- Module 18 -->
+                            <div class="roadmap-item locked">
+                                <div class="roadmap-item-row">
+                                    <div class="roadmap-item-left">
+                                        <div class="roadmap-circle-icon locked"></div>
+                                        <span class="roadmap-item-name" title="MODULE 18 — Key Takeaways For Confident Trading">MODULE 18 — Key Takeaways For Confident Trading</span>
+                                    </div>
+                                    <span class="roadmap-item-percent">0%</span>
+                                </div>
+                                <div class="roadmap-progress-track">
+                                    <div class="roadmap-progress-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="stats-card-premium">
-                <div class="card-header-top">
-                    <span class="card-tag">NEXT UNLOCK</span>
-                    <i data-lucide="lock" class="card-icon-faded" style="color: #a855f7;"></i>
-                </div>
-                <h2 class="card-main-val unlock-timer">08:22:48</h2>
-                <p class="card-sub-val">HOURS : MINS : SECS</p>
-            </div>
-        </div>
-
-
-        </div>
+           <!-- Execution Journal has been moved to a dedicated page: executionjournal.html -->       </div>
 
         <div id="course-view" style="display: none;">
-        <!-- Video Section -->
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
-            <i data-lucide="play-circle" style="color: var(--gold);"></i> Current Lesson
-        </h2>
-        <div class="video-container">
-            <!-- Simulated Video Player -->
-            <div class="video-placeholder" id="mainVideo">
-                <div class="play-btn-dash">
-                    <i data-lucide="play"></i>
+            <!-- Premium Course Page Header -->
+            <div class="course-header-premium">
+                <div class="course-header-content">
+                    <span class="course-header-badge">MASTERY PROGRAM</span>
+                    <h1 class="course-header-title">PRIMEVERSE <span>MASTERY PROGRAM</span></h1>
+                    <h2 class="course-header-subtitle">18-Day Structured Trading Framework</h2>
+                    <h3 class="course-header-tagline">Build Clarity. Discipline. Consistency.</h3>
+                    <p class="course-header-desc">
+                        The PrimeVerse Mastery Program is designed to help struggling traders develop
+                        a structured market approach, disciplined execution habits, and a repeatable trading system.
+                    </p>
                 </div>
-                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;" id="lessonTitle">Day 01: Getting Started</h3>
-                <p style="color: var(--gray); font-size: 0.9rem;">Click to start learning</p>
+                <div class="course-header-graphic">
+                    <img class="course-header-graphic-img" src="../assets/mastery_header_graphic.png" alt="PrimeVerse Mastery Program">
+                </div>
             </div>
-            <!-- In a real app, you'd use <video> or <iframe> -->
-            <video id="videoPlayer" width="100%" height="100%" controls style="display: none;">
-                <source src="../video/Screen Recording 2025-09-04 202308.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
 
-        <!-- Premium Two Videos Selector UI -->
-        <div class="video-parts-selector" style="display: flex; gap: 1rem; margin-bottom: 3rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: 8px; border-radius: 16px; max-width: 500px; backdrop-filter: blur(10px);">
-            <button id="btn-part-1" onclick="switchPart(1)" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--gold); color: #000; border: none; padding: 0.9rem 1.2rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; text-transform: uppercase; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);">
-                <i data-lucide="play-circle" style="width: 18px; height: 18px;"></i>
-                <span>Part 1: Concept Setup</span>
-            </button>
-            <button id="btn-part-2" onclick="switchPart(2)" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: var(--gray); border: none; padding: 0.9rem 1.2rem; border-radius: 10px; font-weight: 800; font-size: 0.82rem; text-transform: uppercase; cursor: pointer; transition: 0.3s;">
-                <i data-lucide="video" style="width: 18px; height: 18px;"></i>
-                <span>Part 2: Live Execution</span>
-            </button>
-        </div>
+            <!-- Video Section Redirected to Immersive Page -->
 
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Continue Learning</h2>
-        <div class="modules-grid">
-            <div class="module-card" onclick="loadLesson(1)">
-                <div class="module-thumb"><i data-lucide="video" style="width: 40px; height: 40px;"></i></div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <span class="module-tag" style="margin-bottom: 0;">Day 01</span>
-                    <span style="font-size: 0.65rem; background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 2px 8px; border-radius: 4px; font-weight: 700;">2 VIDEOS</span>
+            <h2 style="font-size: 1.5rem; margin-top: 3.5rem; margin-bottom: 1.5rem;">Program Roadmap</h2>
+            <div class="mastery-timeline-container">
+                <div class="mastery-timeline-track"></div>
+
+                <!-- Module 01 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 1)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 01</div>
+                        <h4 class="mastery-timeline-title">MODULE 01 — Financial Market Foundations</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Begin your trading journey by mastering the essential structures of global financial markets, liquidity cycles, and institutional order distribution.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(1); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Financial Market Foundations Intro</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(1); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Institutional Order Flow & Dynamics</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h4>Introduction to Trading Psychology</h4>
-                <div class="module-progress">
-                    <div class="progress-bar" style="width: 100%;"></div>
+
+                <!-- Module 02 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 2)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 02</div>
+                        <h4 class="mastery-timeline-title">MODULE 02 — Charting & Trading Fundamentals</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Learn professional charting standards, key indicator setups, and how to properly map candlestick ranges across different timeframes.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(2); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: High-Timeframe Charting Setups</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(2); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Technical Candlestick Analysis</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p style="font-size: 0.7rem; color: var(--gold); margin-top: 0.5rem; text-align: right;">COMPLETED</p>
+
+                <!-- Module 03 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 3)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 03</div>
+                        <h4 class="mastery-timeline-title">MODULE 03 — Trading Execution Essentials</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Master the mechanics of order execution, slippage reduction, and using market vs limit structures to secure the best entries.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(3); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Instant Order Execution Mechanics</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(3); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Limit & Stop Limit Placements</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 04 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 4)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 04</div>
+                        <h4 class="mastery-timeline-title">MODULE 04 — Trade Management & Market Analysis</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Develop techniques for active position monitoring, dynamic risk adjustment, and drawing precise pre-session analysis.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(4); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Risk Mitigation & Scaling Out</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(4); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Advanced Dynamic Market Analysis</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 05 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 5)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 05</div>
+                        <h4 class="mastery-timeline-title">MODULE 05 — Market Structure</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Understand swing point definition, market fractals, and the mechanics behind structural shifts (BOS and CHoCH).</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(5); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Structural Shifts & Swing Points</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(5); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Break of Structure (BOS) vs CHoCH</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 06 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 6)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 06</div>
+                        <h4 class="mastery-timeline-title">MODULE 06 — Trend Analysis & Market Direction</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Master high-probability trend recognition, multi-timeframe direction alignment, and spotting key reversal zones.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(6); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Advanced Trendline Liquidity</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(6); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Identifying High-Probability Reversals</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 07 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 7)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 07</div>
+                        <h4 class="mastery-timeline-title">MODULE 07 — Key Levels & Market Reaction Zones</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Learn supply/demand block mapping, institutional orderblocks, and how to identify high-probability response areas.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(7); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Supply & Demand Zone Mapping</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(7); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Trading Reactions at Premium Key Levels</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 08 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 8)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 08</div>
+                        <h4 class="mastery-timeline-title">MODULE 08 — Expansion & Retracement , Internal & External Market Structure</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Understand market price expansion cycles, optimal retracement limits, and the relationship between internal and external liquidity ranges.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(8); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Internal vs External Range Liquidity</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(8); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Premium & Discount Price Array Zones</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 09 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 9)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 09</div>
+                        <h4 class="mastery-timeline-title">MODULE 09 — Fibonacci Framework & Market Strength Analysis</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Develop professional Fibonacci setups, drawing parameters, and analyzing the underlying strength of a current trend.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(9); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Correct Fibonacci Plotting Standards</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(9); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Measuring Trend Speed & Confluence</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 10 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 10)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 10</div>
+                        <h4 class="mastery-timeline-title">MODULE 10 — Fibonacci Optimal Trade Entry (OTE)</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Master the optimal entry levels (0.62 to 0.79 retracement values) and align them with high-confluence zones.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(10); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: The OTE Core Mechanics (0.62 - 0.79)</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(10); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: High-Probability OTE Case Studies</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 11 (ACTIVE) -->
+                <div class="mastery-timeline-item active-item" onclick="toggleTimelineItem(this, 11)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node active"><i data-lucide="play" style="width: 10px; height: 10px; fill: #000; color: #000;"></i></div>
+                        <div class="mastery-timeline-day">DAY 11</div>
+                        <h4 class="mastery-timeline-title">MODULE 11 — Structure Break, Liquidity, Stop Hunt & Failure Swing</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: #000; background: var(--gold); padding: 3px 8px; border-radius: 4px; font-weight: 900;">ACTIVE</span>
+                            <span class="mastery-timeline-status active">IN PROGRESS (65%)</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Learn how to spot institutional liquidity sweeps, identify fake structure breaks, and trade failure swings near key peaks.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(11); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Liquidity Sweeps & Stop Hunts</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(11); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Failure Swing Confirmations</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 12 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 12)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node locked"><i data-lucide="lock" style="width: 10px; height: 10px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 12</div>
+                        <h4 class="mastery-timeline-title">MODULE 12 — Power of Two Confirmation Patterns</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gray); background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status locked">LOCKED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Understand the core accumulation, manipulation, and distribution (AMD) cycles to confirm high probability trade entries.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(12); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Accumulation, Manipulation, Distribution</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(12); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Confirming High Probability PO3 Entries</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 13 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 13)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node locked"><i data-lucide="lock" style="width: 10px; height: 10px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 13</div>
+                        <h4 class="mastery-timeline-title">MODULE 13 — Risk Management & Trading Journal Framework</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gray); background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status locked">LOCKED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Apply advanced position calculation models, drawdown controls, and configure a multi-asset trading journal.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(13); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Mathematical Risk-of-Ruin Modeling</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(13); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Building your Multi-Asset Journal</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 14 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 14)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node locked"><i data-lucide="lock" style="width: 10px; height: 10px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 14</div>
+                        <h4 class="mastery-timeline-title">MODULE 14 — Trading Psychology & Emotional Discipline</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gray); background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(1 VIDEO)</span>
+                            <span class="mastery-timeline-status locked">LOCKED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Eliminate emotional pitfalls like FOMO, revenge trading, and over-leveraging using peak performance mental routines.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(14); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Breaking FOMO & Overtrading Cycles</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(14); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Operating in the Peak Performance Zone</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 15 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 15)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node locked"><i data-lucide="lock" style="width: 10px; height: 10px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 15</div>
+                        <h4 class="mastery-timeline-title">MODULE 15 — Capital Growth & Compounding Method</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gray); background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status locked">LOCKED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Scale your trading account through compounding models, prop firm payout optimization, and managed risk increases.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(15); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Compounding Models for Prop Firm Growth</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(15); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Risk Scaling for Exponential Returns</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 16 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 16)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node locked"><i data-lucide="lock" style="width: 10px; height: 10px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 16</div>
+                        <h4 class="mastery-timeline-title">MODULE 16 — Market Recap & Complete Market Flow</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gray); background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status locked">LOCKED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Conduct structured weekly reviews, connect multi-timeframe factors, and map complete system-wide market flows.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(16); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Top-Down Multi-Timeframe Confluence</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(16); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Real-time Analysis Session</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 17 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 17)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node locked"><i data-lucide="lock" style="width: 10px; height: 10px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 17</div>
+                        <h4 class="mastery-timeline-title">MODULE 17 — - Real-Time Trade Execution Examples</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gray); background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status locked">LOCKED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Analyze recorded real-time trade executions with detailed dynamic management and decision processes.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(17); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Live Trade Execution Breakdown</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(17); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Managing Trades in High Volatility Sessions</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 18 -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 18)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node locked"><i data-lucide="lock" style="width: 10px; height: 10px;"></i></div>
+                        <div class="mastery-timeline-day">DAY 18</div>
+                        <h4 class="mastery-timeline-title">MODULE 18 — Key Takeaways For Confident Trading</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gray); background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(2 VIDEOS)</span>
+                            <span class="mastery-timeline-status locked">LOCKED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Summarize core system rules, establish your personalized trading plan, and unlock your final completion certificate.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(18); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 1: Developing the Mastery Blueprint</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(18); switchPart(2);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> Part 2: Final Certificate & Next Steps</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="module-card" onclick="loadLesson(2)">
-                <div class="module-thumb"><i data-lucide="video" style="width: 40px; height: 40px;"></i></div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <span class="module-tag" style="margin-bottom: 0;">Day 02</span>
-                    <span style="font-size: 0.65rem; background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 2px 8px; border-radius: 4px; font-weight: 700;">2 VIDEOS</span>
-                </div>
-                <h4>Technical Analysis Foundations</h4>
-                <div class="module-progress">
-                    <div class="progress-bar" style="width: 40%;"></div>
-                </div>
-                <p style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; text-align: right;">40% COMPLETE</p>
-            </div>
-            <div class="module-card" onclick="loadLesson(3)">
-                <div class="module-thumb"><i data-lucide="lock" style="width: 40px; height: 40px;"></i></div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <span class="module-tag" style="margin-bottom: 0;">Day 03</span>
-                    <span style="font-size: 0.65rem; background: rgba(255, 255, 255, 0.05); color: var(--gray); padding: 2px 8px; border-radius: 4px; font-weight: 700;">2 VIDEOS</span>
-                </div>
-                <h4>Risk Management Framework</h4>
-                <div class="module-progress">
-                    <div class="progress-bar" style="width: 0%;"></div>
-                </div>
-                <p style="font-size: 0.7rem; color: var(--gray); margin-top: 0.5rem; text-align: right;">LOCKED</p>
-            </div>
-        </div>
         </div>
 
     </main>
@@ -837,17 +2440,17 @@
                     const tomorrow = new Date(now);
                     tomorrow.setDate(now.getDate() + 1);
                     tomorrow.setHours(0, 0, 0, 0);
-                    
+
                     const diff = tomorrow - now;
-                    
+
                     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
                     const minutes = Math.floor((diff / (1000 * 60)) % 60);
                     const seconds = Math.floor((diff / 1000) % 60);
-                    
+
                     const h = hours.toString().padStart(2, '0');
                     const m = minutes.toString().padStart(2, '0');
                     const s = seconds.toString().padStart(2, '0');
-                    
+
                     timerDisplay.textContent = `${h}:${m}:${s}`;
                 }
 
@@ -858,6 +2461,19 @@
 
 
             // --- Other Dashboard Logic ---
+            window.toggleTimelineItem = function(itemElement, dayNumber) {
+                if (dayNumber > 11) {
+                    return; // Locked, do not toggle
+                }
+                const allItems = document.querySelectorAll('.mastery-timeline-item');
+                allItems.forEach(item => {
+                    if (item !== itemElement) {
+                        item.classList.remove('expanded');
+                    }
+                });
+                itemElement.classList.toggle('expanded');
+            };
+
             if (window.lucide) {
                 window.lucide.createIcons();
             }
@@ -868,184 +2484,113 @@
             // --- Lessons Database (2 Videos per Day) ---
             const lessonsDatabase = {
                 1: {
-                    title: "Introduction to Trading Psychology",
-                    part1: { title: "Day 01 - Part 1: Emotional Traps & Hard Truths", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 01 - Part 2: Building Emotional Control", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                    title: "Financial Market Foundations",
+                    part1: { title: "Day 01 - Part 1: Financial Market Foundations Intro", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 01 - Part 2: Institutional Order Flow & Dynamics", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
                 },
                 2: {
-                    title: "Technical Analysis Foundations",
-                    part1: { title: "Day 02 - Part 1: Market Structure & Trend Cycles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 02 - Part 2: Liquidity & Supply/Demand Zones", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                    title: "Charting & Trading Fundamentals",
+                    part1: { title: "Day 02 - Part 1: High-Timeframe Charting Setups", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 02 - Part 2: Technical Candlestick Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
                 },
                 3: {
-                    title: "Risk Management Framework",
-                    part1: { title: "Day 03 - Part 1: Position Sizing & Calculation Model", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 03 - Part 2: Dynamic R:R Optimization", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                    title: "Trading Execution Essentials",
+                    part1: { title: "Day 03 - Part 1: Instant Order Execution Mechanics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 03 - Part 2: Limit & Stop Limit Placements", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                4: {
+                    title: "Trade Management & Market Analysis",
+                    part1: { title: "Day 04 - Part 1: Risk Mitigation & Scaling Out", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 04 - Part 2: Advanced Dynamic Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                5: {
+                    title: "Market Structure",
+                    part1: { title: "Day 05 - Part 1: Structural Shifts & Swing Points", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 05 - Part 2: Break of Structure (BOS) vs CHoCH", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                6: {
+                    title: "Trend Analysis & Market Direction",
+                    part1: { title: "Day 06 - Part 1: Advanced Trendline Liquidity", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 06 - Part 2: Identifying High-Probability Reversals", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                7: {
+                    title: "Key Levels & Market Reaction Zones",
+                    part1: { title: "Day 07 - Part 1: Supply & Demand Zone Mapping", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 07 - Part 2: Trading Reactions at Premium Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                8: {
+                    title: "Expansion & Retracement",
+                    part1: { title: "Day 08 - Part 1: Internal vs External Range Liquidity", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 08 - Part 2: Premium & Discount Price Array Zones", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                9: {
+                    title: "Fibonacci Framework & Market Strength Analysis",
+                    part1: { title: "Day 09 - Part 1: Correct Fibonacci Plotting Standards", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 09 - Part 2: Measuring Trend Speed & Confluence", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                10: {
+                    title: "Fibonacci Optimal Trade Entry (OTE)",
+                    part1: { title: "Day 10 - Part 1: The OTE Core Mechanics (0.62 - 0.79)", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 10 - Part 2: High-Probability OTE Case Studies", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                11: {
+                    title: "Structure Break, Liquidity, Stop Hunt & Failure Swing",
+                    part1: { title: "Day 11 - Part 1: Liquidity Sweeps & Stop Hunts", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 11 - Part 2: Failure Swing Confirmations", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                12: {
+                    title: "Power of Two Confirmation Patterns",
+                    part1: { title: "Day 12 - Part 1: Accumulation, Manipulation, Distribution", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 12 - Part 2: Confirming High Probability PO3 Entries", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                13: {
+                    title: "Risk Management & Trading Journal Framework",
+                    part1: { title: "Day 13 - Part 1: Mathematical Risk-of-Ruin Modeling", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 13 - Part 2: Building your Multi-Asset Journal", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                14: {
+                    title: "Trading Psychology & Emotional Discipline",
+                    part1: { title: "Day 14 - Part 1: Breaking FOMO & Overtrading Cycles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 14 - Part 2: Operating in the Peak Performance Zone", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                15: {
+                    title: "Capital Growth & Compounding Method",
+                    part1: { title: "Day 15 - Part 1: Compounding Models for Prop Firm Growth", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 15 - Part 2: Risk Scaling for Exponential Returns", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                16: {
+                    title: "Market Recap & Complete Market Flow",
+                    part1: { title: "Day 16 - Part 1: Top-Down Multi-Timeframe Confluence", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 16 - Part 2: Real-time Analysis Session", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                17: {
+                    title: "Real-Time Trade Execution Examples",
+                    part1: { title: "Day 17 - Part 1: Live Trade Execution Breakdown", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 17 - Part 2: Managing Trades in High Volatility Sessions", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
+                18: {
+                    title: "Key Takeaways For Confident Trading",
+                    part1: { title: "Day 18 - Part 1: Developing the Mastery Blueprint", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 18 - Part 2: Final Certificate & Next Steps", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
                 }
             };
 
             let activeDayNum = 1;
             let activePartNum = 1;
 
-            window.loadLesson = function(dayNumber) {
-                // Check daily unlock first
-                const selectedCourse = localStorage.getItem('selectedCourse');
-                const enrollDateStr = localStorage.getItem('enrollDate');
-                if (enrollDateStr) {
-                    const enrollDate = new Date(enrollDateStr);
-                    const today = new Date();
-                    const diffTime = Math.abs(today - enrollDate);
-                    const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                    const currentDay = daysSinceEnroll + 1;
-                    
-                    const isPreviousDayCompleted = dayNumber === 1 || localStorage.getItem(`completed_day_${dayNumber - 1}`) === 'true';
-                    if (dayNumber > currentDay || !isPreviousDayCompleted) {
-                        return; // card is locked
-                    }
+            window.loadLesson = function (dayNumber) {
+                if (dayNumber > 11) {
+                    return; // Locked
                 }
-
                 activeDayNum = dayNumber;
-                activePartNum = 1;
-
-                // Reset Tab Highlights
-                const btn1 = document.getElementById('btn-part-1');
-                const btn2 = document.getElementById('btn-part-2');
-                if (btn1 && btn2) {
-                    btn1.style.background = 'var(--gold)';
-                    btn1.style.color = '#000';
-                    btn1.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.25)';
-                    
-                    btn2.style.background = 'transparent';
-                    btn2.style.color = 'var(--gray)';
-                    btn2.style.boxShadow = 'none';
-                }
-
-                const lessonData = lessonsDatabase[dayNumber];
-                if (lessonData) {
-                    document.getElementById('lessonTitle').innerText = lessonData.part1.title;
-                    const h3Title = document.querySelector('#course-view h2');
-                    if (h3Title) {
-                        h3Title.innerHTML = `<i data-lucide="play-circle" style="color: var(--gold);"></i> Current Lesson: Day 0${dayNumber}`;
-                    }
-
-                    const videoPlayer = document.getElementById('videoPlayer');
-                    const videoPlaceholder = document.getElementById('mainVideo');
-                    if (videoPlayer && videoPlaceholder) {
-                        videoPlaceholder.style.display = 'flex';
-                        videoPlayer.style.display = 'none';
-                        videoPlayer.src = lessonData.part1.src;
-                        videoPlayer.load();
-                    }
-
-                    // Scroll player smoothly into viewport
-                    const playerContainer = document.querySelector('.video-container');
-                    if (playerContainer) {
-                        playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
-                if (window.lucide) window.lucide.createIcons();
             };
 
-            window.switchPart = function(partNumber) {
-                activePartNum = partNumber;
-                const btn1 = document.getElementById('btn-part-1');
-                const btn2 = document.getElementById('btn-part-2');
-                if (btn1 && btn2) {
-                    if (partNumber === 1) {
-                        btn1.style.background = 'var(--gold)';
-                        btn1.style.color = '#000';
-                        btn1.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.25)';
-                        
-                        btn2.style.background = 'transparent';
-                        btn2.style.color = 'var(--gray)';
-                        btn2.style.boxShadow = 'none';
-                    } else {
-                        btn2.style.background = 'var(--gold)';
-                        btn2.style.color = '#000';
-                        btn2.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.25)';
-                        
-                        btn1.style.background = 'transparent';
-                        btn1.style.color = 'var(--gray)';
-                        btn1.style.boxShadow = 'none';
-                    }
+            window.switchPart = function (partNumber) {
+                if (activeDayNum > 11) {
+                    return; // Locked
                 }
-
-                const lessonData = lessonsDatabase[activeDayNum];
-                if (lessonData) {
-                    const partData = partNumber === 1 ? lessonData.part1 : lessonData.part2;
-                    document.getElementById('lessonTitle').innerText = partData.title;
-
-                    const videoPlayer = document.getElementById('videoPlayer');
-                    const videoPlaceholder = document.getElementById('mainVideo');
-                    if (videoPlayer && videoPlaceholder) {
-                        videoPlaceholder.style.display = 'flex';
-                        videoPlayer.style.display = 'none';
-                        videoPlayer.src = partData.src;
-                        videoPlayer.load();
-                    }
-                }
+                window.location.href = `videoplayer.html?day=${activeDayNum}&part=${partNumber}`;
             };
-
-            videoPlaceholder.addEventListener('click', () => {
-                videoPlaceholder.style.display = 'none';
-                videoPlayer.style.display = 'block';
-                videoPlayer.play();
-            });
-
-            // Update progress bar based on video playback of both parts
-            videoPlayer.addEventListener('timeupdate', () => {
-                const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100;
-                
-                if (percentage >= 98) {
-                    localStorage.setItem(`completed_day_${activeDayNum}_part_${activePartNum}`, 'true');
-                    
-                    const p1 = localStorage.getItem(`completed_day_${activeDayNum}_part_1`) === 'true';
-                    const p2 = localStorage.getItem(`completed_day_${activeDayNum}_part_2`) === 'true';
-                    
-                    let totalProg = 0;
-                    if (p1) totalProg += 50;
-                    if (p2) totalProg += 50;
-                    
-                    const modules = document.querySelectorAll('.module-card');
-                    const currentModule = modules[activeDayNum - 1];
-                    if (currentModule) {
-                        const progressBar = currentModule.querySelector('.progress-bar');
-                        const status = currentModule.querySelector('p:last-child');
-                        
-                        progressBar.style.width = totalProg + '%';
-                        if (totalProg === 100) {
-                            status.innerText = 'COMPLETED';
-                            status.style.color = 'var(--gold)';
-                            localStorage.setItem(`completed_day_${activeDayNum}`, 'true');
-                        } else {
-                            status.innerText = totalProg + '% COMPLETE';
-                            status.style.color = '#28a745';
-                        }
-                    }
-                } else {
-                    const p1 = localStorage.getItem(`completed_day_${activeDayNum}_part_1`) === 'true';
-                    const p2 = localStorage.getItem(`completed_day_${activeDayNum}_part_2`) === 'true';
-                    
-                    let baseProg = 0;
-                    if (activePartNum === 1 && p2) baseProg = 50;
-                    if (activePartNum === 2 && p1) baseProg = 50;
-                    
-                    const currentProg = baseProg + (percentage * 0.5);
-                    const modules = document.querySelectorAll('.module-card');
-                    const currentModule = modules[activeDayNum - 1];
-                    if (currentModule) {
-                        const progressBar = currentModule.querySelector('.progress-bar');
-                        const status = currentModule.querySelector('p:last-child');
-                        
-                        const isAlreadyCompleted = localStorage.getItem(`completed_day_${activeDayNum}`) === 'true';
-                        if (!isAlreadyCompleted) {
-                            progressBar.style.width = currentProg + '%';
-                            status.innerText = Math.floor(currentProg) + '% COMPLETE';
-                            status.style.color = '#28a745';
-                        }
-                    }
-                }
-            });
 
             // Display selected course info from localStorage
             const selectedCourse = localStorage.getItem('selectedCourse');
@@ -1075,14 +2620,25 @@
             }
 
             // --- Navigation Logic ---
-            window.switchView = function(viewId, activeNavId) {
+            const journalView = document.getElementById('journal-view');
+            const navJournal = document.getElementById('nav-journal');
+
+            window.switchView = function (viewId, activeNavId) {
                 dashboardView.style.display = 'none';
                 courseView.style.display = 'none';
-                
+                if (journalView) journalView.style.display = 'none';
+
+                const welcomeHeader = document.querySelector('.dashboard-header-premium');
+
                 if (viewId === 'dashboard-view') {
                     dashboardView.style.display = 'block';
+                    if (welcomeHeader) welcomeHeader.style.display = 'flex';
                 } else if (viewId === 'course-view') {
                     courseView.style.display = 'block';
+                    if (welcomeHeader) welcomeHeader.style.display = 'none';
+                } else if (viewId === 'journal-view') {
+                    if (journalView) journalView.style.display = 'flex';
+                    if (welcomeHeader) welcomeHeader.style.display = 'none';
                 }
 
                 document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -1100,6 +2656,13 @@
                     e.preventDefault();
                     window.switchView('course-view', 'nav-mastery');
                 });
+            }
+
+            // Check if redirecting with specific tab
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (tabParam === 'journal') {
+                window.location.replace('executionjournal.html');
             }
 
             // Load saved user name dynamically for the dashboard welcome header
@@ -1126,10 +2689,16 @@
 
                 const initialLessonData = lessonsDatabase[currentDay];
                 if (initialLessonData) {
-                    document.getElementById('lessonTitle').innerText = initialLessonData.part1.title;
+                    const lessonTitleEl = document.getElementById('lessonTitle');
+                    if (lessonTitleEl) {
+                        lessonTitleEl.innerText = initialLessonData.part1.title;
+                    }
                     activeDayNum = currentDay;
                 } else {
-                    document.getElementById('lessonTitle').innerText = "Day 0" + currentDay + ": Lesson for " + (selectedCourse || "Program");
+                    const lessonTitleEl = document.getElementById('lessonTitle');
+                    if (lessonTitleEl) {
+                        lessonTitleEl.innerText = "Day 0" + currentDay + ": Lesson for " + (selectedCourse || "Program");
+                    }
                 }
 
                 const modules = document.querySelectorAll('.module-card');
@@ -1148,14 +2717,14 @@
                         module.style.pointerEvents = 'auto';
                         thumb.innerHTML = '<i data-lucide="video" style="width: 40px; height: 40px;"></i>';
                         if (progressContainer) progressContainer.style.display = 'block';
-                        
+
                         const p1 = localStorage.getItem(`completed_day_${moduleDay}_part_1`) === 'true';
                         const p2 = localStorage.getItem(`completed_day_${moduleDay}_part_2`) === 'true';
-                        
+
                         let totalProg = 0;
                         if (p1) totalProg += 50;
                         if (p2) totalProg += 50;
-                        
+
                         progressBar.style.width = totalProg + '%';
                         if (totalProg === 100) {
                             status.innerText = 'COMPLETED';
@@ -1185,6 +2754,26 @@
 
             if (window.lucide) window.lucide.createIcons();
 
+            // --- Program Roadmap Toggle Controller ---
+            window.toggleRoadmap = () => {
+                const list = document.getElementById('roadmapList');
+                const btn = document.getElementById('roadmapToggleBtn');
+                if (list && btn) {
+                    if (list.classList.contains('collapsed')) {
+                        list.classList.remove('collapsed');
+                        btn.textContent = 'Close Roadmap';
+                    } else {
+                        list.classList.add('collapsed');
+                        btn.textContent = 'View Full Roadmap';
+                        // Scroll back to card header smoothly when collapsing
+                        const roadmapCard = document.querySelector('.roadmap-card');
+                        if (roadmapCard) {
+                            roadmapCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                }
+            };
+
             // Profile Dropdown Toggle
             const profileTrigger = document.getElementById('profileTrigger');
             const profileDropdown = document.getElementById('profileDropdown');
@@ -1206,7 +2795,7 @@
             // --- Mobile Sliding Menu Drawer Toggle ---
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const sidebar = document.querySelector('.sidebar');
-            
+
             if (mobileMenuBtn && sidebar) {
                 mobileMenuBtn.addEventListener('click', (e) => {
                     e.stopPropagation();

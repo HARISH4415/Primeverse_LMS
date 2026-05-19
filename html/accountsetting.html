@@ -19,7 +19,7 @@
 
         body {
             background-color: var(--navy);
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Satoshi', sans-serif;
             font-weight: 500;
             display: flex;
             height: 100vh;
@@ -350,45 +350,84 @@
             height: 12px;
         }
 
-        /* Achievements section */
-        .achievements-section {
+        /* Active Program Card styling */
+        .active-program-section {
             width: 100%;
             display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
+            justify-content: center;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             padding-top: 1.5rem;
             margin-bottom: 1.5rem;
             z-index: 1;
         }
 
-        .achievement-item {
+        .active-program-card {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 0.8rem 1rem;
-            border-radius: 12px;
-            color: var(--gray);
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: 0.3s;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 1.2rem;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 250px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .achievement-item.active {
-            background: rgba(212, 175, 55, 0.03);
-            border-color: rgba(212, 175, 55, 0.15);
-            color: var(--white);
+        .active-program-card:hover {
+            border-color: rgba(212, 175, 55, 0.25);
+            background: rgba(212, 175, 55, 0.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .achievement-item.active i {
+        .active-program-icon-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.06);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.08);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .active-program-card:hover .active-program-icon-circle {
+            transform: scale(1.05);
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .active-program-icon-circle i {
+            width: 20px;
+            height: 20px;
             color: var(--gold);
+            fill: var(--gold);
         }
 
-        .achievement-item i {
-            width: 18px;
-            height: 18px;
+        .active-program-text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: left;
+        }
+
+        .active-program-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--gray);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .active-program-name {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--white);
+            margin: 0;
+            letter-spacing: 0.3px;
         }
 
         /* Status panel */
@@ -440,142 +479,328 @@
             100% { opacity: 0.3; }
         }
 
-        /* --- Right Column: Cyber Form --- */
+        /* --- Right Column: Premium Side-by-Side Form --- */
+        .settings-right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 100%;
+        }
+
         .cyber-form-wrapper {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--glass-border);
-            padding: 3.5rem;
+            padding: 3rem;
             border-radius: 24px;
             backdrop-filter: blur(15px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .cyber-input-group {
             margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
         }
 
-        .cyber-input-group label {
+        .form-row-premium {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .form-row-label-block {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.72rem;
-            font-weight: 800;
-            color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            gap: 12px;
         }
 
-        .cyber-input-group label i {
-            width: 14px;
-            height: 14px;
-            color: var(--gold);
-        }
-
-        .input-glow-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .input-glow-wrapper input {
-            width: 100%;
-            padding: 1.2rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            font-size: 1rem;
-            color: var(--white);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .input-glow-wrapper input:focus {
-            outline: none;
-            border-color: rgba(212, 175, 55, 0.5) !important;
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.08);
-        }
-
-        .input-line-effect {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: var(--gold);
-            transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            transform: translateX(-50%);
-        }
-
-        .input-glow-wrapper input:focus + .input-line-effect {
-            width: 100%;
-        }
-
-        /* --- Futuristic Buttons --- */
-        .cyber-submit-btn {
-            position: relative;
-            width: 100%;
-            padding: 1.2rem;
-            background: var(--gold);
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            overflow: hidden;
+        .row-icon-wrapper {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.3s;
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
+            color: var(--gray);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
         }
 
-        .cyber-submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
+        .form-row-premium:hover .row-icon-wrapper {
+            border-color: rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.04);
+        }
+
+        .row-icon-wrapper i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .row-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .row-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--white);
+            font-family: 'Satoshi', sans-serif;
+        }
+
+        .row-subtitle {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #6f82a1;
+        }
+
+        .form-row-input-block {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
+            position: relative;
         }
 
-        .cyber-submit-btn:hover::before {
-            left: 100%;
+        .form-row-input-block input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(13, 21, 33, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--white);
+            font-family: 'Satoshi', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .cyber-submit-btn:hover {
-            transform: translateY(-2px);
-            background: #fff;
-            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4);
+        .form-row-input-block input:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.4) !important;
+            background: rgba(13, 21, 33, 0.7);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.06);
         }
 
-        .cyber-submit-btn:hover .btn-text {
-            color: #000;
-        }
-
-        .cyber-submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-text {
+        /* Password field visibility toggle */
+        .password-input-container {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
-            font-weight: 900;
-            color: #000;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: 0.3s;
-            z-index: 1;
         }
 
-        .btn-text i {
+        .password-toggle-btn {
+            position: absolute;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--white);
+        }
+
+        .password-toggle-btn i {
             width: 18px;
             height: 18px;
+        }
+
+        /* Redesigned Button Actions Row */
+        .form-actions-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cyber-submit-btn-premium {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 1.1rem 2rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+            flex-grow: 1;
+        }
+
+        .cyber-submit-btn-premium:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(135deg, #f4c430, #ffdb58);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
+        }
+
+        .cyber-submit-btn-premium:active {
+            transform: translateY(0) scale(1);
+        }
+
+        .cyber-submit-btn-premium:hover i {
+            animation: btn-spin 1.2s linear infinite;
+        }
+
+        @keyframes btn-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cyber-submit-btn-premium i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .cyber-reset-btn-premium {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1.1rem 2rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-grow: 1;
+        }
+
+        .cyber-reset-btn-premium:hover {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.03);
+            transform: translateY(-2px);
+        }
+
+        /* --- Premium Account Security Panel --- */
+        .security-status-panel-premium {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .security-left-block {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .security-shield-icon {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--gold);
+            flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.1);
+        }
+
+        .security-shield-icon i {
+            width: 22px;
+            height: 22px;
+            fill: rgba(212, 175, 55, 0.1);
+        }
+
+        .security-text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: left;
+        }
+
+        .security-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--white);
+            font-family: 'Satoshi', sans-serif;
+        }
+
+        .security-subtitle {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .security-history-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--white);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .security-history-btn:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .security-history-btn i {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .security-history-btn:hover i {
+            transform: translateX(2px);
+        }
+
+        @media (max-width: 768px) {
+            .form-row-premium {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+            .form-actions-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .cyber-submit-btn-premium, .cyber-reset-btn-premium {
+                width: 100%;
+            }
+            .security-status-panel-premium {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.25rem;
+                padding: 1.5rem;
+            }
+            .security-history-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         /* --- Glitch Overlay Sync Effect --- */
@@ -660,8 +885,8 @@
                 <a href="dashboard.html" class="nav-item" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
                 <a href="dashboard.html" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
                 <a href="dashboard.html" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
-                <a href="#" class="nav-item"><i data-lucide="book-marked"></i> Execution Journal</a>
-                <a href="#" class="nav-item"><i data-lucide="users"></i> PrimeVerse Community</a>
+                <a href="executionjournal.html" class="nav-item"><i data-lucide="book-marked"></i> Execution Journal</a>
+                <a href="communitypage.html" class="nav-item" id="nav-community"><i data-lucide="users"></i> PrimeVerse Community</a>
                 <a href="accountsetting.html" class="nav-item active" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
             </div>
             <div class="nav-bottom">
@@ -716,54 +941,121 @@
                     <h3 id="profileSubName" class="profile-display-name">Alex Carter</h3>
                     <div class="trader-tier-tag"><i data-lucide="zap"></i> VERIFIED TRADER</div>
 
-                    <!-- Achievements & Status Indicators -->
-                    <div class="achievements-section">
-                        <div class="achievement-item active" title="Risk Management Certification">
-                            <i data-lucide="shield"></i>
-                            <span>Risk Controller</span>
-                        </div>
-                        <div class="achievement-item active" title="Consistency Streak">
-                            <i data-lucide="flame"></i>
-                            <span>Discipline Node</span>
-                        </div>
-                        <div class="achievement-item active" title="100% Completion Badge">
-                            <i data-lucide="award"></i>
-                            <span>Elite Protocol</span>
+                    <!-- Active Program Gated Card -->
+                    <div class="active-program-section">
+                        <div class="active-program-card">
+                            <div class="active-program-icon-circle">
+                                <i data-lucide="crown"></i>
+                            </div>
+                            <div class="active-program-text-block">
+                                <span class="active-program-label">Active Program</span>
+                                <h4 class="active-program-name" id="activeProgramName">PrimeVerse Mastery Program</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Premium Glowing Form -->
-                <div class="cyber-form-wrapper">
-                    <form id="settingsForm">
-                        <div class="cyber-input-group">
-                            <label><i data-lucide="user"></i> TRADER CALLSIGN (FULL NAME)</label>
-                            <div class="input-glow-wrapper">
-                                <input type="text" id="settingsName" required autocomplete="off">
-                                <span class="input-line-effect"></span>
+                <!-- Right Column Stack Wrapper -->
+                <div class="settings-right-column">
+                    <!-- Right Column: Premium Side-by-Side Form -->
+                    <div class="cyber-form-wrapper">
+                        <form id="settingsForm">
+                            <!-- Row 1: Trader Name -->
+                            <div class="form-row-premium">
+                                <div class="form-row-label-block">
+                                    <div class="row-icon-wrapper">
+                                        <i data-lucide="contact"></i>
+                                    </div>
+                                    <div class="row-text-wrapper">
+                                        <span class="row-title">Trader Name</span>
+                                        <span class="row-subtitle">Your full name</span>
+                                    </div>
+                                </div>
+                                <div class="form-row-input-block">
+                                    <input type="text" id="settingsName" required autocomplete="off">
+                                </div>
+                            </div>
+
+                            <!-- Row 2: Email Address -->
+                            <div class="form-row-premium">
+                                <div class="form-row-label-block">
+                                    <div class="row-icon-wrapper">
+                                        <i data-lucide="mail"></i>
+                                    </div>
+                                    <div class="row-text-wrapper">
+                                        <span class="row-title">Email Address</span>
+                                        <span class="row-subtitle">Your registered email</span>
+                                    </div>
+                                </div>
+                                <div class="form-row-input-block">
+                                    <input type="email" id="settingsEmail" required autocomplete="off">
+                                </div>
+                            </div>
+
+                            <!-- Row 3: Phone Number -->
+                            <div class="form-row-premium">
+                                <div class="form-row-label-block">
+                                    <div class="row-icon-wrapper">
+                                        <i data-lucide="phone"></i>
+                                    </div>
+                                    <div class="row-text-wrapper">
+                                        <span class="row-title">Phone Number</span>
+                                        <span class="row-subtitle">Your mobile number</span>
+                                    </div>
+                                </div>
+                                <div class="form-row-input-block">
+                                    <input type="tel" id="settingsPhone" required autocomplete="off">
+                                </div>
+                            </div>
+
+                            <!-- Row 4: Password -->
+                            <div class="form-row-premium">
+                                <div class="form-row-label-block">
+                                    <div class="row-icon-wrapper">
+                                        <i data-lucide="lock"></i>
+                                    </div>
+                                    <div class="row-text-wrapper">
+                                        <span class="row-title">Password</span>
+                                        <span class="row-subtitle">Enter new password</span>
+                                    </div>
+                                </div>
+                                <div class="form-row-input-block password-input-container">
+                                    <input type="password" id="settingsPassword" value="••••••••" required autocomplete="new-password">
+                                    <button type="button" class="password-toggle-btn" id="toggleSettingsPassword">
+                                        <i data-lucide="eye" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions Row -->
+                            <div class="form-actions-row">
+                                <button type="submit" class="cyber-submit-btn-premium">
+                                    <i data-lucide="refresh-cw"></i>
+                                    <span>UPDATE SETTINGS</span>
+                                </button>
+                                <button type="button" class="cyber-reset-btn-premium" id="resetPasswordBtn">
+                                    <span>RESET PASSWORD</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Premium Account Security Panel -->
+                    <div class="security-status-panel-premium">
+                        <div class="security-left-block">
+                            <div class="security-shield-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <div class="security-text-block">
+                                <span class="security-title">Your account is secure</span>
+                                <span class="security-subtitle">Last login: 18 May 2025 • 10:45 AM</span>
                             </div>
                         </div>
-
-                        <div class="cyber-input-group">
-                            <label><i data-lucide="mail"></i> COMMUNICATIONS VECTOR (EMAIL)</label>
-                            <div class="input-glow-wrapper">
-                                <input type="email" id="settingsEmail" required autocomplete="off">
-                                <span class="input-line-effect"></span>
-                            </div>
-                        </div>
-
-                        <div class="cyber-input-group">
-                            <label><i data-lucide="smartphone"></i> SECURE CALLSIGN LINE (PHONE)</label>
-                            <div class="input-glow-wrapper">
-                                <input type="tel" id="settingsPhone" required autocomplete="off">
-                                <span class="input-line-effect"></span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="cyber-submit-btn">
-                            <span class="btn-text"><i data-lucide="save"></i> UPDATE</span>
+                        <button class="security-history-btn" type="button">
+                            <span>Login History</span>
+                            <i data-lucide="chevron-right"></i>
                         </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -832,10 +1124,10 @@
             const settingsPhoneInput = document.getElementById('settingsPhone');
             const syncOverlay = document.getElementById('syncOverlay');
 
-            // Load saved user details or use defaults
-            const savedName = localStorage.getItem('userName') || 'Alex Carter';
-            const savedEmail = localStorage.getItem('userEmail') || 'alex.carter@example.com';
-            const savedPhone = localStorage.getItem('userPhone') || '+1 (555) 019-2834';
+            // Load saved user details or use defaults (matching Ganesh Kumar from design mockup)
+            const savedName = localStorage.getItem('userName') || 'Ganesh Kumar';
+            const savedEmail = localStorage.getItem('userEmail') || 'ganesh@primeverse.pro';
+            const savedPhone = localStorage.getItem('userPhone') || '+91 9342995956';
 
             // Calculate initials
             function getInitials(name) {
@@ -856,6 +1148,55 @@
             if (welcomeUserName) welcomeUserName.innerText = savedName;
             if (profileSubName) profileSubName.innerText = savedName;
             if (avatarInitials) avatarInitials.innerText = getInitials(savedName);
+
+            // Populate active program name dynamically
+            const activeProgramNameEl = document.getElementById('activeProgramName');
+            if (activeProgramNameEl) {
+                let courseName = localStorage.getItem('selectedCourse') || 'PrimeVerse Mastery Program';
+                // Clean up "Program" at the end to match screen mockup
+                courseName = courseName.replace(/\s+Program$/i, '');
+                activeProgramNameEl.innerText = courseName;
+            }
+
+            // Settings password visibility toggle
+            const toggleSettingsPassword = document.getElementById('toggleSettingsPassword');
+            const settingsPasswordInput = document.getElementById('settingsPassword');
+            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+            
+            if (toggleSettingsPassword && settingsPasswordInput) {
+                toggleSettingsPassword.addEventListener('click', () => {
+                    const isPassword = settingsPasswordInput.getAttribute('type') === 'password';
+                    settingsPasswordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                    
+                    if (togglePasswordIcon) {
+                        if (isPassword) {
+                            togglePasswordIcon.setAttribute('data-lucide', 'eye-off');
+                        } else {
+                            togglePasswordIcon.setAttribute('data-lucide', 'eye');
+                        }
+                        if (window.lucide) {
+                            window.lucide.createIcons();
+                        }
+                    }
+                });
+            }
+
+            // Simulate Reset Password functionality
+            const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+            if (resetPasswordBtn) {
+                resetPasswordBtn.addEventListener('click', () => {
+                    if (settingsPasswordInput) {
+                        settingsPasswordInput.value = '';
+                        settingsPasswordInput.setAttribute('type', 'text');
+                        settingsPasswordInput.placeholder = 'Type new password...';
+                        settingsPasswordInput.focus();
+                        if (togglePasswordIcon && window.lucide) {
+                            togglePasswordIcon.setAttribute('data-lucide', 'eye');
+                            window.lucide.createIcons();
+                        }
+                    }
+                });
+            }
 
             // Handle Futuristic Save Changes Sequence
             if (settingsForm) {

@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeVerse Community | LMS</title>
+    <link rel="icon" type="image/png" href="../assets/login.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: var(--navy);
+            font-family: 'Satoshi', sans-serif;
+            font-weight: 500;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--white);
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--navy-dark);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            margin-bottom: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .nav-bottom {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--gray);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--glass);
+            color: var(--gold);
+            border-radius: 8px;
+        }
+
+        .nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* --- Main Content --- */
+        .main-dash {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Community Chat Layout --- */
+        .community-container {
+            flex: 1;
+            display: flex;
+            height: calc(100vh - 80px);
+            background: rgba(5, 10, 18, 0.4);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        /* Left Channel Sidebar */
+        .channel-sidebar {
+            width: 260px;
+            background: rgba(7, 13, 25, 0.6);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+            gap: 1.5rem;
+        }
+
+        .channel-section-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding-left: 0.5rem;
+        }
+
+        .channel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            color: var(--gray);
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .channel-item:hover,
+        .channel-item.active {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--white);
+        }
+
+        .channel-item.active {
+            border-left: 3px solid var(--gold);
+            border-radius: 0 10px 10px 0;
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, transparent 100%);
+            color: var(--gold) !important;
+        }
+
+        .channel-left-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .channel-badge-unread {
+            background: var(--gold);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 20px;
+        }
+
+        /* Center Chat Window */
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(10, 17, 28, 0.2);
+            position: relative;
+        }
+
+        /* Top bar info */
+        .chat-header {
+            height: 75px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .chat-header-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .chat-channel-name {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Satoshi', sans-serif;
+        }
+
+        .chat-channel-subtitle {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
+        }
+
+        /* Role Switcher floating widget */
+        .role-switcher-badge {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .role-switcher-badge:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+        }
+
+        .role-switcher-badge.admin-active {
+            background: rgba(212, 175, 55, 0.08);
+            border-color: rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Message feed container */
+        .chat-messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+        }
+
+        .chat-messages-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* System Info Day Separator */
+        .chat-day-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .chat-day-separator::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.03);
+            z-index: 1;
+        }
+
+        .chat-day-text {
+            background: var(--navy);
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: var(--gray);
+            letter-spacing: 1px;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            text-transform: uppercase;
+        }
+
+        /* Premium message bubble */
+        .message-bubble {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+            align-self: flex-start;
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            text-align: left;
+        }
+
+        .sender-avatar-container {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1.5px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+
+        .message-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .message-header-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sender-name {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--white);
+            font-family: 'Satoshi', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sender-badge-verified {
+            display: inline-flex;
+            align-items: center;
+            color: var(--gold);
+        }
+
+        .sender-badge-verified i {
+            width: 13px;
+            height: 13px;
+            fill: currentColor;
+        }
+
+        .sender-title {
+            font-size: 0.65rem;
+            font-weight: 900;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: var(--gold);
+            padding: 1px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .message-timestamp {
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+        }
+
+        .message-body-box {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--glass-border);
+            padding: 1rem 1.25rem;
+            border-radius: 4px 16px 16px 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1dce8;
+            backdrop-filter: blur(5px);
+        }
+
+        .message-body-box p {
+            margin: 0;
+        }
+
+        /* Floating action overlay / lock */
+        .chat-input-bar-area {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .chat-lock-container {
+            background: rgba(5, 10, 18, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--gray);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-lock-container i {
+            width: 16px;
+            height: 16px;
+            color: var(--gold);
+        }
+
+        /* Active chat input styling */
+        .chat-input-active-container {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 6px 6px 6px 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .chat-input-active-container:focus-within {
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .chat-text-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--white);
+            font-family: 'Satoshi', sans-serif;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        .chat-text-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-send-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+            background: #e5bd42;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .chat-send-btn i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Top Mobile Bar */
+        .mobile-nav-bar {
+            display: none;
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow-x: hidden;
+                overflow-y: auto !important;
+            }
+
+            .sidebar {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                z-index: 1000;
+                box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            .mobile-nav-bar {
+                display: flex !important;
+            }
+
+            .main-dash {
+                height: calc(100vh - 65px);
+            }
+
+            .community-container {
+                height: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .channel-sidebar {
+                display: none;
+            }
+            
+            .chat-header {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="dashboard.html" class="logo-wrap" style="gap: 8px !important; text-decoration: none;">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 40px; display: block;">
+                <div class="logo-info">
+                    <div class="logo-text">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
+                    <div class="logo-tagline" style="font-size: 0.45rem; letter-spacing: 0.5px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                </div>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-top">
+                <a href="dashboard.html" class="nav-item" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="dashboard.html" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
+                <a href="dashboard.html" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
+                <a href="executionjournal.html" class="nav-item" id="nav-journal"><i data-lucide="book-marked"></i> Execution Journal</a>
+                <a href="communitypage.html" class="nav-item active" id="nav-community"><i data-lucide="users"></i> PrimeVerse Community</a>
+                <a href="accountsetting.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
+            </div>
+            <div class="nav-bottom">
+                <a href="../index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i> Logout</a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-dash">
+        <!-- Mobile Navigation Header -->
+        <div class="mobile-nav-bar" style="display: none; justify-content: space-between; align-items: center; background: var(--navy-dark); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 99; backdrop-filter: blur(10px);">
+            <a href="dashboard.html" class="logo-wrap" style="gap: 8px !important; text-decoration: none;">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo" style="height: 30px; display: block;">
+                <div class="logo-info">
+                    <div class="logo-text" style="font-size: 1.1rem !important;">PRIME<span class="gold-text" style="color: var(--gold);">VERSE</span></div>
+                    <div class="logo-tagline" style="font-size: 0.4rem; letter-spacing: 0.3px;">CLARITY • DISCIPLINE • CONSISTENCY</div>
+                </div>
+            </a>
+            <button id="mobileMenuBtn" style="background: transparent; border: none; color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none;">
+                <i data-lucide="menu" style="width: 26px; height: 26px;"></i>
+            </button>
+        </div>
+
+        <!-- Community Page Content -->
+        <div class="community-container">
+            <!-- Center Chat Panel -->
+            <section class="chat-window">
+                <!-- Chat Window Top Bar -->
+                <header class="chat-header">
+                    <div class="chat-header-info">
+                        <div class="chat-channel-name">
+                            <i data-lucide="megaphone" style="width: 20px; height: 20px; color: var(--gold);"></i>
+                            <span>#announcements</span>
+                        </div>
+                        <div class="chat-channel-subtitle">
+                            <span><span class="online-dot"></span> 1,357 Traders Enrolled</span>
+                            <span style="color: rgba(255,255,255,0.1);">|</span>
+                            <span>Official Broadcast Only</span>
+                        </div>
+                    </div>
+
+                    <!-- Sleek Admin Identity Badge -->
+                    <div class="role-switcher-badge admin-active" style="cursor: default;">
+                        <i data-lucide="shield-check" style="width: 14px; height: 14px; color: var(--gold);"></i>
+                        <span>Admin Console: Ganesh Kumar ✔️</span>
+                    </div>
+                </header>
+
+                <!-- Message Feed container -->
+                <div class="chat-messages-container" id="chatFeed">
+                    <!-- Day Separator -->
+                    <div class="chat-day-separator">
+                        <span class="chat-day-text">Yesterday</span>
+                    </div>
+
+                    <!-- Message 1 -->
+                    <div class="message-bubble">
+                        <div class="sender-avatar-container">GK</div>
+                        <div class="message-content-wrapper">
+                            <div class="message-header-meta">
+                                <span class="sender-name">
+                                    <span>Ganesh Kumar</span>
+                                    <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
+                                </span>
+                                <span class="sender-title">Founder</span>
+                                <span class="message-timestamp">09:12 AM</span>
+                            </div>
+                            <div class="message-body-box">
+                                <p>Welcome to the official PrimeVerse announcements feed! All major trade guidelines, setups, and platform announcements will be posted directly here by myself and the support team. Make sure notifications are turned ON. Let's achieve consistency together. 🚀</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message 2 -->
+                    <div class="message-bubble">
+                        <div class="sender-avatar-container">PA</div>
+                        <div class="message-content-wrapper">
+                            <div class="message-header-meta">
+                                <span class="sender-name">
+                                    <span>PrimeVerse Support</span>
+                                    <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
+                                </span>
+                                <span class="sender-title">Admin</span>
+                                <span class="message-timestamp">02:30 PM</span>
+                            </div>
+                            <div class="message-body-box">
+                                <p>💡 <strong>Quick Tip:</strong> Remember to download the updated **Execution Journal Excel Sheet** from the Execution Journal tab on your sidebar. Standardizing trade reviews is the fastest way to trace execution leaks!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Day Separator -->
+                    <div class="chat-day-separator" id="todaySeparator">
+                        <span class="chat-day-text">Today</span>
+                    </div>
+
+                    <!-- Message 3 -->
+                    <div class="message-bubble">
+                        <div class="sender-avatar-container">GK</div>
+                        <div class="message-content-wrapper">
+                            <div class="message-header-meta">
+                                <span class="sender-name">
+                                    <span>Ganesh Kumar</span>
+                                    <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
+                                </span>
+                                <span class="sender-title">Founder</span>
+                                <span class="message-timestamp">09:05 AM</span>
+                            </div>
+                            <div class="message-body-box">
+                                <p>Morning traders. Nifty opened with a slight gap up, test-rejection at the daily key supply. I am sitting on my hands and wait for structured setups. Avoid chasing the morning noise. Patience pays. 📉📊</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input / Admin Broadcasting Console -->
+                <div class="chat-input-bar-area" id="chatInputArea">
+                    <div class="chat-input-active-container" id="chatActiveContainer">
+                        <input type="text" class="chat-text-input" id="messageInput" placeholder="Type an official announcement to broadcast to all traders..." autocomplete="off">
+                        <button class="chat-send-btn" id="sendBtn">
+                            <i data-lucide="send"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.replace('../index.html?login=true');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+
+            // Mobile menu drawer
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.querySelector('.sidebar');
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('active');
+                });
+
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        sidebar.classList.remove('active');
+                    });
+                });
+            }
+
+            // Dynamic Program Sidebar menu tab visibility
+            const selectedCourse = localStorage.getItem('selectedCourse');
+            const navMastery = document.getElementById('nav-mastery');
+            const navMentorship = document.getElementById('nav-mentorship');
+            if (selectedCourse) {
+                if (selectedCourse.includes('Mastery')) {
+                    if (navMastery) navMastery.style.display = 'flex';
+                } else if (selectedCourse.includes('Mentorship')) {
+                    if (navMentorship) navMentorship.style.display = 'flex';
+                }
+            }
+
+            // Active Admin Broadcasting Console Logic
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const chatFeed = document.getElementById('chatFeed');
+
+            // Function to post a message
+            const postMessage = () => {
+                const text = messageInput.value.trim();
+                if (!text) return;
+
+                // Format current time
+                const now = new Date();
+                let hours = now.getHours();
+                let minutes = now.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // 12 instead of 0
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                const timeString = `${hours}:${minutes} ${ampm}`;
+
+                // Create message element
+                const msgBubble = document.createElement('div');
+                msgBubble.className = 'message-bubble';
+                msgBubble.innerHTML = `
+                    <div class="sender-avatar-container">GK</div>
+                    <div class="message-content-wrapper">
+                        <div class="message-header-meta">
+                            <span class="sender-name">
+                                <span>Ganesh Kumar</span>
+                                <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
+                            </span>
+                            <span class="sender-title">Founder</span>
+                            <span class="message-timestamp">${timeString}</span>
+                        </div>
+                        <div class="message-body-box">
+                            <p>${escapeHTML(text)}</p>
+                        </div>
+                    </div>
+                `;
+
+                // Append and scroll
+                chatFeed.appendChild(msgBubble);
+                chatFeed.scrollTop = chatFeed.scrollHeight;
+
+                // Reset field
+                messageInput.value = '';
+
+                // Create Lucide icons for the new message
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            };
+
+            const escapeHTML = (str) => {
+                return str.replace(/[&<>'"]/g, 
+                    tag => ({
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        "'": '&#39;',
+                        '"': '&quot;'
+                    }[tag] || tag)
+                );
+            };
+
+            // Input triggers
+            if (messageInput) {
+                messageInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        postMessage();
+                    }
+                });
+            }
+
+            if (sendBtn) {
+                sendBtn.addEventListener('click', postMessage);
+            }
+
+            // Scroll chat feed to bottom on load
+            if (chatFeed) {
+                chatFeed.scrollTop = chatFeed.scrollHeight;
+            }
+        });
+    </script>
+</body>
+
+</html>

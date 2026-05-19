@@ -1,3 +1,5 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap');
+
 :root {
     --navy: #0d1521;
     --navy-dark: #050E1C;
@@ -20,8 +22,8 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500; /* Montserrat Medium for body */
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 500; /* Satoshi Medium for body */
     background-color: var(--navy);
     color: var(--white);
     line-height: 1.6;
@@ -107,7 +109,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 700; /* Montserrat Bold for headings */
+    font-weight: 700; /* Satoshi Bold for headings */
     text-transform: uppercase;
     letter-spacing: -0.5px;
 }
@@ -756,7 +758,7 @@ h6 {
 }
 
 .module-code {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Satoshi', sans-serif;
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--gray);
@@ -1913,7 +1915,7 @@ h6 {
 
 .prime-snackbar-message {
     color: var(--white);
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Satoshi', sans-serif;
     font-weight: 700;
     font-size: 0.95rem;
     letter-spacing: 0.5px;

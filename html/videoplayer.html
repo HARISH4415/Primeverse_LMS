@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../assets/login.png">
+    <title>Immersive Learning Player | PrimeVerse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --sidebar-width: 320px;
+            --header-height: 70px;
+        }
+
+        body {
+            background-color: #030812;
+            font-family: 'Satoshi', sans-serif;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--white);
+            margin: 0;
+        }
+
+        /* --- IMMERSIVE PLAYER HEADER --- */
+        .player-header {
+            height: var(--header-height);
+            background: rgba(13, 21, 33, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .back-dashboard-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .back-dashboard-btn:hover {
+            color: var(--gold);
+            border-color: rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.05);
+            transform: translateX(-4px);
+        }
+
+        .player-logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .player-logo-wrap img {
+            height: 34px;
+        }
+
+        .player-logo-text {
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            color: var(--white);
+        }
+
+        .player-logo-text span {
+            color: var(--gold);
+        }
+
+        .active-module-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.04);
+            padding: 0.5rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .active-module-badge span {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* --- MAIN WORKSPACE --- */
+        .workspace {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - var(--header-height));
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- VIDEO WORKSTATION CONTAINER --- */
+        .video-workstation {
+            flex: 1;
+            background: #02060f;
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem;
+            overflow-y: auto;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Ambient Glow behind player */
+        .player-ambient-glow {
+            position: absolute;
+            top: 10%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.035) 0%, transparent 70%);
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .video-frame-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* THEATRIC CINEMATIC PLAYER WRAPPER */
+        .cinematic-player-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #050a14;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.02);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cinematic-player-wrap:hover {
+            border-color: rgba(212, 175, 55, 0.15);
+        }
+
+        .custom-video {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* PLAY OVERLAY */
+        .player-cover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(7, 13, 25, 0.75) 0%, rgba(3, 8, 18, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .large-play-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.35), 0 0 50px rgba(212, 175, 55, 0.15);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .player-cover-overlay:hover .large-play-icon {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.25);
+        }
+
+        .large-play-icon i {
+            margin-left: 6px;
+        }
+
+        .player-cover-overlay h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .player-cover-overlay p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- PLAYER CONTROL META & CONTEXT --- */
+        .player-context-box {
+            margin-top: 2rem;
+            background: rgba(13, 21, 33, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .context-left {
+            flex: 1.3;
+        }
+
+        .context-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+
+        .context-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .context-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--white);
+            margin: 0 0 0.5rem 0;
+            line-height: 1.3;
+        }
+
+        .context-desc {
+            color: #8b9bb4;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* PART ROW TOGGLES */
+        .workspace-part-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 6px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .part-toggle-btn {
+            flex: 1;
+            padding: 0.8rem 1.1rem;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--gray);
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .part-toggle-btn.active {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+
+
+        /* --- ROADMAP SIDEBAR QUICK NAV --- */
+        .quick-nav-sidebar {
+            width: var(--sidebar-width);
+            background: var(--navy-dark);
+            border-left: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .sidebar-header h2 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .sidebar-list {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 0.5rem;
+        }
+
+        .quick-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 1.1rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .quick-nav-item.active {
+            background: rgba(212, 175, 55, 0.04);
+            border-color: rgba(212, 175, 55, 0.25);
+        }
+
+        .quick-nav-item.locked {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .quick-nav-item:hover:not(.locked) {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(-3px);
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .day-num-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: var(--gray);
+            white-space: nowrap;
+        }
+
+        .quick-nav-item.active .day-num-badge {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .item-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.3;
+        }
+
+        .quick-nav-item.active .item-title {
+            color: var(--gold);
+        }
+
+        .item-subtitle {
+            font-size: 0.68rem;
+            color: var(--gray);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            font-size: 0.65rem;
+        }
+
+        .status-active {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 0.65rem;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+            animation: pulse-border 2s infinite;
+        }
+
+        .status-locked {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.65rem;
+        }
+
+        @keyframes pulse-border {
+            0% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 6px rgba(212, 175, 55, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+            }
+        }
+
+        /* Mobile Responsive adjustments */
+        @media (max-width: 1024px) {
+            .workspace {
+                flex-direction: column;
+            }
+            .quick-nav-sidebar {
+                width: 100%;
+                height: 300px;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.04);
+            }
+            .player-context-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .context-right {
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Player Header Navbar -->
+    <header class="player-header">
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <a href="dashboard.html" class="back-dashboard-btn">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
+            </a>
+            <div class="player-logo-wrap">
+                <img src="../assets/logo.png" alt="PrimeVerse Logo">
+                <div class="player-logo-text">PRIME<span>VERSE</span></div>
+            </div>
+        </div>
+
+        <div class="active-module-badge" id="activeModuleBadge">
+            <span></span> Day 01 — Concept Setup
+        </div>
+    </header>
+
+    <!-- Main Learning Workspace -->
+    <main class="workspace">
+        <!-- Interactive Player Workspace -->
+        <section class="video-workstation">
+            <div class="player-ambient-glow"></div>
+
+            <div class="video-frame-container">
+                <!-- Cinematic Player Block -->
+                <div class="cinematic-player-wrap">
+                    <!-- Play Overlay Poster -->
+                    <div class="player-cover-overlay" id="playerOverlay">
+                        <div class="large-play-icon">
+                            <i class="fa-solid fa-play"></i>
+                        </div>
+                        <h3 id="overlayLessonTitle">Concept Setup</h3>
+                        <p>Click to Stream Lesson Video</p>
+                    </div>
+
+                    <!-- Custom MP4 Video Player -->
+                    <video id="workspaceVideo" class="custom-video" controls>
+                        <source src="../video/Screen Recording 2025-09-04 202308.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <!-- Control Context Detail Box -->
+                <div class="player-context-box">
+                    <div class="context-left">
+                        <div class="context-badge" id="contextDayTag">Day 01 — Module 01</div>
+                        <h1 class="context-title" id="contextLessonTitle">Financial Market Foundations Intro</h1>
+                        <p class="context-desc">
+                            Begin your study by mastering the essential core architectures of financial markets, liquidity structures, trend definitions, and professional execution behaviors. Take thorough notes.
+                        </p>
+                    </div>
+
+                    <div class="context-right">
+                        <!-- Part selection buttons -->
+                        <div class="workspace-part-selector">
+                            <button id="player-part-1" class="part-toggle-btn active" onclick="triggerSwitchPart(1)">
+                                <i class="fa-solid fa-circle-play"></i> Part 1
+                            </button>
+                            <button id="player-part-2" class="part-toggle-btn" onclick="triggerSwitchPart(2)">
+                                <i class="fa-solid fa-video"></i> Part 2
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sidebar Quick Navigation RoadMap -->
+        <aside class="quick-nav-sidebar">
+            <div class="sidebar-header">
+                <h2>Program Roadmap QuickNav</h2>
+            </div>
+            <div class="sidebar-list" id="sidebarList">
+                <!-- Will be dynamically built to match current database and locks -->
+            </div>
+        </aside>
+    </main>
+
+    <!-- Script player execution -->
+    <script>
+        const lessonsDatabase = {
+            1: {
+                title: "Financial Market Foundations",
+                part1: { title: "Day 01 - Part 1: Financial Market Foundations Intro", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 01 - Part 2: Institutional Order Flow & Dynamics", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            2: {
+                title: "Charting & Trading Fundamentals",
+                part1: { title: "Day 02 - Part 1: High-Timeframe Charting Setups", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 02 - Part 2: Technical Candlestick Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            3: {
+                title: "Trading Execution Essentials",
+                part1: { title: "Day 03 - Part 1: Instant Order Execution Mechanics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 03 - Part 2: Limit & Stop Limit Placements", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            4: {
+                title: "Trade Management & Market Analysis",
+                part1: { title: "Day 04 - Part 1: Risk Mitigation & Scaling Out", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 04 - Part 2: Advanced Dynamic Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            5: {
+                title: "Market Structure",
+                part1: { title: "Day 05 - Part 1: Structural Shifts & Swing Points", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 05 - Part 2: Break of Structure (BOS) vs CHoCH", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            6: {
+                title: "Trend Analysis & Market Direction",
+                part1: { title: "Day 06 - Part 1: Advanced Trendline Liquidity", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 06 - Part 2: Identifying High-Probability Reversals", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            7: {
+                title: "Key Levels & Market Reaction Zones",
+                part1: { title: "Day 07 - Part 1: Supply & Demand Zone Mapping", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 07 - Part 2: Trading Reactions at Premium Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            8: {
+                title: "Expansion & Retracement",
+                part1: { title: "Day 08 - Part 1: Internal vs External Range Liquidity", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 08 - Part 2: Premium & Discount Price Array Zones", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            9: {
+                title: "Fibonacci Framework & Market Strength Analysis",
+                part1: { title: "Day 09 - Part 1: Correct Fibonacci Plotting Standards", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 09 - Part 2: Measuring Trend Speed & Confluence", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            10: {
+                title: "Fibonacci Optimal Trade Entry (OTE)",
+                part1: { title: "Day 10 - Part 1: The OTE Core Mechanics (0.62 - 0.79)", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 10 - Part 2: High-Probability OTE Case Studies", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            11: {
+                title: "Structure Break, Liquidity, Stop Hunt & Failure Swing",
+                part1: { title: "Day 11 - Part 1: Liquidity Sweeps & Stop Hunts", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 11 - Part 2: Failure Swing Confirmations", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            12: {
+                title: "Power of Two Confirmation Patterns",
+                part1: { title: "Day 12 - Part 1: Accumulation, Manipulation, Distribution", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 12 - Part 2: Confirming High Probability PO3 Entries", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            13: {
+                title: "Risk Management & Trading Journal Framework",
+                part1: { title: "Day 13 - Part 1: Mathematical Risk-of-Ruin Modeling", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 13 - Part 2: Building your Multi-Asset Journal", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            14: {
+                title: "Trading Psychology & Emotional Discipline",
+                part1: { title: "Day 14 - Part 1: Breaking FOMO & Overtrading Cycles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 14 - Part 2: Operating in the Peak Performance Zone", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            15: {
+                title: "Capital Growth & Compounding Method",
+                part1: { title: "Day 15 - Part 1: Compounding Models for Prop Firm Growth", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 15 - Part 2: Risk Scaling for Exponential Returns", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            16: {
+                title: "Market Recap & Complete Market Flow",
+                part1: { title: "Day 16 - Part 1: Top-Down Multi-Timeframe Confluence", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 16 - Part 2: Real-time Analysis Session", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            17: {
+                title: "Real-Time Trade Execution Examples",
+                part1: { title: "Day 17 - Part 1: Live Trade Execution Breakdown", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 17 - Part 2: Managing Trades in High Volatility Sessions", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
+            18: {
+                title: "Key Takeaways For Confident Trading",
+                part1: { title: "Day 18 - Part 1: Developing the Mastery Blueprint", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 18 - Part 2: Final Certificate & Next Steps", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            }
+        };
+
+        // Parse search params
+        const urlParams = new URLSearchParams(window.location.search);
+        let activeDayNum = parseInt(urlParams.get('day')) || 1;
+        let activePartNum = parseInt(urlParams.get('part')) || 1;
+
+        // Force check locks
+        if (activeDayNum > 11) {
+            window.location.href = 'dashboard.html';
+        }
+
+        const videoPlayer = document.getElementById('workspaceVideo');
+        const playerOverlay = document.getElementById('playerOverlay');
+        const overlayLessonTitle = document.getElementById('overlayLessonTitle');
+
+        // Play handler
+        playerOverlay.addEventListener('click', () => {
+            playerOverlay.style.display = 'none';
+            videoPlayer.play();
+        });
+
+        // Initialize state
+        function renderLesson(dayNum, partNum) {
+            activeDayNum = dayNum;
+            activePartNum = partNum;
+
+            const lesson = lessonsDatabase[dayNum];
+            if (!lesson) return;
+
+            const partData = partNum === 1 ? lesson.part1 : lesson.part2;
+
+            // Update DOM details
+            document.getElementById('activeModuleBadge').innerHTML = `<span></span> Day 0${dayNum} — Part ${partNum}`;
+            document.getElementById('overlayLessonTitle').innerText = partData.title;
+            document.getElementById('contextDayTag').innerText = `Day 0${dayNum} — Module 0${dayNum}`;
+            document.getElementById('contextLessonTitle').innerText = partData.title;
+            
+            // Set source
+            videoPlayer.src = partData.src;
+            videoPlayer.load();
+
+            // Reset player visibility to poster
+            playerOverlay.style.display = 'flex';
+
+            // Toggle active buttons
+            const p1Btn = document.getElementById('player-part-1');
+            const p2Btn = document.getElementById('player-part-2');
+            if (partNum === 1) {
+                p1Btn.classList.add('active');
+                p2Btn.classList.remove('active');
+            } else {
+                p2Btn.classList.add('active');
+                p1Btn.classList.remove('active');
+            }
+
+            
+            // Update Quick Navigation Sidebar
+            buildQuickNavSidebar();
+        }
+
+        // Trigger Switch Parts on-page
+        window.triggerSwitchPart = function(partNum) {
+            renderLesson(activeDayNum, partNum);
+            // Auto play immediately on toggle
+            playerOverlay.style.display = 'none';
+            videoPlayer.play();
+        };
+
+        // Jump Day/Part via quicknav
+        window.jumpToLesson = function(dayNum) {
+            if (dayNum > 11) return; // Locked
+            renderLesson(dayNum, 1);
+        };
+
+        // Render Quick Nav List
+        function buildQuickNavSidebar() {
+            const container = document.getElementById('sidebarList');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= 18; i++) {
+                const lesson = lessonsDatabase[i];
+                if (!lesson) continue;
+
+                const item = document.createElement('a');
+                item.className = 'quick-nav-item';
+                if (i === activeDayNum) {
+                    item.classList.add('active');
+                }
+                
+                // Locks mapping
+                if (i > 11) {
+                    item.classList.add('locked');
+                    item.href = 'javascript:void(0)';
+                } else {
+                    item.href = `javascript:jumpToLesson(${i})`;
+                }
+
+                // Left Info
+                const leftDiv = document.createElement('div');
+                leftDiv.className = 'item-left';
+
+                const dayBadge = document.createElement('span');
+                dayBadge.className = 'day-num-badge';
+                dayBadge.innerText = `DAY ${i < 10 ? '0' + i : i}`;
+                leftDiv.appendChild(dayBadge);
+
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'item-info';
+
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'item-title';
+                titleSpan.innerText = lesson.title;
+                infoDiv.appendChild(titleSpan);
+
+                const subtitleSpan = document.createElement('span');
+                subtitleSpan.className = 'item-subtitle';
+                subtitleSpan.innerText = i > 11 ? 'Locked' : 'Available (2 Videos)';
+                infoDiv.appendChild(subtitleSpan);
+
+                leftDiv.appendChild(infoDiv);
+                item.appendChild(leftDiv);
+
+                // Right Status
+                const rightDiv = document.createElement('div');
+                rightDiv.className = 'status-indicator';
+
+                if (i > 11) {
+                    rightDiv.className += ' status-locked';
+                    rightDiv.innerHTML = '<i class="fa-solid fa-lock"></i>';
+                } else if (i === 11) {
+                    rightDiv.className += ' status-active';
+                    rightDiv.innerHTML = '<i class="fa-solid fa-play"></i>';
+                } else {
+                    rightDiv.className += ' status-completed';
+                    rightDiv.innerHTML = '<i class="fa-solid fa-check"></i>';
+                }
+
+                item.appendChild(rightDiv);
+                container.appendChild(item);
+            }
+        }
+
+        // Completion Watcher
+        videoPlayer.addEventListener('timeupdate', () => {
+            const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+
+            if (percentage >= 98) {
+                // Save Completion Node
+                localStorage.setItem(`completed_day_${activeDayNum}_part_${activePartNum}`, 'true');
+
+                const p1 = localStorage.getItem(`completed_day_${activeDayNum}_part_1`) === 'true';
+                const p2 = localStorage.getItem(`completed_day_${activeDayNum}_part_2`) === 'true';
+
+                if (p1 && p2) {
+                    localStorage.setItem(`completed_day_${activeDayNum}`, 'true');
+                }
+                
+                // Re-render Quick Nav with new tick states
+                buildQuickNavSidebar();
+            }
+        });
+
+        // Initialize Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLesson(activeDayNum, activePartNum);
+            if (window.lucide) window.lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>
