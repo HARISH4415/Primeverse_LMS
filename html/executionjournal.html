@@ -478,99 +478,112 @@
         }
 
         .resource-item-box {
-            background: rgba(13, 21, 33, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: linear-gradient(145deg, rgba(13, 21, 33, 0.6), rgba(5, 10, 20, 0.85));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem 1.75rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             position: relative;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
         }
 
-        .resource-item-box:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        .resource-item-box.template-box:hover {
+            transform: translateY(-6px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.18);
+        }
+
+        .resource-item-box.video-box:hover {
+            transform: translateY(-6px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.18);
         }
 
         .resource-badge {
             position: absolute;
-            top: 1rem;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
+            top: 1.25rem;
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 0.3rem 0.75rem;
+            border-radius: 50px;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         .badge-green {
-            background: rgba(40, 167, 69, 0.08);
-            border: 1px solid rgba(40, 167, 69, 0.25);
-            color: #28a745;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.05);
         }
 
         .badge-purple {
-            background: rgba(168, 85, 247, 0.08);
-            border: 1px solid rgba(168, 85, 247, 0.25);
-            color: #a855f7;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.05);
         }
 
         .xlsx-icon-container {
-            width: 70px;
-            height: 90px;
-            background: rgba(40, 167, 69, 0.03);
-            border: 2px dashed rgba(40, 167, 69, 0.15);
-            border-radius: 12px;
+            width: 76px;
+            height: 96px;
+            background: rgba(16, 185, 129, 0.02);
+            border: 2px dashed rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-            gap: 4px;
-            transition: all 0.3s ease;
+            margin-top: 1.8rem;
+            margin-bottom: 1.2rem;
+            gap: 6px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .resource-item-box:hover .xlsx-icon-container {
-            background: rgba(40, 167, 69, 0.06);
-            border-color: rgba(40, 167, 69, 0.4);
-            box-shadow: 0 0 15px rgba(40, 167, 69, 0.1);
+            background: rgba(16, 185, 129, 0.06);
+            border-color: rgba(16, 185, 129, 0.55);
+            border-style: solid;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+            transform: scale(1.05);
         }
 
         .xlsx-icon {
-            width: 28px;
-            height: 28px;
-            color: #28a745;
+            width: 32px;
+            height: 32px;
+            color: #10b981;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
         }
 
         .xlsx-text {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 900;
-            color: #28a745;
-            letter-spacing: 0.5px;
+            color: #10b981;
+            letter-spacing: 0.8px;
         }
 
         .video-thumbnail-wrapper-journal {
             width: 100%;
             aspect-ratio: 16/10;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 1.8rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         .video-thumb-img-journal {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .play-btn-circle-journal {
@@ -578,53 +591,56 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 42px;
-            height: 42px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1.5px solid #fff;
+            background: rgba(0, 0, 0, 0.65);
+            border: 2px solid rgba(255, 255, 255, 0.9);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(2px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
 
         .video-thumbnail-wrapper-journal:hover .video-thumb-img-journal {
-            transform: scale(1.05);
+            transform: scale(1.06);
         }
 
         .video-thumbnail-wrapper-journal:hover .play-btn-circle-journal {
             background: var(--gold);
             color: #000;
             border-color: var(--gold);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
         }
 
         .play-btn-circle-journal i {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             fill: currentColor;
-            margin-left: 2px;
+            margin-left: 3px;
         }
 
         .resource-title {
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--white);
             margin: 0;
             font-family: 'Satoshi', sans-serif;
             text-align: left;
             width: 100%;
+            letter-spacing: 0.3px;
         }
 
         .resource-subtitle {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: var(--gray);
-            margin-top: 4px;
-            margin-bottom: 1.25rem;
-            line-height: 1.4;
+            margin-top: 6px;
+            margin-bottom: 1.5rem;
+            line-height: 1.45;
             text-align: left;
             width: 100%;
             flex-grow: 1;
@@ -636,90 +652,94 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 0.8rem;
-            border-radius: 8px;
+            padding: 0.85rem;
+            border-radius: 12px;
             font-size: 0.78rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
+            box-sizing: border-box;
         }
 
         .btn-outline-green {
-            background: transparent;
-            border: 1px solid rgba(40, 167, 69, 0.3);
-            color: #28a745;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #10b981;
         }
 
         .btn-outline-green:hover {
-            background: #28a745;
+            background: #10b981;
             color: #000;
-            border-color: #28a745;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
+            border-color: #10b981;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
         }
 
         .btn-outline-purple {
-            background: transparent;
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            color: #a855f7;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #a78bfa;
         }
 
         .btn-outline-purple:hover {
-            background: #a855f7;
+            background: #8b5cf6;
             color: #fff;
-            border-color: #a855f7;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.25);
+            border-color: #8b5cf6;
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
         }
 
         .resource-action-btn i {
-            width: 14px;
-            height: 14px;
+            width: 15px;
+            height: 15px;
         }
 
         /* How to use banner */
         .how-to-use-bar-journal {
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 1.25rem 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem 1.75rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1.5rem;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
         }
 
         .how-to-use-bar-journal:hover {
-            border-color: rgba(212, 175, 55, 0.2);
-            background: rgba(212, 175, 55, 0.01);
+            border-color: rgba(212, 175, 55, 0.25);
+            background: rgba(212, 175, 55, 0.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25), 0 0 15px rgba(212, 175, 55, 0.05);
         }
 
         .how-to-left {
             display: flex;
-            align-items: flex-start;
-            gap: 14px;
+            align-items: center;
+            gap: 16px;
             text-align: left;
         }
 
         .info-icon-wrapper-journal {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            border: 1.5px solid var(--gold);
+            background: linear-gradient(135deg, var(--gold), #b2933a);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--gold);
-            margin-top: 2px;
+            color: #000;
             flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
         }
 
         .info-icon-wrapper-journal i {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
         }
 
         .how-to-text-block {
