@@ -614,6 +614,160 @@
         video::-webkit-media-controls-fullscreen-button {
             display: none !important;
         }
+
+        /* High-fidelity glassmorphic video loader spinner */
+        .video-loader-overlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 10, 18, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 2147483644;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .video-loader-spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin-loader 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+        @keyframes spin-loader {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Custom Quality/Resolution Selector Styling */
+        .custom-quality-container {
+            position: absolute;
+            top: 1.5rem;
+            right: 5rem;
+            z-index: 2147483645 !important;
+            display: inline-block;
+        }
+
+        .custom-quality-btn {
+            width: auto;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 12px;
+            border-radius: 22px;
+            background: rgba(13, 21, 33, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: 'Satoshi', sans-serif;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .custom-quality-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: scale(1.05) translateZ(0);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.25);
+        }
+
+        .custom-quality-btn i {
+            font-size: 0.95rem;
+            transition: transform 0.4s ease;
+        }
+
+        .custom-quality-container.open .custom-quality-btn i {
+            transform: rotate(45deg);
+        }
+
+        .quality-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: rgba(10, 16, 26, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 6px;
+            width: 140px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .custom-quality-container.open .quality-dropdown {
+            display: flex;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .quality-option {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .quality-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+        }
+
+        .quality-option.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* Video resolution feedback toast overlay */
+        .quality-toast {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%) translateZ(0);
+            background: rgba(5, 7, 12, 0.85);
+            border: 1.5px solid rgba(212, 175, 55, 0.4);
+            color: var(--gold);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            font-family: 'Satoshi', sans-serif;
+            letter-spacing: 0.5px;
+            z-index: 2147483647;
+            pointer-events: none;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quality-toast.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -644,10 +798,28 @@
             <div class="video-frame-container">
                 <!-- Cinematic Player Block -->
                 <div class="cinematic-player-wrap">                    <!-- Custom MP4 Video Player -->
-                    <video id="workspaceVideo" class="custom-video" controls controlslist="nodownload nofullscreen" disablepictureinpicture oncontextmenu="return false;">
-                        <source src="../video/Screen Recording 2025-09-04 202308.mp4" type="video/mp4">
+                    <video id="workspaceVideo" class="custom-video" controls controlslist="nodownload nofullscreen" disablepictureinpicture oncontextmenu="return false;" preload="auto" playsinline>
+                        <source src="https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/public/videos/intro/intro.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
+
+                    <!-- Glassmorphic Loading Spinner -->
+                    <div id="videoLoader" class="video-loader-overlay">
+                        <div class="video-loader-spinner"></div>
+                    </div>
+
+                    <!-- Custom Quality/Resolution Selector Overlay -->
+                    <div class="custom-quality-container" id="qualitySelectorContainer">
+                        <button id="customQualityBtn" class="custom-quality-btn" title="Change Resolution">
+                            <i class="fa-solid fa-gear"></i> <span id="currentQualityLabel">Auto</span>
+                        </button>
+                        <div class="quality-dropdown" id="qualityDropdown">
+                            <div class="quality-option" data-quality="1080p">1080p (FHD)</div>
+                            <div class="quality-option" data-quality="720p">720p (HD)</div>
+                            <div class="quality-option" data-quality="480p">480p (SD)</div>
+                            <div class="quality-option active" data-quality="auto">Original (Auto)</div>
+                        </div>
+                    </div>
 
                     <!-- Custom Fullscreen Toggle Button Overlay -->
                     <button id="customFullscreenBtn" class="custom-fullscreen-btn" title="Toggle Fullscreen">
@@ -721,7 +893,7 @@
         const lessonsDatabase = {
             0: {
                 title: "YOUR FUTURE IS HERE , INTRODUCTION",
-                part1: { title: "YOUR FUTURE IS HERE , INTRODUCTION", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                part1: { title: "YOUR FUTURE IS HERE , INTRODUCTION", src: "https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/public/videos/intro/intro.mp4" }
             },
             1: {
                     title: "Financial Market Foundations",
@@ -941,6 +1113,155 @@
             videoPlayer.play();
         });
 
+        // Video Resolution Switcher Logic
+        const qualityBtn = document.getElementById('customQualityBtn');
+        const qualityContainer = document.getElementById('qualitySelectorContainer');
+        const qualityDropdown = document.getElementById('qualityDropdown');
+        const qualityOptions = document.querySelectorAll('.quality-option');
+        const currentQualityLabel = document.getElementById('currentQualityLabel');
+
+        // Toggle Quality dropdown
+        if (qualityBtn && qualityContainer) {
+            qualityBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                qualityContainer.classList.toggle('open');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                qualityContainer.classList.remove('open');
+            });
+        }
+
+        // Show Toast Notification Helper
+        function showQualityToast(message, isError = false) {
+            let toast = document.getElementById('qualityToastNotification');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'qualityToastNotification';
+                toast.className = 'quality-toast';
+                playerWrap.appendChild(toast);
+            }
+            toast.innerHTML = isError 
+                ? `<i class="fa-solid fa-circle-exclamation" style="color: #ef4444;"></i> ${message}`
+                : `<i class="fa-solid fa-circle-check"></i> ${message}`;
+            
+            if (isError) {
+                toast.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+                toast.style.color = '#f87171';
+            } else {
+                toast.style.borderColor = 'rgba(212, 175, 55, 0.4)';
+                toast.style.color = 'var(--gold)';
+            }
+            
+            toast.classList.add('visible');
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
+        }
+
+        let selectedResolution = localStorage.getItem('preferredResolution') || 'auto';
+
+        // Apply Resolution to player
+        function applyResolution(res, skipReplay = false) {
+            if (!videoPlayer) return;
+            
+            const originalUrl = lessonsDatabase[activeDayNum]['part' + activePartNum]?.src || lessonsDatabase[activeDayNum].part1.src;
+            let targetUrl = originalUrl;
+            
+            if (res !== 'auto') {
+                targetUrl = originalUrl.replace(/\.mp4$/i, `-${res}.mp4`);
+            }
+
+            // If it's already playing that URL, do nothing
+            if (videoPlayer.src === targetUrl) {
+                updateQualityUIActiveState(res);
+                return;
+            }
+
+            const currentTime = videoPlayer.currentTime;
+            const isPaused = videoPlayer.paused;
+
+            // Define dynamic error recovery callback
+            const handleLoadError = function() {
+                console.warn(`Resolution ${res} file not found at ${targetUrl}. Reverting to original quality.`);
+                // Clean up error listener to prevent infinite loop
+                videoPlayer.removeEventListener('error', handleLoadError);
+                
+                // Fall back to original
+                videoPlayer.src = originalUrl;
+                videoPlayer.load();
+                
+                // Revert UI selection
+                selectedResolution = 'auto';
+                updateQualityUIActiveState('auto');
+                
+                // Seek back to position
+                videoPlayer.addEventListener('loadedmetadata', function revertSeek() {
+                    videoPlayer.currentTime = currentTime;
+                    if (!isPaused) videoPlayer.play();
+                    videoPlayer.removeEventListener('loadedmetadata', revertSeek);
+                });
+                
+                showQualityToast("Resolution not available. Playing original quality.", true);
+            };
+
+            // Listen for loading errors
+            videoPlayer.addEventListener('error', handleLoadError);
+
+            // Set new source and load
+            videoPlayer.src = targetUrl;
+            videoPlayer.load();
+
+            // Seek and play on metadata load success
+            videoPlayer.addEventListener('loadedmetadata', function successSeek() {
+                // Remove error listener since load succeeded
+                videoPlayer.removeEventListener('error', handleLoadError);
+                
+                videoPlayer.currentTime = currentTime;
+                if (!isPaused && !skipReplay) videoPlayer.play();
+                
+                videoPlayer.removeEventListener('loadedmetadata', successSeek);
+                
+                if (res === 'auto') {
+                    showQualityToast("Switched to Original Quality");
+                } else {
+                    showQualityToast(`Switched to Resolution: ${res}`);
+                }
+            });
+
+            updateQualityUIActiveState(res);
+        }
+
+        function updateQualityUIActiveState(res) {
+            if (currentQualityLabel) {
+                currentQualityLabel.innerText = res === 'auto' ? 'Auto' : res;
+            }
+            if (qualityOptions) {
+                qualityOptions.forEach(opt => {
+                    if (opt.getAttribute('data-quality') === res) {
+                        opt.classList.add('active');
+                    } else {
+                        opt.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Bind click events to options
+        if (qualityOptions) {
+            qualityOptions.forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const quality = opt.getAttribute('data-quality');
+                    selectedResolution = quality;
+                    localStorage.setItem('preferredResolution', quality);
+                    applyResolution(quality);
+                    qualityContainer.classList.remove('open');
+                });
+            });
+        }
+
         // Initialize state
         function renderLesson(dayNum, partNum) {
             activeDayNum = dayNum;
@@ -964,9 +1285,26 @@
                 document.getElementById('contextLessonTitle').innerText = partData.title;
             }
             
-            // Set source
-            videoPlayer.src = partData.src;
+            // Set source (applying user resolution preference with self-healing fallback)
+            let finalSrc = partData.src;
+            if (selectedResolution !== 'auto') {
+                finalSrc = partData.src.replace(/\.mp4$/i, `-${selectedResolution}.mp4`);
+            }
+            
+            videoPlayer.src = finalSrc;
+            
+            const handleLessonResError = function() {
+                videoPlayer.removeEventListener('error', handleLessonResError);
+                videoPlayer.src = partData.src;
+                videoPlayer.load();
+                updateQualityUIActiveState('auto');
+            };
+            videoPlayer.addEventListener('error', handleLessonResError);
+
             videoPlayer.load();
+            
+            // Ensure UI is kept in sync
+            updateQualityUIActiveState(selectedResolution);
 
             // Reset player visibility to poster
             playerOverlay.style.display = 'flex';
@@ -1121,6 +1459,26 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderLesson(activeDayNum, activePartNum);
             if (window.lucide) window.lucide.createIcons();
+
+            // Hook up high-fidelity video loading spinner event listeners
+            const videoLoader = document.getElementById('videoLoader');
+            if (videoLoader && videoPlayer) {
+                videoPlayer.addEventListener('waiting', () => {
+                    videoLoader.style.display = 'flex';
+                });
+                videoPlayer.addEventListener('playing', () => {
+                    videoLoader.style.display = 'none';
+                });
+                videoPlayer.addEventListener('canplay', () => {
+                    videoLoader.style.display = 'none';
+                });
+                videoPlayer.addEventListener('seeked', () => {
+                    videoLoader.style.display = 'none';
+                });
+                videoPlayer.addEventListener('loadstart', () => {
+                    videoLoader.style.display = 'flex';
+                });
+            }
         });
     </script>
 </body>

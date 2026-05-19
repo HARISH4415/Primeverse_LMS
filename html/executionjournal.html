@@ -1057,6 +1057,33 @@
         .pulse-glow-button {
             animation: pulseGlow 3s infinite ease-in-out;
         }
+
+        /* High-fidelity glassmorphic video loader spinner */
+        .video-loader-overlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 10, 18, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 2147483644;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .video-loader-spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin-loader 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+        @keyframes spin-loader {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
@@ -1453,10 +1480,14 @@
                 <i data-lucide="x"></i>
             </button>
             <div class="journal-modal-video-wrapper">
-                <video id="journalModalVideoPlayer" controls>
+                <video id="journalModalVideoPlayer" controls preload="auto" playsinline>
                     <source src="../video/Screen Recording 2025-09-04 202308.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+                <!-- Glassmorphic Loading Spinner -->
+                <div id="journalVideoLoader" class="video-loader-overlay">
+                    <div class="video-loader-spinner"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1583,6 +1614,26 @@
             // Journal video walkthrough modal triggers
             const journalVideoModal = document.getElementById('journalVideoModal');
             const journalModalVideoPlayer = document.getElementById('journalModalVideoPlayer');
+
+            // Hook up high-fidelity video loading spinner event listeners
+            const journalVideoLoader = document.getElementById('journalVideoLoader');
+            if (journalVideoLoader && journalModalVideoPlayer) {
+                journalModalVideoPlayer.addEventListener('waiting', () => {
+                    journalVideoLoader.style.display = 'flex';
+                });
+                journalModalVideoPlayer.addEventListener('playing', () => {
+                    journalVideoLoader.style.display = 'none';
+                });
+                journalModalVideoPlayer.addEventListener('canplay', () => {
+                    journalVideoLoader.style.display = 'none';
+                });
+                journalModalVideoPlayer.addEventListener('seeked', () => {
+                    journalVideoLoader.style.display = 'none';
+                });
+                journalModalVideoPlayer.addEventListener('loadstart', () => {
+                    journalVideoLoader.style.display = 'flex';
+                });
+            }
 
             window.openJournalVideoModal = function () {
                 if (journalVideoModal && journalModalVideoPlayer) {
