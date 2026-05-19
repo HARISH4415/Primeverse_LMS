@@ -2199,6 +2199,28 @@
             <h2 style="font-size: 1.5rem; margin-top: 3.5rem; margin-bottom: 1.5rem;">Program Roadmap</h2>
             <div class="mastery-timeline-container">
                 <div class="mastery-timeline-track"></div>
+                <!-- Intro Module: YOUR FUTURE IS HERE, INTRODUCTION -->
+                <div class="mastery-timeline-item" onclick="toggleTimelineItem(this, 0)">
+                    <div class="mastery-timeline-header">
+                        <div class="mastery-timeline-node completed"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                        <div class="mastery-timeline-day" style="background: linear-gradient(135deg, var(--gold), #f59e0b); color: #05070c; font-weight: 900; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);">INTRO</div>
+                        <h4 class="mastery-timeline-title">YOUR FUTURE IS HERE , INTRODUCTION</h4>
+                        <div class="mastery-timeline-meta">
+                            <span style="font-size: 0.75rem; color: var(--gold); background: rgba(212, 175, 55, 0.08); padding: 3px 8px; border-radius: 4px; font-weight: 700;">(1 VIDEO)</span>
+                            <span class="mastery-timeline-status completed">COMPLETED</span>
+                            <i data-lucide="chevron-right" class="mastery-timeline-arrow" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <div class="mastery-timeline-details">
+                        <p class="mastery-details-desc">Welcome to PrimeVerse. Establish your ultimate mindset, understand our mission, and launch your educational journey with high consistency.</p>
+                        <div class="mastery-parts-list">
+                            <div class="mastery-part-row" onclick="event.stopPropagation(); loadLesson(0); switchPart(1);">
+                                <span class="mastery-part-title"><i data-lucide="play-circle" style="width: 16px; height: 16px;"></i> YOUR FUTURE IS HERE , INTRODUCTION</span>
+                                <span class="mastery-play-badge">PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Module 01 -->
                 <div class="mastery-timeline-item " onclick="toggleTimelineItem(this, 1)">
                     <div class="mastery-timeline-header">
@@ -2764,13 +2786,10 @@
         // Enforce Login & Course Enrollment/Selection to access Dashboard
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.replace('../index.html?login=true');
-        } else {
-            if (!localStorage.getItem('selectedCourse')) {
-                localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
-            }
-            if (!localStorage.getItem('enrollDate')) {
-                localStorage.setItem('enrollDate', new Date().toISOString());
-            }
+        } else if (!localStorage.getItem('selectedCourse')) {
+            window.location.replace('../index.html');
+        } else if (localStorage.getItem('selectedCourse') === 'PrimeVerse Pro Mentorship') {
+            window.location.replace('../index.html?mentorshipModal=true');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -2823,8 +2842,11 @@
             const videoPlaceholder = document.getElementById('mainVideo');
             const videoPlayer = document.getElementById('videoPlayer');
 
-            // --- Lessons Database (2 Videos per Day) ---
                     const lessonsDatabase = {
+            0: {
+                    title: "YOUR FUTURE IS HERE , INTRODUCTION",
+                    part1: { title: "YOUR FUTURE IS HERE , INTRODUCTION", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             1: {
                     title: "Financial Market Foundations",
                     part1: { title: "Day 01 - Part 1: Introduction to Trading & Financial Markets", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
@@ -3084,6 +3106,16 @@
                     
                     if (window.lucide) {
                         window.lucide.createIcons();
+                    }
+                }
+
+                // Execution Journal Sidebar Lock Evaluation
+                const navJournal = document.getElementById('nav-journal');
+                if (navJournal) {
+                    if (currentDay < 13) {
+                        navJournal.innerHTML = '<i data-lucide="lock"></i> Execution Journal';
+                    } else {
+                        navJournal.innerHTML = '<i data-lucide="book-marked"></i> Execution Journal';
                     }
                 }
 

@@ -45,8 +45,22 @@
             }
         }
     </script>
-
     <style>
+        @keyframes pulse-gold {
+            0% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+                border-color: rgba(212, 175, 55, 0.25);
+            }
+            50% {
+                box-shadow: 0 0 35px rgba(212, 175, 55, 0.35);
+                border-color: rgba(212, 175, 55, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+                border-color: rgba(212, 175, 55, 0.25);
+            }
+        }
+
         :root {
             --sidebar-width: 280px;
         }
@@ -1102,7 +1116,33 @@
         </header>
 
         <!-- Premium Execution Journal View -->
-        <div id="journal-view">
+        <div id="journal-view" style="position: relative; min-height: 500px;">
+            
+            <!-- Center Lock Glass Overlay (Visible when locked) -->
+            <div id="journalLockOverlay" style="position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(5, 7, 12, 0.98); backdrop-filter: blur(35px) saturate(100%); -webkit-backdrop-filter: blur(35px) saturate(100%); z-index: 20; padding: 2rem; border-radius: 24px;">
+                <div style="width: 84px; height: 84px; background: rgba(212, 175, 55, 0.08); border: 1.5px solid rgba(212, 175, 55, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; box-shadow: 0 0 35px rgba(212, 175, 55, 0.25); animation: pulse-gold 2s infinite;">
+                    <i data-lucide="lock" style="width: 38px; height: 38px; color: var(--gold); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));"></i>
+                </div>
+                
+                <div>
+                    <span class="mentorship-card-badge" style="background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.25); color: var(--gold); margin-bottom: 1rem; text-transform: uppercase; font-weight: 800; font-size: 0.75rem; letter-spacing: 1px; display: inline-block; padding: 6px 12px; border-radius: 6px; border: 1px solid;">
+                         Day 13 Requirement
+                    </span>
+                </div>
+
+                <h2 class="mentorship-card-title" style="font-size: 2rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0,0,0,0.5); color: var(--white); text-transform: uppercase; font-weight: 900;">Journal Locked</h2>
+                <p style="color: #cbd5e1; font-size: 0.92rem; font-weight: 600; text-align: center; max-width: 380px; margin-bottom: 1.5rem; line-height: 1.6; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">
+                    Unlock the Professional Execution Journal template and training modules after completing Day 13 of the Mastery Program.
+                </p>
+                
+                <!-- Mini Progress bar inside overlay -->
+                <div style="width: 100%; max-width: 260px; background: rgba(255,255,255,0.05); border-radius: 10px; height: 6px; overflow: hidden; margin-bottom: 0.75rem; border: 1px solid rgba(255,255,255,0.05);">
+                    <div id="journalOverlayBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--gold), #f3e5ab); box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);"></div>
+                </div>
+                <p id="journalOverlayText" style="color: #94a3b8; font-size: 0.8rem; font-weight: 700; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                    Day 1 of 13 (12 days remaining)
+                </p>
+            </div>
             <!-- Premium Execution Journal Hero Banner -->
             <div class="journal-hero-banner">
                 <div class="journal-hero-left">
@@ -1424,6 +1464,10 @@
     <script>
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.replace('../index.html?login=true');
+        } else if (!localStorage.getItem('selectedCourse')) {
+            window.location.replace('../index.html');
+        } else if (localStorage.getItem('selectedCourse') === 'PrimeVerse Pro Mentorship') {
+            window.location.replace('../index.html?mentorshipModal=true');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1454,7 +1498,7 @@
             if (navMastery) navMastery.style.display = 'flex';
             if (navMentorship) {
                 navMentorship.style.display = 'flex';
-                // Lock icon evaluation for Pro Mentorship (locked until Day 18 complete / Day 19)
+                // Lock icon evaluation for Pro Mentorship and Execution Journal
                 const enrollDateStr = localStorage.getItem('enrollDate');
                 if (enrollDateStr) {
                     const enrollDate = new Date(enrollDateStr);
@@ -1462,11 +1506,65 @@
                     const diffTime = Math.abs(today - enrollDate);
                     const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                     const currentDay = daysSinceEnroll + 1;
+                    
+                    // Mentorship Sidebar Lock Icon Evaluation
                     if (currentDay < 19) {
                         navMentorship.innerHTML = '<i data-lucide="lock"></i> PrimeVerse Pro Mentorship';
                     } else {
                         navMentorship.innerHTML = '<i data-lucide="crown"></i> PrimeVerse Pro Mentorship';
                     }
+
+                    // Execution Journal Page & Sidebar Locking Logic
+                    const navJournal = document.getElementById('nav-journal');
+                    const isJournalLocked = currentDay < 13;
+                    const journalOverlay = document.getElementById('journalLockOverlay');
+                    const journalBar = document.getElementById('journalOverlayBar');
+                    const journalText = document.getElementById('journalOverlayText');
+                    const journalView = document.getElementById('journal-view');
+                    
+                    if (isJournalLocked) {
+                        if (navJournal) {
+                            navJournal.innerHTML = '<i data-lucide="lock"></i> Execution Journal';
+                        }
+                        if (journalOverlay) {
+                            journalOverlay.style.display = 'flex';
+                        }
+                        // Heavily blur and hide all other content components of the journal
+                        if (journalView) {
+                            Array.from(journalView.children).forEach(child => {
+                                if (child !== journalOverlay) {
+                                    child.style.filter = 'blur(25px)';
+                                    child.style.opacity = '0';
+                                    child.style.visibility = 'hidden';
+                                }
+                            });
+                        }
+                        if (journalBar) {
+                            const percent = Math.min(100, Math.max(0, (currentDay / 13) * 100));
+                            journalBar.style.width = `${percent}%`;
+                        }
+                        if (journalText) {
+                            const remaining = 13 - currentDay;
+                            journalText.innerText = `Day ${currentDay} of 13 (${remaining} day${remaining > 1 ? 's' : ''} remaining)`;
+                        }
+                    } else {
+                        if (navJournal) {
+                            navJournal.innerHTML = '<i data-lucide="book-marked"></i> Execution Journal';
+                        }
+                        if (journalOverlay) {
+                            journalOverlay.style.display = 'none';
+                        }
+                        if (journalView) {
+                            Array.from(journalView.children).forEach(child => {
+                                if (child !== journalOverlay) {
+                                    child.style.filter = 'none';
+                                    child.style.opacity = '1';
+                                    child.style.visibility = 'visible';
+                                }
+                            });
+                        }
+                    }
+
                     if (window.lucide) {
                         window.lucide.createIcons();
                     }

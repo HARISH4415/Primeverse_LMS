@@ -140,14 +140,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateAuthUI = () => {
         const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const hasPurchased = localStorage.getItem('selectedCourse') ? true : false;
+        const selectedCourse = localStorage.getItem('selectedCourse');
         const viewProgramBtn = document.getElementById('viewProgramBtn');
         const applyNowBtn = document.getElementById('applyNowBtn');
 
         if (loggedIn) {
             // Desk Nav
             if (loginBtnNav) {
-                loginBtnNav.innerText = 'DASHBOARD';
-                loginBtnNav.style.background = 'rgba(255, 255, 255, 0.05)';
+                if (hasPurchased) {
+                    if (selectedCourse === 'PrimeVerse Pro Mentorship') {
+                        loginBtnNav.innerText = 'PRO STATUS';
+                    } else {
+                        loginBtnNav.innerText = 'DASHBOARD';
+                    }
+                    loginBtnNav.style.display = 'inline-block';
+                    loginBtnNav.style.background = 'rgba(255, 255, 255, 0.05)';
+                } else {
+                    loginBtnNav.style.display = 'none';
+                }
             }
             if (signupBtnNav) {
                 signupBtnNav.innerText = 'SIGN OUT';
@@ -156,19 +167,38 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Mobile Nav
             if (loginBtnNavMobile) {
-                loginBtnNavMobile.innerText = 'DASHBOARD';
+                if (hasPurchased) {
+                    if (selectedCourse === 'PrimeVerse Pro Mentorship') {
+                        loginBtnNavMobile.innerText = 'PRO STATUS';
+                    } else {
+                        loginBtnNavMobile.innerText = 'DASHBOARD';
+                    }
+                    loginBtnNavMobile.style.display = 'block';
+                } else {
+                    loginBtnNavMobile.style.display = 'none';
+                }
             }
             if (signupBtnNavMobile) {
                 signupBtnNavMobile.innerText = 'SIGN OUT';
             }
             // Program Action Buttons Green Color
             if (viewProgramBtn) {
+                if (selectedCourse === 'PrimeVerse Mastery Program') {
+                    viewProgramBtn.innerText = 'ACTIVE';
+                } else {
+                    viewProgramBtn.innerText = 'View Program';
+                }
                 viewProgramBtn.style.background = '#28a745';
                 viewProgramBtn.style.borderColor = '#28a745';
                 viewProgramBtn.style.boxShadow = '0 0 25px rgba(40, 167, 69, 0.4)';
                 viewProgramBtn.style.color = '#ffffff';
             }
             if (applyNowBtn) {
+                if (selectedCourse === 'PrimeVerse Pro Mentorship') {
+                    applyNowBtn.innerText = 'ACTIVE';
+                } else {
+                    applyNowBtn.innerText = 'Apply Now';
+                }
                 applyNowBtn.style.background = '#28a745';
                 applyNowBtn.style.borderColor = '#28a745';
                 applyNowBtn.style.boxShadow = '0 0 25px rgba(40, 167, 69, 0.4)';
@@ -178,28 +208,34 @@ document.addEventListener('DOMContentLoaded', () => {
             // Desk Nav Restores
             if (loginBtnNav) {
                 loginBtnNav.innerText = 'Sign In';
+                loginBtnNav.style.display = 'inline-block';
                 loginBtnNav.style.background = '';
             }
             if (signupBtnNav) {
                 signupBtnNav.innerText = 'Sign Up';
+                signupBtnNav.style.display = 'inline-block';
                 signupBtnNav.style.background = '';
                 signupBtnNav.style.color = '';
             }
             // Mobile Nav Restores
             if (loginBtnNavMobile) {
                 loginBtnNavMobile.innerText = 'Sign In';
+                loginBtnNavMobile.style.display = 'block';
             }
             if (signupBtnNavMobile) {
                 signupBtnNavMobile.innerText = 'Sign Up';
+                signupBtnNavMobile.style.display = 'block';
             }
             // Program Action Buttons Gold Restores
             if (viewProgramBtn) {
+                viewProgramBtn.innerText = 'View Program';
                 viewProgramBtn.style.background = '';
                 viewProgramBtn.style.borderColor = '';
                 viewProgramBtn.style.boxShadow = '';
                 viewProgramBtn.style.color = '';
             }
             if (applyNowBtn) {
+                applyNowBtn.innerText = 'Apply Now';
                 applyNowBtn.style.background = '';
                 applyNowBtn.style.borderColor = '';
                 applyNowBtn.style.boxShadow = '';
@@ -217,6 +253,16 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const submitBtn = document.getElementById('authSubmitBtn');
             submitBtn.innerText = 'Processing...';
+            
+            const emailInput = authForm.querySelector('input[type="email"]');
+            if (emailInput && emailInput.value) {
+                localStorage.setItem('userEmail', emailInput.value);
+            }
+
+            const phoneInput = authForm.querySelector('input[type="tel"]');
+            if (phoneInput && phoneInput.value) {
+                localStorage.setItem('userPhone', phoneInput.value);
+            }
             
             setTimeout(() => {
                 if (authState === 'forgot') {
@@ -264,7 +310,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginBtnNav) {
         loginBtnNav.addEventListener('click', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'html/dashboard.html';
+                const selectedCourse = localStorage.getItem('selectedCourse');
+                if (selectedCourse === 'PrimeVerse Pro Mentorship') {
+                    openMentorshipModal();
+                } else if (selectedCourse) {
+                    window.location.href = 'html/dashboard.html';
+                }
             } else {
                 setAuthState('login');
                 openModal();
@@ -289,7 +340,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (document.getElementById('joinBtn')) {
-        document.getElementById('joinBtn').addEventListener('click', handleActionClick);
+        document.getElementById('joinBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            // Scroll to programs section on homepage so user can purchase
+            const programsSection = document.getElementById('programs');
+            if (programsSection) {
+                programsSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                handleActionClick(e);
+            }
+        });
     }
     
     // Gated View Program Navigation
@@ -297,7 +357,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('viewProgramBtn').addEventListener('click', (e) => {
             e.preventDefault();
             if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'html/mastery-program.html';
+                if (localStorage.getItem('selectedCourse') === 'PrimeVerse Mastery Program') {
+                    window.location.href = 'html/dashboard.html';
+                } else {
+                    window.location.href = 'html/mastery-program.html';
+                }
             } else {
                 setAuthState('login');
                 openModal();
@@ -305,12 +369,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Gated Apply Now Navigation
     if (document.getElementById('applyNowBtn')) {
         document.getElementById('applyNowBtn').addEventListener('click', (e) => {
             e.preventDefault();
             if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'html/pro-mentorship.html';
+                if (localStorage.getItem('selectedCourse') === 'PrimeVerse Pro Mentorship') {
+                    openMentorshipModal();
+                } else {
+                    window.location.href = 'html/pro-mentorship.html';
+                }
             } else {
                 setAuthState('login');
                 openModal();
@@ -319,6 +386,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     closeAuth.addEventListener('click', closeModal);
+
+    // --- Mentorship Onboarding Modal Event Listeners ---
+    const mentorshipOverlay = document.getElementById('mentorshipModal');
+    const closeMentorshipModal = document.getElementById('closeMentorshipModal');
+    const closeMentorshipModalBtn = document.getElementById('closeMentorshipModalBtn');
+
+    window.openMentorshipModal = () => {
+        if (mentorshipOverlay) {
+            mentorshipOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    };
+
+    window.closeModalMentorship = () => {
+        if (mentorshipOverlay) {
+            mentorshipOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    };
+
+    if (closeMentorshipModal) {
+        closeMentorshipModal.addEventListener('click', closeModalMentorship);
+    }
+    if (closeMentorshipModalBtn) {
+        closeMentorshipModalBtn.addEventListener('click', closeModalMentorship);
+    }
+    if (mentorshipOverlay) {
+        mentorshipOverlay.addEventListener('click', (e) => {
+            if (e.target === mentorshipOverlay) closeModalMentorship();
+        });
+    }
 
     // Initial state setup for switchAuth and forgotLink
     setAuthState('login');
@@ -334,6 +432,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (urlParams.get('login') === 'true') {
         setAuthState('login');
         openModal();
+    }
+    if (urlParams.get('mentorshipModal') === 'true' && localStorage.getItem('isLoggedIn') === 'true') {
+        openMentorshipModal();
     }
 
     // --- Mobile Hamburger Menu Toggle ---
@@ -386,7 +487,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginBtnNavMobile) {
         loginBtnNavMobile.addEventListener('click', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'html/dashboard.html';
+                const selectedCourse = localStorage.getItem('selectedCourse');
+                if (selectedCourse === 'PrimeVerse Pro Mentorship') {
+                    openMentorshipModal();
+                } else if (selectedCourse) {
+                    window.location.href = 'html/dashboard.html';
+                }
             } else {
                 setAuthState('login');
                 openModal();

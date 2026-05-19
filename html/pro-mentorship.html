@@ -682,27 +682,22 @@
             const loaderTitle = document.getElementById('loaderTitle');
             const loaderMessage = document.getElementById('loaderMessage');
 
-            // Action Checkout Simulation Flow
+            // Action Checkout Razorpay Gateway Routing
             buildSystemBtn.addEventListener('click', () => {
                 loaderOverlay.classList.add('active');
                 paymentSpinner.style.display = 'block';
                 paymentSuccessIcon.style.display = 'none';
-                loaderTitle.innerText = "Verifying Transaction";
-                loaderMessage.innerText = "Please do not close or refresh this page. Securing your premium mentorship node...";
+                loaderTitle.innerText = "Redirecting to Razorpay";
+                loaderMessage.innerText = "Connecting to the secure Razorpay payment gateway. Please do not close or refresh this page...";
                 
+                // Track user selection parameters
                 localStorage.setItem('selectedCourse', 'PrimeVerse Pro Mentorship');
                 localStorage.setItem('enrollDate', new Date().toISOString());
                 
+                // Redirect directly to the Razorpay link
                 setTimeout(() => {
-                    paymentSpinner.style.display = 'none';
-                    paymentSuccessIcon.style.display = 'flex';
-                    loaderTitle.innerText = "Transaction Success";
-                    loaderMessage.innerText = "Welcome to PrimeVerse! Redirecting to your learning dashboard...";
-                    
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
-                }, 3000);
+                    window.location.href = 'https://rzp.io/rzp/F89qkMo8';
+                }, 1500);
             });
         });
     </script>

@@ -460,7 +460,6 @@
                 </div>
             </div>
         </section>
-
         <!-- About Ganesh Profile Section -->
         <section id="about-ganesh" class="section-wrap"
             style="background: #0d1521; padding-top: 8rem; padding-bottom: 8rem; border-top: 1px solid rgba(255, 255, 255, 0.03); position: relative; overflow: hidden;">
@@ -752,6 +751,30 @@
 
                 <button type="submit" class="auth-submit" id="authSubmitBtn">Login</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Mentorship Onboarding Modal -->
+    <div class="auth-overlay" id="mentorshipModal" style="display: none; align-items: center; justify-content: center; z-index: 10001; background: rgba(5, 7, 12, 0.98); backdrop-filter: blur(20px);">
+        <div class="auth-card" style="border: 1px solid rgba(212, 175, 55, 0.35); text-align: center; padding: 3rem 2.5rem; max-width: 460px; box-shadow: 0 0 50px rgba(212, 175, 55, 0.15); position: relative;">
+            <button class="close-auth" id="closeMentorshipModal" style="color: var(--gray); font-size: 1.8rem; background: transparent; border: none; cursor: pointer; position: absolute; right: 20px; top: 15px;">&times;</button>
+            <div style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.08); border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);">
+                <i class="fa-solid fa-crown" style="font-size: 2.2rem; color: var(--gold); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));"></i>
+            </div>
+            <h2 style="font-size: 1.8rem; font-weight: 900; text-transform: uppercase; font-family: 'Satoshi', sans-serif; color: var(--white); margin-bottom: 0.75rem; letter-spacing: 0.5px;">
+                Mentorship Enrolled!
+            </h2>
+            <div style="color: var(--gold); font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem;">
+                PrimeVerse Pro Mentorship
+            </div>
+            <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">
+                Thank you for enrolling in PrimeVerse Pro Mentorship. Your seat is secured! 
+                <br><br>
+                <strong>Our team will contact you directly via phone / WhatsApp</strong> to coordinate your 1:1 scheduling and initiate your direct trading workspace.
+            </p>
+            <button type="button" class="auth-submit" id="closeMentorshipModalBtn" style="background: var(--gold); color: #000; font-weight: 800; border-radius: 10px; width: 100%; padding: 1rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
+                GREAT, THANK YOU
+            </button>
         </div>
     </div>
     <script src="js/script.js"></script>

@@ -1079,6 +1079,10 @@
     <script>
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.replace('../index.html?login=true');
+        } else if (!localStorage.getItem('selectedCourse')) {
+            window.location.replace('../index.html');
+        } else if (localStorage.getItem('selectedCourse') === 'PrimeVerse Pro Mentorship') {
+            window.location.replace('../index.html?mentorshipModal=true');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1122,6 +1126,17 @@
                     } else {
                         navMentorship.innerHTML = '<i data-lucide="crown"></i> PrimeVerse Pro Mentorship';
                     }
+
+                    // Execution Journal Sidebar Lock Evaluation
+                    const navJournal = document.getElementById('nav-journal');
+                    if (navJournal) {
+                        if (currentDay < 13) {
+                            navJournal.innerHTML = '<i data-lucide="lock"></i> Execution Journal';
+                        } else {
+                            navJournal.innerHTML = '<i data-lucide="book-marked"></i> Execution Journal';
+                        }
+                    }
+
                     if (window.lucide) {
                         window.lucide.createIcons();
                     }
