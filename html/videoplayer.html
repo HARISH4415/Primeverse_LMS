@@ -182,6 +182,36 @@
             object-fit: cover;
         }
 
+        /* Cinematic Wrap Fullscreen Adjustments for Watermark Visibility */
+        .cinematic-player-wrap:fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100% !important;
+            aspect-ratio: auto !important;
+            border-radius: 0 !important;
+            border: none !important;
+            background: #000000 !important;
+        }
+        .cinematic-player-wrap:fullscreen .custom-video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+        }
+        .cinematic-player-wrap:-webkit-full-screen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100% !important;
+            aspect-ratio: auto !important;
+            border-radius: 0 !important;
+            border: none !important;
+            background: #000000 !important;
+        }
+        .cinematic-player-wrap:-webkit-full-screen .custom-video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+        }
+
         /* PLAY OVERLAY */
         .player-cover-overlay {
             position: absolute;
@@ -546,11 +576,43 @@
             }
         }
 
-        /* --- Media Print & Screenshot Protection --- */
-        @media print {
-            body { display: none !important; }
-            video { display: none !important; }
-            #screenRecordOverlay { display: flex !important; }
+        /* --- Custom Fullscreen Button Styling --- */
+        .custom-fullscreen-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(13, 21, 33, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            cursor: pointer;
+            z-index: 2147483645 !important;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+        .custom-fullscreen-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: scale(1.1) translateZ(0);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.25);
+        }
+        .custom-fullscreen-btn:active {
+            transform: scale(0.95) translateZ(0);
+        }
+
+        /* Completely hide native browser video control buttons */
+        video::-webkit-media-controls-fullscreen-button {
+            display: none !important;
         }
     </style>
 </head>
@@ -581,9 +643,19 @@
 
             <div class="video-frame-container">
                 <!-- Cinematic Player Block -->
-                <div class="cinematic-player-wrap">
+                <div class="cinematic-player-wrap">                    <!-- Custom MP4 Video Player -->
+                    <video id="workspaceVideo" class="custom-video" controls controlslist="nodownload nofullscreen" disablepictureinpicture oncontextmenu="return false;">
+                        <source src="../video/Screen Recording 2025-09-04 202308.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <!-- Custom Fullscreen Toggle Button Overlay -->
+                    <button id="customFullscreenBtn" class="custom-fullscreen-btn" title="Toggle Fullscreen">
+                        <i class="fa-solid fa-expand"></i>
+                    </button>
+
                     <!-- Play Overlay Poster -->
-                    <div class="player-cover-overlay" id="playerOverlay">
+                    <div class="player-cover-overlay" id="playerOverlay" style="z-index: 2147483645; transform: translateZ(0); will-change: transform;">
                         <div class="large-play-icon">
                             <i class="fa-solid fa-play"></i>
                         </div>
@@ -591,32 +663,12 @@
                         <p>Click to Stream Lesson Video</p>
                     </div>
 
-                    <!-- Screen Capture Protection Black Block Overlay -->
-                    <div id="screenRecordOverlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; box-sizing: border-box;">
-                        <div style="width: 70px; height: 70px; background: rgba(239, 68, 68, 0.1); border: 2px solid #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; color: #ef4444;"></i>
-                        </div>
-                        <h2 style="font-size: 1.5rem; font-weight: 900; text-transform: uppercase; font-family: 'Satoshi', sans-serif; color: #ffffff; margin-bottom: 0.5rem; letter-spacing: 0.5px;">
-                            Security Action Triggered
-                        </h2>
-                        <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.5; max-width: 400px; margin-bottom: 1.5rem;">
-                            Screen recording, background capture tools, or page layout prints are strictly restricted on PrimeVerse LMS.
-                        </p>
-                        <div style="font-size: 0.72rem; color: var(--gold); font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; border: 1px solid rgba(212,175,55,0.2); padding: 6px 16px; border-radius: 4px; background: rgba(212,175,55,0.05);">
-                            PROTECTION LAYER ACTIVE
-                        </div>
-                    </div>
 
-                    <!-- Custom MP4 Video Player -->
+
                     <!-- Dynamic Anti-Piracy Watermark -->
-                    <div id="videoWatermark" style="position: absolute; pointer-events: none; z-index: 8; color: rgba(255, 255, 255, 0.22); font-size: 0.85rem; font-weight: 700; font-family: 'Satoshi', sans-serif; white-space: nowrap; background: rgba(0, 0, 0, 0.35); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 5s ease-in-out; top: 20%; left: 20%; backdrop-filter: blur(2px);">
+                    <div id="videoWatermark" style="position: absolute; pointer-events: none; z-index: 2147483646; color: rgba(255, 255, 255, 0.22); font-size: 0.85rem; font-weight: 700; font-family: 'Satoshi', sans-serif; white-space: nowrap; background: rgba(0, 0, 0, 0.35); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 5s ease-in-out; top: 20%; left: 20%; backdrop-filter: blur(2px); transform: translateZ(0); will-change: transform;">
                         harish.primeverse@gmail.com
                     </div>
-
-                    <video id="workspaceVideo" class="custom-video" controls controlslist="nodownload" oncontextmenu="return false;">
-                        <source src="../video/Screen Recording 2025-09-04 202308.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
                 </div>
 
                 <!-- Control Context Detail Box -->
@@ -780,7 +832,7 @@
         if (watermarkEl) {
             const userEmail = localStorage.getItem('userEmail') || 'harish.primeverse@gmail.com';
             const userPhone = localStorage.getItem('userPhone') || '+91 9999999999';
-            watermarkEl.innerText = `${userEmail} | ${userPhone}`;
+            watermarkEl.innerHTML = `<div style="text-decoration: none !important; border-bottom: none !important; display: block;">${userEmail}</div><div style="font-weight: 800; color: rgba(255, 255, 255, 0.38); margin-top: 3px; display: block;">${userPhone}</div>`;
             
             function moveWatermark() {
                 const randomTop = Math.floor(Math.random() * 65) + 15; // Between 15% and 80% height
@@ -795,41 +847,79 @@
             setInterval(moveWatermark, 5000);
         }
 
-        // --- Advanced Screen Capture / Record Protection Logic ---
-        const recordOverlay = document.getElementById('screenRecordOverlay');
-        function showBlock() {
-            if (recordOverlay) recordOverlay.style.display = 'flex';
-            if (videoPlayer) videoPlayer.pause();
-        }
-        function hideBlock() {
-            if (recordOverlay) recordOverlay.style.display = 'none';
-        }
 
-        // 1. Loss of window focus detection (stops background recording compositor compose)
-        window.addEventListener('blur', showBlock);
-        window.addEventListener('focus', hideBlock);
 
-        // 2. Keyboard shortcut screenshot blocker (PrintScreen, Ctrl+P, Ctrl+S)
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'PrintScreen' || e.keyCode === 44) {
-                e.preventDefault();
-                showBlock();
-                setTimeout(hideBlock, 3000);
-            }
-            if (e.ctrlKey && (e.key === 'p' || e.key === 'P' || e.key === 's' || e.key === 'S')) {
-                e.preventDefault();
-                showBlock();
-                setTimeout(hideBlock, 3000);
-            }
-        });
-
-        // 3. Screen Share/Record Tab API blocker
-        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-            navigator.mediaDevices.getDisplayMedia = function() {
-                showBlock();
-                return Promise.reject(new Error("Screen capture is strictly blocked on PrimeVerse LMS."));
+        // 4. Custom Fullscreen Redirection to preserve Watermark Sibling Visibility
+        const playerWrap = document.querySelector('.cinematic-player-wrap');
+        
+        // Monkeypatch requestFullscreen calls on the video element (native zoom/fullscreen control button)
+        // so that it transparently requests fullscreen on the parent container instead.
+        // This is 100% compliant with browser transient user gesture restrictions!
+        if (videoPlayer) {
+            videoPlayer.requestFullscreen = function(options) {
+                if (playerWrap && playerWrap.requestFullscreen) {
+                    return playerWrap.requestFullscreen(options);
+                }
+                return Promise.reject(new Error("Fullscreen wrap element not found"));
+            };
+            
+            videoPlayer.webkitRequestFullscreen = function(options) {
+                if (playerWrap) {
+                    if (playerWrap.webkitRequestFullscreen) {
+                        playerWrap.webkitRequestFullscreen(options);
+                    } else if (playerWrap.requestFullscreen) {
+                        playerWrap.requestFullscreen(options);
+                    }
+                }
             };
         }
+        
+        // Custom Fullscreen Toggle Helper
+        function toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (playerWrap.requestFullscreen) {
+                    playerWrap.requestFullscreen().catch(err => console.log(err));
+                } else if (playerWrap.webkitRequestFullscreen) {
+                    playerWrap.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        // Double click video element to toggle custom fullscreen on the parent container
+        videoPlayer.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            toggleFullscreen();
+        });
+
+        // Click custom glassmorphic fullscreen button
+        const customFullscreenBtn = document.getElementById('customFullscreenBtn');
+        if (customFullscreenBtn) {
+            customFullscreenBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFullscreen();
+            });
+        }
+
+        // Keep fullscreen icon synced dynamically
+        function updateFullscreenIcon() {
+            const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+            const icon = customFullscreenBtn ? customFullscreenBtn.querySelector('i') : null;
+            if (icon) {
+                if (isFs) {
+                    icon.className = 'fa-solid fa-compress';
+                } else {
+                    icon.className = 'fa-solid fa-expand';
+                }
+            }
+        }
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
 
         // Play handler
         playerOverlay.addEventListener('click', () => {
