@@ -2797,55 +2797,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Countdown Timer Logic (Counts down to midnight) ---
-            const timerDisplay = document.querySelector('.unlock-timer');
-            if (timerDisplay) {
-                function updateTimer() {
-                    const now = new Date();
-                    const tomorrow = new Date(now);
-                    tomorrow.setDate(now.getDate() + 1);
-                    tomorrow.setHours(0, 0, 0, 0);
-
-                    const diff = tomorrow - now;
-
-                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-                    const seconds = Math.floor((diff / 1000) % 60);
-
-                    const h = hours.toString().padStart(2, '0');
-                    const m = minutes.toString().padStart(2, '0');
-                    const s = seconds.toString().padStart(2, '0');
-
-                    timerDisplay.textContent = `${h}:${m}:${s}`;
-                }
-
-                updateTimer(); // Initial call
-                setInterval(updateTimer, 1000);
-            }
-
-            // --- Other Dashboard Logic ---
-            window.toggleTimelineItem = function(itemElement, dayNumber) {
-                const isUnlocked = (dayNumber <= currentDay);
-                if (!isUnlocked) {
-                    return; // Locked, do not toggle
-                }
-                const allItems = document.querySelectorAll('.mastery-timeline-item');
-                allItems.forEach(item => {
-                    if (item !== itemElement) {
-                        item.classList.remove('expanded');
-                    }
-                });
-                itemElement.classList.toggle('expanded');
-            };
-
-            if (window.lucide) {
-                window.lucide.createIcons();
-            }
-
-            const videoPlaceholder = document.getElementById('mainVideo');
-            const videoPlayer = document.getElementById('videoPlayer');
-
-                    const lessonsDatabase = {
+            const lessonsDatabase = {
             0: {
                     title: "YOUR FUTURE IS HERE , INTRODUCTION",
                     part1: { title: "YOUR FUTURE IS HERE , INTRODUCTION", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
@@ -2954,6 +2906,77 @@
             let modulesCompleted = parseInt(localStorage.getItem('modulesCompleted')) || 0;
             let totalModules = parseInt(localStorage.getItem('totalModules')) || 18;
 
+            // --- Helper Functions to Unlock Next Day Modules ---
+            window.triggerDayUnlock = async function (newDay) {
+                if (newDay <= currentDay) return;
+                
+                console.log(`🔓 Unlocking new day: ${currentDay} -> ${newDay}`);
+                currentDay = newDay;
+                modulesCompleted = currentDay - 1;
+                programProgress = Math.round((modulesCompleted / totalModules) * 100);
+                
+                const nextLessonData = lessonsDatabase[currentDay] || lessonsDatabase[1];
+                if (nextLessonData) {
+                    stageTitle = nextLessonData.title;
+                }
+
+                // Update localStorage
+                localStorage.setItem('currentDay', currentDay);
+                localStorage.setItem('programProgress', programProgress);
+                localStorage.setItem('stageTitle', stageTitle);
+                localStorage.setItem('modulesCompleted', modulesCompleted);
+
+                // Update UI immediately
+                window.updateDashboardUI();
+
+                // Save to Supabase
+                const userEmail = localStorage.getItem('userEmail');
+                const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+                if (supabase && userEmail) {
+                    try {
+                        const { error } = await supabase
+                            .from('profiles')
+                            .update({
+                                current_day: currentDay,
+                                modules_completed: modulesCompleted,
+                                program_progress: programProgress,
+                                stage_title: stageTitle
+                            })
+                            .ilike('email', userEmail.trim());
+
+                        if (error) {
+                            console.error("❌ Supabase Sync Engine: Error updating unlocked day in DB:", error);
+                        } else {
+                            console.log("✅ Supabase Sync Engine: Successfully updated unlocked day in DB to", currentDay);
+                        }
+                    } catch (e) {
+                        console.error("❌ Supabase Sync Engine: Exception during DB unlock sync:", e);
+                    }
+                }
+            };
+
+            window.checkAndUnlockDays = function (enrollDateStr) {
+                if (!enrollDateStr) return;
+                try {
+                    const enrollDate = new Date(enrollDateStr);
+                    const enrollDateClean = new Date(enrollDate);
+                    enrollDateClean.setHours(0, 0, 0, 0);
+                    
+                    const todayClean = new Date();
+                    todayClean.setHours(0, 0, 0, 0);
+                    
+                    const diffTime = todayClean - enrollDateClean;
+                    const daysSinceEnroll = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                    const targetDay = Math.min(totalModules, Math.max(1, daysSinceEnroll + 1));
+                    
+                    if (targetDay > currentDay) {
+                        window.triggerDayUnlock(targetDay);
+                    }
+                } catch (e) {
+                    console.error("Error checking and unlocking days:", e);
+                }
+            };
+
             // Compute local fallbacks if enrollDateStr is present and no cache exists before Supabase loads
             if (enrollDateStr && !localStorage.getItem('currentDay')) {
                 const enrollDate = new Date(enrollDateStr);
@@ -2969,6 +2992,70 @@
                     stageTitle = initialLessonData.title;
                 }
             }
+
+            // Run initial check on page load using cached enrollDate
+            if (enrollDateStr) {
+                window.checkAndUnlockDays(enrollDateStr);
+            }
+
+            // --- Countdown Timer Logic (Counts down to midnight) ---
+            const timerDisplay = document.querySelector('.unlock-timer');
+            let lastTimerDateStr = new Date().toDateString();
+            if (timerDisplay) {
+                function updateTimer() {
+                    const now = new Date();
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(now.getDate() + 1);
+                    tomorrow.setHours(0, 0, 0, 0);
+
+                    const diff = tomorrow - now;
+
+                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                    const seconds = Math.floor((diff / 1000) % 60);
+
+                    const h = hours.toString().padStart(2, '0');
+                    const m = minutes.toString().padStart(2, '0');
+                    const s = seconds.toString().padStart(2, '0');
+
+                    timerDisplay.textContent = `${h}:${m}:${s}`;
+
+                    // Real-time rollover detection (when date string changes)
+                    const currentDateStr = new Date().toDateString();
+                    if (currentDateStr !== lastTimerDateStr) {
+                        lastTimerDateStr = currentDateStr;
+                        const latestEnrollDate = localStorage.getItem('enrollDate');
+                        if (latestEnrollDate && typeof window.checkAndUnlockDays === 'function') {
+                            window.checkAndUnlockDays(latestEnrollDate);
+                        }
+                    }
+                }
+
+                updateTimer(); // Initial call
+                setInterval(updateTimer, 1000);
+            }
+
+            // --- Other Dashboard Logic ---
+            window.toggleTimelineItem = function(itemElement, dayNumber) {
+                const isUnlocked = (dayNumber <= currentDay);
+                if (!isUnlocked) {
+                    return; // Locked, do not toggle
+                }
+                const allItems = document.querySelectorAll('.mastery-timeline-item');
+                allItems.forEach(item => {
+                    if (item !== itemElement) {
+                        item.classList.remove('expanded');
+                    }
+                });
+                itemElement.classList.toggle('expanded');
+            };
+
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+
+            const videoPlaceholder = document.getElementById('mainVideo');
+            const videoPlayer = document.getElementById('videoPlayer');
 
             window.loadLesson = function (dayNumber) {
                 const isUnlocked = (dayNumber <= currentDay);
@@ -3365,8 +3452,9 @@
                 const userEmail = localStorage.getItem('userEmail');
                 console.log("🔄 Supabase Sync Engine: Triggered sync check for email:", userEmail);
                 
-                if (!window.supabaseClient) {
-                    console.error("❌ Supabase Sync Engine: supabaseClient is not defined on the window. Verify js/supabase.js script load.");
+                const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+                if (!supabase) {
+                    console.error("❌ Supabase Sync Engine: supabaseClient is not defined on the window and fallback creation failed. Verify CDN or connection.");
                     return;
                 }
 
@@ -3376,7 +3464,7 @@
                 }
 
                 try {
-                    const { data: user, error } = await window.supabaseClient
+                    const { data: user, error } = await supabase
                         .from('profiles')
                         .select('*')
                         .ilike('email', userEmail.trim())
@@ -3425,6 +3513,11 @@
                     localStorage.setItem('stageTitle', stageTitle);
                     localStorage.setItem('modulesCompleted', modulesCompleted);
                     localStorage.setItem('totalModules', totalModules);
+
+                    // Check and unlock day if the enrollment date dictates a new day
+                    if (user.enroll_date && typeof window.checkAndUnlockDays === 'function') {
+                        window.checkAndUnlockDays(user.enroll_date);
+                    }
                     
                     // Update dynamic welcome name
                     const welcomeUserName = document.getElementById('welcomeUserName');
