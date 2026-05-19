@@ -12,6 +12,39 @@
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter & Plus Jakarta Sans Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false
+            },
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        premiumDark: {
+                            900: '#05070C',
+                            800: '#0B0F19',
+                            700: '#111827',
+                            600: '#1F2937',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
         :root {
@@ -969,6 +1002,47 @@
                 padding: 1.5rem;
             }
         }
+
+        /* Glowing backdrops */
+        .glow-green {
+            box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.15) !important;
+        }
+        .glow-purple {
+            box-shadow: 0 0 35px -5px rgba(139, 92, 246, 0.15) !important;
+        }
+        .glow-gold {
+            box-shadow: 0 0 35px -5px rgba(245, 158, 11, 0.12) !important;
+        }
+
+        /* High-end glass utility */
+        .premium-glass {
+            background: rgba(17, 24, 39, 0.7) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .premium-glass-hover:hover {
+            background: rgba(17, 24, 39, 0.85) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        }
+
+        /* Custom dash border */
+        .dash-border-gradient {
+            background-image: linear-gradient(90deg, #10B981 50%, transparent 50%), linear-gradient(90deg, #10B981 50%, transparent 50%), linear-gradient(0deg, #10B981 50%, transparent 50%), linear-gradient(0deg, #10B981 50%, transparent 50%);
+            background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+            background-size: 12px 1.5px, 12px 1.5px, 1.5px 12px, 1.5px 12px;
+            background-position: 0 0, 100% 100%, 0 100%, 100% 0;
+        }
+
+        /* Pulse animation for key active components */
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.95; }
+            50% { transform: scale(1.03); opacity: 1; filter: brightness(1.1); }
+        }
+        .pulse-glow-button {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
     </style>
 </head>
 
@@ -1050,63 +1124,250 @@
 
             <!-- Premium Journal Setup Plan Section -->
             <div class="journal-plan-flow-grid">
-                <!-- Left Card: YOUR JOURNAL PLAN -->
-                <div class="journal-setup-card-premium">
-                    <div class="card-header-with-badge">
-                        <i data-lucide="calendar-days" class="header-icon-gold"></i>
-                        <div class="header-text-block">
-                            <h3 class="setup-card-title">YOUR JOURNAL PLAN</h3>
-                            <span class="setup-card-subtitle">1 Journal Template File + 1 Guided Video</span>
+                <!-- Left Column: YOUR JOURNAL PLAN (New Premium UI) -->
+                <div class="flex flex-col gap-6" style="min-width: 0;">
+                    
+                    <!-- Header -->
+                    <div class="flex items-center gap-4 pb-4 border-b border-white/5">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500/10 to-yellow-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.15)] relative overflow-hidden group">
+                            <i data-lucide="calendar-days" style="width: 22px; height: 22px; color: var(--gold);"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-lg font-extrabold tracking-tight text-white uppercase m-0">
+                                YOUR JOURNAL PLAN
+                            </h3>
+                            <p class="text-xs text-slate-400 font-medium mt-1 flex items-center gap-2 m-0">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold border border-emerald-500/20">1 Journal Template File</span>
+                                <span class="text-slate-600">•</span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded bg-violet-500/10 text-violet-400 text-[10px] font-semibold border border-violet-500/20">1 Guided Walkthrough</span>
+                            </p>
                         </div>
                     </div>
 
-                    <div class="setup-resources-row">
-                        <!-- Resource 1: XLSX Template -->
-                        <div class="resource-item-box template-box">
-                            <span class="resource-badge badge-green">TEMPLATE FILE</span>
-                            <div class="xlsx-icon-container">
-                                <i data-lucide="file-spreadsheet" class="xlsx-icon"></i>
-                                <span class="xlsx-text">XLSX</span>
+                    <!-- Main Dashboard Cards Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- Card 1: Execution Journal Template -->
+                        <div class="premium-glass premium-glass-hover rounded-3xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:glow-green group relative overflow-hidden">
+                            <!-- Highlight Gradient Bar -->
+                            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/0 via-emerald-500/40 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                            <div>
+                                <!-- Badge -->
+                                <div class="flex justify-between items-start mb-6">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 uppercase">
+                                        Template File
+                                    </span>
+                                    <span class="text-slate-500 text-xs font-semibold bg-white/5 px-2.5 py-1 rounded-lg">v2.4.1</span>
+                                </div>
+
+                                <!-- Visual Asset Container -->
+                                <div class="h-44 w-full rounded-2xl bg-[#05070C]/60 border border-white/5 flex items-center justify-center mb-6 relative group/visual overflow-hidden">
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 to-transparent opacity-0 group-hover/visual:opacity-100 transition-opacity duration-300"></div>
+                                    
+                                    <!-- XLSX Document Block -->
+                                    <div class="w-24 h-28 relative flex flex-col justify-between items-center p-3 rounded-xl border border-emerald-500/30 bg-gradient-to-b from-[#0B0F19] to-[#05070C] shadow-xl group-hover:scale-105 transition-all duration-500">
+                                        <!-- Custom dash ring overlay inside -->
+                                        <div class="absolute inset-1.5 rounded-lg border border-dashed border-emerald-500/10 pointer-events-none"></div>
+
+                                        <!-- Folded Corner Effect -->
+                                        <div class="absolute top-0 right-0 w-4 h-4 bg-emerald-500/20 border-l border-b border-emerald-500/30 rounded-bl-md"></div>
+                                        
+                                        <!-- Document Icon and Header -->
+                                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mt-2">
+                                            <i data-lucide="file-spreadsheet" class="w-6 h-6 text-emerald-400"></i>
+                                        </div>
+
+                                        <!-- Extension Text Badge -->
+                                        <div class="px-2.5 py-1 bg-emerald-500 text-slate-900 rounded font-black text-xs tracking-wider shadow-lg shadow-emerald-500/20 mb-1">
+                                            XLSX
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Metadata -->
+                                <div class="space-y-1 mb-8 text-left">
+                                    <h2 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors duration-200 m-0">
+                                        EXECUTION JOURNAL TEMPLATE
+                                    </h2>
+                                    <p class="text-xs text-slate-400 m-0">
+                                        PrimeVerse Journal Framework
+                                    </p>
+                                </div>
                             </div>
-                            <h4 class="resource-title">Execution Journal Template</h4>
-                            <p class="resource-subtitle">PrimeVerse Journal Framework</p>
-                            <a href="../video/Screen Recording 2025-09-04 202308.mp4" download="PrimeVerse_Execution_Journal_Template.xlsx" class="resource-action-btn btn-outline-green">
-                                <i data-lucide="download"></i>
-                                <span>Download Template</span>
+
+                            <!-- Interactive Premium Button -->
+                            <a href="../video/Screen Recording 2025-09-04 202308.mp4" download="PrimeVerse_Execution_Journal_Template.xlsx" onclick="handleDownload()" id="downloadBtn" class="w-full relative py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm tracking-wide transition-all duration-300 shadow-[0_4px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_8px_30px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2 overflow-hidden group/btn active:scale-[0.98] text-decoration-none">
+                                <div class="absolute inset-0 w-1/2 h-full bg-white/10 skew-x-12 -translate-x-full group-hover/btn:animate-[shimmer_1s_ease-in-out]"></div>
+                                <span id="downloadText" class="flex items-center gap-2">
+                                    <i data-lucide="download" class="w-5 h-5"></i>
+                                    DOWNLOAD TEMPLATE
+                                </span>
+                                <span id="downloadProgress" class="hidden flex items-center gap-3">
+                                    <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    PREPARING FILE...
+                                </span>
                             </a>
                         </div>
 
-                        <!-- Resource 2: Guided Video -->
-                        <div class="resource-item-box video-box">
-                            <span class="resource-badge badge-purple">GUIDED VIDEO</span>
-                            <div class="video-thumbnail-wrapper-journal" onclick="openJournalVideoModal()">
-                                <img src="../assets/journal_walkthrough_thumb.png" alt="Guided Video Walkthrough" class="video-thumb-img-journal">
-                                <div class="play-btn-circle-journal">
-                                    <i data-lucide="play"></i>
+                        <!-- Card 2: Execution Journal Walkthrough -->
+                        <div class="premium-glass premium-glass-hover rounded-3xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:glow-purple group relative overflow-hidden">
+                            <!-- Highlight Gradient Bar -->
+                            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500/0 via-violet-500/40 to-violet-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                            <div>
+                                <!-- Badge -->
+                                <div class="flex justify-between items-start mb-6">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider text-violet-400 bg-violet-500/10 border border-violet-500/20 uppercase">
+                                        Guided Video
+                                    </span>
+                                    <span class="text-slate-500 text-xs font-semibold bg-white/5 px-2.5 py-1 rounded-lg">18 min HD</span>
+                                </div>
+
+                                <!-- Visual Asset Container (Mock Video Player with High-Fidelity Interface) -->
+                                <div class="h-44 w-full rounded-2xl bg-[#05070C]/80 border border-white/5 flex items-center justify-center mb-6 relative overflow-hidden group/video cursor-pointer" onclick="openJournalVideoModal()">
+                                    <!-- Simulated video background with gradient overlay and abstract graphs -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+                                    
+                                    <!-- Stylized Chart Art in Background -->
+                                    <div class="absolute inset-0 opacity-20 group-hover/video:opacity-30 transition-opacity duration-300 flex items-end justify-between p-4 pointer-events-none">
+                                        <div class="h-16 w-3 bg-violet-500 rounded-sm"></div>
+                                        <div class="h-24 w-3 bg-indigo-500 rounded-sm"></div>
+                                        <div class="h-12 w-3 bg-violet-400 rounded-sm"></div>
+                                        <div class="h-20 w-3 bg-indigo-400 rounded-sm"></div>
+                                        <div class="h-32 w-3 bg-violet-600 rounded-sm"></div>
+                                        <div class="h-24 w-3 bg-emerald-500 rounded-sm"></div>
+                                        <div class="h-16 w-3 bg-teal-500 rounded-sm"></div>
+                                    </div>
+
+                                    <!-- Floating Play Overlay with Ripple Ring -->
+                                    <div class="relative z-20 flex flex-col items-center gap-2">
+                                        <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-2xl group-hover/video:scale-110 group-hover/video:bg-violet-600 group-hover/video:border-violet-400 transition-all duration-300 relative">
+                                            <span class="absolute -inset-2 rounded-full border border-violet-500/30 animate-ping opacity-75 group-hover/video:opacity-100"></span>
+                                            <i data-lucide="play" class="w-6 h-6 text-white translate-x-0.5"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Video Title Overlay -->
+                                    <div class="absolute bottom-3 left-3 right-3 z-20 flex justify-between items-center">
+                                        <span class="text-[10px] text-slate-300 font-bold tracking-wider uppercase bg-black/60 backdrop-blur-sm px-2 py-1 rounded border border-white/5">
+                                            Trading Mastery
+                                        </span>
+                                        <span class="text-[10px] text-violet-300 font-semibold flex items-center gap-1 bg-violet-500/25 backdrop-blur-sm px-2 py-1 rounded">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span>
+                                            STEP-BY-STEP
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Metadata -->
+                                <div class="space-y-1 mb-8 text-left">
+                                    <h2 class="text-lg font-bold text-white group-hover:text-violet-300 transition-colors duration-200 m-0">
+                                        EXECUTION JOURNAL WALKTHROUGH
+                                    </h2>
+                                    <p class="text-xs text-slate-400 m-0">
+                                        Step-by-step guidance to use the journal for maximum results.
+                                    </p>
                                 </div>
                             </div>
-                            <h4 class="resource-title">Execution Journal Walkthrough</h4>
-                            <p class="resource-subtitle">Step-by-step guidance to use the journal for maximum results.</p>
-                            <button class="resource-action-btn btn-outline-purple" onclick="openJournalVideoModal()">
-                                <i data-lucide="play-circle"></i>
-                                <span>Watch Video</span>
+
+                            <!-- Interactive Premium Button -->
+                            <button onclick="openJournalVideoModal()" class="w-full relative py-4 px-6 rounded-2xl bg-[#0B0F19] hover:bg-[#111827] text-white font-bold text-sm tracking-wide transition-all duration-300 border border-white/10 hover:border-violet-500/30 flex items-center justify-center gap-2 group/btn active:scale-[0.98]">
+                                <span class="flex items-center gap-2 group-hover/btn:text-violet-400 transition-colors duration-200">
+                                    <i data-lucide="play-circle" class="w-5 h-5 text-violet-400"></i>
+                                    WATCH VIDEO WALKTHROUGH
+                                </span>
                             </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Premium "How to Use" Accordion / Drawer -->
+                    <div class="premium-glass rounded-3xl overflow-hidden transition-all duration-300 hover:glow-gold border border-amber-500/10">
+                        <!-- Header bar / Toggle Button -->
+                        <button onclick="toggleOnboarding()" class="w-full p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors duration-200 group bg-transparent border-0 cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                                    <i data-lucide="info" class="w-5 h-5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <h3 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors duration-200 m-0">How to Use</h3>
+                                    <p class="text-xs text-slate-400 mt-0.5 m-0">Quick Onboarding Steps & Checklists</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] text-amber-500 font-semibold uppercase tracking-wider bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/20">
+                                    Interactive Checklist
+                                </span>
+                                <i data-lucide="chevron-down" id="chevron-icon" class="w-5 h-5 text-slate-400 group-hover:text-white transition-transform duration-300 transform"></i>
+                            </div>
+                        </button>
+
+                        <!-- Expanded Drawer Content -->
+                        <div id="onboarding-drawer" class="border-t border-white/5 bg-[#05070C]/40 transition-all duration-300 ease-in-out max-h-0 opacity-0 overflow-hidden">
+                            <div class="p-6 md:p-8 space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    
+                                    <!-- Step 1 -->
+                                    <div class="p-4 rounded-2xl bg-[#0B0F19]/60 border border-white/5 flex flex-col justify-between hover:border-emerald-500/20 transition-all duration-200">
+                                        <div class="text-left">
+                                            <div class="flex justify-between items-center mb-3">
+                                                <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Step 01</span>
+                                                <input type="checkbox" id="chk-step-1" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 bg-[#05070C] cursor-pointer" onchange="updateProgress()">
+                                            </div>
+                                            <h4 class="font-bold text-sm text-white m-0">Download Template</h4>
+                                            <p class="text-xs text-slate-400 mt-1 leading-relaxed m-0">Download and save the execution excel template onto your local workstation.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2 -->
+                                    <div class="p-4 rounded-2xl bg-[#0B0F19]/60 border border-white/5 flex flex-col justify-between hover:border-violet-500/20 transition-all duration-200">
+                                        <div class="text-left">
+                                            <div class="flex justify-between items-center mb-3">
+                                                <span class="text-[10px] font-black text-violet-400 uppercase tracking-widest">Step 02</span>
+                                                <input type="checkbox" id="chk-step-2" class="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500 bg-[#05070C] cursor-pointer" onchange="updateProgress()">
+                                            </div>
+                                            <h4 class="font-bold text-sm text-white m-0">Watch Walkthrough</h4>
+                                            <p class="text-xs text-slate-400 mt-1 leading-relaxed m-0">Spend 18 minutes reviewing the layout, formulas, and parameters included inside the template.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 3 -->
+                                    <div class="p-4 rounded-2xl bg-[#0B0F19]/60 border border-white/5 flex flex-col justify-between hover:border-amber-500/20 transition-all duration-200">
+                                        <div class="text-left">
+                                            <div class="flex justify-between items-center mb-3">
+                                                <span class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Step 03</span>
+                                                <input type="checkbox" id="chk-step-3" class="w-4 h-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500 bg-[#05070C] cursor-pointer" onchange="updateProgress()">
+                                            </div>
+                                            <h4 class="font-bold text-sm text-white m-0">Document Every Trade</h4>
+                                            <p class="text-xs text-slate-400 mt-1 leading-relaxed m-0">Begin logging entry, targets, stop-losses, emotional indicators, and strategy details weekly.</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Progress Tracking Info -->
+                                <div class="bg-[#0B0F19]/80 rounded-2xl p-4 border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3 w-full sm:w-auto text-left">
+                                        <div class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xs font-black" id="progress-percent">
+                                            0%
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-white uppercase tracking-wider m-0">Your Setup Progress</p>
+                                            <p class="text-[11px] text-slate-400 m-0" id="progress-status-text">Select checkboxes to track your preparation journey.</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-center sm:text-right">
+                                        <p class="text-xs text-slate-300 italic font-medium m-0">"Consistency in journaling = Consistency in results."</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Bottom Alert: How to Use -->
-                    <div class="how-to-use-bar-journal">
-                        <div class="how-to-left">
-                            <div class="info-icon-wrapper-journal">
-                                <i data-lucide="info"></i>
-                            </div>
-                            <div class="how-to-text-block">
-                                <span class="how-to-title">How to Use</span>
-                                <p class="how-to-desc">Download the template, watch the video guide, and start documenting every trade. <br><span class="how-to-span">Consistency in journaling = Consistency in results.</span></p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="how-to-arrow"></i>
-                    </div>
                 </div>
 
                 <!-- Right Card: JOURNAL FLOW -->
@@ -1250,9 +1511,122 @@
                     journalModalVideoPlayer.pause();
                     journalModalVideoPlayer.currentTime = 0;
                 }
+                // Tick Step 2
+                const chk2 = document.getElementById('chk-step-2');
+                if (chk2 && !chk2.checked) {
+                    chk2.checked = true;
+                    updateProgress();
+                }
             };
         });
+
+        // Onboarding Checkbox Trackers
+        let chk1, chk2, chk3, progressPercent, progressStatusText;
+
+        // Toggle Expandable "How to Use" Onboarding checklist
+        window.toggleOnboarding = function() {
+            const drawer = document.getElementById('onboarding-drawer');
+            const chevron = document.getElementById('chevron-icon');
+            
+            if (drawer.style.maxHeight && drawer.style.maxHeight !== '0px') {
+                drawer.style.maxHeight = '0px';
+                drawer.style.opacity = '0';
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            } else {
+                drawer.style.maxHeight = '500px'; // sufficiently high to avoid cropping
+                drawer.style.opacity = '1';
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Onboarding Checkboxes Logic
+        window.updateProgress = function() {
+            chk1 = document.getElementById('chk-step-1');
+            chk2 = document.getElementById('chk-step-2');
+            chk3 = document.getElementById('chk-step-3');
+            progressPercent = document.getElementById('progress-percent');
+            progressStatusText = document.getElementById('progress-status-text');
+
+            let completed = 0;
+            if (chk1 && chk1.checked) completed++;
+            if (chk2 && chk2.checked) completed++;
+            if (chk3 && chk3.checked) completed++;
+
+            const percentage = Math.round((completed / 3) * 100);
+            if (progressPercent) progressPercent.textContent = `${percentage}%`;
+
+            if (percentage === 0) {
+                if (progressStatusText) progressStatusText.textContent = "Select checkboxes to track your preparation journey.";
+                if (progressPercent) progressPercent.className = "w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xs font-black";
+            } else if (percentage === 33) {
+                if (progressStatusText) progressStatusText.textContent = "Step 1 complete! Move on to watching the video walkthrough.";
+                if (progressPercent) progressPercent.className = "w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-black";
+            } else if (percentage === 67) {
+                if (progressStatusText) progressStatusText.textContent = "Fantastic! You are almost ready to begin trading consistently.";
+                if (progressPercent) progressPercent.className = "w-10 h-10 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-300 text-xs font-black";
+            } else if (percentage === 100) {
+                if (progressStatusText) progressStatusText.textContent = "All set! Time to start logging consistency & mastering the framework.";
+                if (progressPercent) progressPercent.className = "w-10 h-10 rounded-full bg-emerald-500 text-[#05070C] flex items-center justify-center text-xs font-black animate-pulse shadow-lg shadow-emerald-500/20";
+            }
+        }
+
+        // Simulating the premium XLSX download functionality
+        window.handleDownload = function() {
+            const downloadBtn = document.getElementById('downloadBtn');
+            const dText = document.getElementById('downloadText');
+            const dProgress = document.getElementById('downloadProgress');
+
+            // Set Loading States
+            if (downloadBtn) downloadBtn.disabled = true;
+            if (dText) dText.classList.add('hidden');
+            if (dProgress) dProgress.classList.remove('hidden');
+
+            setTimeout(() => {
+                // Revert Loading States
+                if (downloadBtn) downloadBtn.disabled = false;
+                if (dText) dText.classList.remove('hidden');
+                if (dProgress) dProgress.classList.add('hidden');
+
+                // Auto-tick Step 1 checkbox on download
+                chk1 = document.getElementById('chk-step-1');
+                if (chk1) {
+                    chk1.checked = true;
+                    updateProgress();
+                }
+
+                // Trigger Premium Toast Alert
+                triggerToast();
+            }, 1800);
+        }
+
+        window.triggerToast = function() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.style.transform = 'translateY(0px)';
+                toast.style.opacity = '1';
+                toast.style.pointerEvents = 'auto';
+
+                setTimeout(() => {
+                    toast.style.transform = 'translateY(12px)';
+                    toast.style.opacity = '0';
+                    toast.style.pointerEvents = 'none';
+                }, 4500);
+            }
+        }
     </script>
+
+    <!-- Notification Toast Popup -->
+    <div id="toast" class="fixed bottom-6 right-6 z-[1000] bg-emerald-950/90 border border-emerald-500/30 text-emerald-300 px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-md">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <div class="text-left">
+            <h5 class="text-sm font-bold text-white m-0">Download Started</h5>
+            <p class="text-xs text-emerald-400/80 mt-0.5 m-0">Your Premium Execution Journal is saving to your downloads folders.</p>
+        </div>
+    </div>
 </body>
 
 </html>
