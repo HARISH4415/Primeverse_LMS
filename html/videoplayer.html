@@ -630,97 +630,95 @@
 
     <!-- Script player execution -->
     <script>
-        const lessonsDatabase = {
+                const lessonsDatabase = {
             1: {
-                title: "Financial Market Foundations",
-                part1: { title: "Day 01 - Part 1: Financial Market Foundations Intro", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 01 - Part 2: Institutional Order Flow & Dynamics", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Financial Market Foundations",
+                    part1: { title: "Day 01 - Part 1: Introduction to Trading & Financial Markets", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 01 - Part 2: Forex Market & Currency Pair Fundamentals", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             2: {
-                title: "Charting & Trading Fundamentals",
-                part1: { title: "Day 02 - Part 1: High-Timeframe Charting Setups", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 02 - Part 2: Technical Candlestick Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Charting & Trading Fundamentals",
+                    part1: { title: "Day 02 - Part 1: TradingView Platform & Candlestick Chart Basics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 02 - Part 2: Timeframe Analysis & Types of Traders", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             3: {
-                title: "Trading Execution Essentials",
-                part1: { title: "Day 03 - Part 1: Instant Order Execution Mechanics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 03 - Part 2: Limit & Stop Limit Placements", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Trading Execution Essentials",
+                    part1: { title: "Day 03 - Part 1: Understanding Pips & Lot Size Management", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 03 - Part 2: Broker Mechanics, Spread & Leverage Basics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part3: { title: "Day 03 - Part 3: Market Order & Pending Order Types", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             4: {
-                title: "Trade Management & Market Analysis",
-                part1: { title: "Day 04 - Part 1: Risk Mitigation & Scaling Out", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 04 - Part 2: Advanced Dynamic Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Trade Management & Market Analysis",
+                    part1: { title: "Day 04 - Part 1: Stop Loss, Take Profit & Trading Sessions", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 04 - Part 2: Technical & Fundamental Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             5: {
-                title: "Market Structure",
-                part1: { title: "Day 05 - Part 1: Structural Shifts & Swing Points", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 05 - Part 2: Break of Structure (BOS) vs CHoCH", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Market Structure",
+                    part1: { title: "Day 05 - Part 1: Understanding Market Structure Fundamentals", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             6: {
-                title: "Trend Analysis & Market Direction",
-                part1: { title: "Day 06 - Part 1: Advanced Trendline Liquidity", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 06 - Part 2: Identifying High-Probability Reversals", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Trend Analysis & Market Direction",
+                    part1: { title: "Day 06 - Part 1: Understanding Market Trends", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 06 - Part 2: Live Trend Analysis & Market Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             7: {
-                title: "Key Levels & Market Reaction Zones",
-                part1: { title: "Day 07 - Part 1: Supply & Demand Zone Mapping", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 07 - Part 2: Trading Reactions at Premium Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Key Levels & Market Reaction Zone",
+                    part1: { title: "Day 07 - Part 1: Understanding Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 07 - Part 2: How to Draw Accurate Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part3: { title: "Day 07 - Part 3: Live Key Level Market Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             8: {
-                title: "Expansion & Retracement",
-                part1: { title: "Day 08 - Part 1: Internal vs External Range Liquidity", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 08 - Part 2: Premium & Discount Price Array Zones", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Expansion & Retracement ,  Internal & External Market Structure",
+                    part1: { title: "Day 08 - Part 1: Understanding Expansion & Retracing", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 08 - Part 2: Internal & External Market Structure", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             9: {
-                title: "Fibonacci Framework & Market Strength Analysis",
-                part1: { title: "Day 09 - Part 1: Correct Fibonacci Plotting Standards", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 09 - Part 2: Measuring Trend Speed & Confluence", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Fibonacci Framework & Market Strength Analysis",
+                    part1: { title: "Day 09 - Part 1: Understanding the Fibonacci Tool", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 09 - Part 2: Strong & Weak Highs & Lows", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             10: {
-                title: "Fibonacci Optimal Trade Entry (OTE)",
-                part1: { title: "Day 10 - Part 1: The OTE Core Mechanics (0.62 - 0.79)", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 10 - Part 2: High-Probability OTE Case Studies", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Fibonacci Optimal Trade Entry (OTE)",
+                    part1: { title: "Day 10 - Part 1: Understanding Fibonacci OTE Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             11: {
-                title: "Structure Break, Liquidity, Stop Hunt & Failure Swing",
-                part1: { title: "Day 11 - Part 1: Liquidity Sweeps & Stop Hunts", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 11 - Part 2: Failure Swing Confirmations", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Structure Break, Liquidity, Stop Hunt & Failure Swing",
+                    part1: { title: "Day 11 - Part 1: Structure Break & Liquidity Concepts", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 11 - Part 2: Stop Hunt & Failure Swing Framework", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             12: {
-                title: "Power of Two Confirmation Patterns",
-                part1: { title: "Day 12 - Part 1: Accumulation, Manipulation, Distribution", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 12 - Part 2: Confirming High Probability PO3 Entries", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Power of Two Confirmation Patterns",
+                    part1: { title: "Day 12 - Part 1: SH + SB &  FS + SB (Confirmation Model)", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 12 - Part 2: Live Market Apply", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             13: {
-                title: "Risk Management & Trading Journal Framework",
-                part1: { title: "Day 13 - Part 1: Mathematical Risk-of-Ruin Modeling", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 13 - Part 2: Building your Multi-Asset Journal", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Risk Management & Trading Journal Framework",
+                    part1: { title: "Day 13 - Part 1: Professional Risk Management Principles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 13 - Part 2: Trading Journal & Performance Tracking", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             14: {
-                title: "Trading Psychology & Emotional Discipline",
-                part1: { title: "Day 14 - Part 1: Breaking FOMO & Overtrading Cycles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 14 - Part 2: Operating in the Peak Performance Zone", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Trading Psychology & Emotional Discipline",
+                    part1: { title: "Day 14 - Part 1: Understanding Trading Psychology and Emotional Control & Discipline Framework", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             15: {
-                title: "Capital Growth & Compounding Method",
-                part1: { title: "Day 15 - Part 1: Compounding Models for Prop Firm Growth", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 15 - Part 2: Risk Scaling for Exponential Returns", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Capital Growth & Compounding Methoad",
+                    part1: { title: "Day 15 - Part 1: Capital Growth Formula & Risk Scaling", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 15 - Part 2: Compounding Strategy & Long-Term Growth", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             16: {
-                title: "Market Recap & Complete Market Flow",
-                part1: { title: "Day 16 - Part 1: Top-Down Multi-Timeframe Confluence", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 16 - Part 2: Real-time Analysis Session", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "Market Recap & Complete Market Flow",
+                    part1: { title: "Day 16 - Part 1: Full Recap and Complete Market Flow", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             17: {
-                title: "Real-Time Trade Execution Examples",
-                part1: { title: "Day 17 - Part 1: Live Trade Execution Breakdown", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 17 - Part 2: Managing Trades in High Volatility Sessions", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            },
+                    title: "- Real-Time Trade Execution Examples",
+                    part1: { title: "Day 17 - Part 1: Live Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 17 - Part 2: Real-Time Trade Execution Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                },
             18: {
-                title: "Key Takeaways For Confident Trading",
-                part1: { title: "Day 18 - Part 1: Developing the Mastery Blueprint", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                part2: { title: "Day 18 - Part 2: Final Certificate & Next Steps", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-            }
+                    title: "Key Takeaways For Confident Trading",
+                    part1: { title: "Day 18 - Part 1: Core Trading Principles & Execution Review", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                    part2: { title: "Day 18 - Part 2: Building Confidence & Long-Term Consistency", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+                }
         };
 
         // Parse search params
@@ -751,7 +749,7 @@
             const lesson = lessonsDatabase[dayNum];
             if (!lesson) return;
 
-            const partData = partNum === 1 ? lesson.part1 : lesson.part2;
+            const partData = lesson['part' + partNum] || lesson.part1;
 
             // Update DOM details
             document.getElementById('activeModuleBadge').innerHTML = `<span></span> Day 0${dayNum} — Part ${partNum}`;
@@ -766,15 +764,23 @@
             // Reset player visibility to poster
             playerOverlay.style.display = 'flex';
 
-            // Toggle active buttons
-            const p1Btn = document.getElementById('player-part-1');
-            const p2Btn = document.getElementById('player-part-2');
-            if (partNum === 1) {
-                p1Btn.classList.add('active');
-                p2Btn.classList.remove('active');
-            } else {
-                p2Btn.classList.add('active');
-                p1Btn.classList.remove('active');
+            // Generate part buttons dynamically
+            const partSelector = document.querySelector('.workspace-part-selector');
+            if (partSelector) {
+                let buttonsHTML = '';
+                const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
+                partKeys.sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+                partKeys.forEach((key, index) => {
+                    const pNum = index + 1;
+                    const isActive = pNum === partNum ? 'active' : '';
+                    const iconClass = pNum === partNum ? 'fa-solid fa-circle-play' : 'fa-solid fa-video';
+                    buttonsHTML += `
+                        <button id="player-part-${pNum}" class="part-toggle-btn ${isActive}" onclick="triggerSwitchPart(${pNum})">
+                            <i class="${iconClass}"></i> Part ${pNum}
+                        </button>
+                    `;
+                });
+                partSelector.innerHTML = buttonsHTML;
             }
 
             
@@ -838,7 +844,10 @@
 
                 const subtitleSpan = document.createElement('span');
                 subtitleSpan.className = 'item-subtitle';
-                subtitleSpan.innerText = i > 11 ? 'Locked' : 'Available (2 Videos)';
+                const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
+                const videoCount = partKeys.length;
+                const videoLabel = videoCount === 1 ? '1 Video' : `${videoCount} Videos`;
+                subtitleSpan.innerText = i > 11 ? 'Locked' : `Available (${videoLabel})`;
                 infoDiv.appendChild(subtitleSpan);
 
                 leftDiv.appendChild(infoDiv);
@@ -872,11 +881,19 @@
                 // Save Completion Node
                 localStorage.setItem(`completed_day_${activeDayNum}_part_${activePartNum}`, 'true');
 
-                const p1 = localStorage.getItem(`completed_day_${activeDayNum}_part_1`) === 'true';
-                const p2 = localStorage.getItem(`completed_day_${activeDayNum}_part_2`) === 'true';
-
-                if (p1 && p2) {
-                    localStorage.setItem(`completed_day_${activeDayNum}`, 'true');
+                const lesson = lessonsDatabase[activeDayNum];
+                if (lesson) {
+                    const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
+                    let allCompleted = true;
+                    for (let pIdx = 1; pIdx <= partKeys.length; pIdx++) {
+                        if (localStorage.getItem(`completed_day_${activeDayNum}_part_${pIdx}`) !== 'true') {
+                            allCompleted = false;
+                            break;
+                        }
+                    }
+                    if (allCompleted) {
+                        localStorage.setItem(`completed_day_${activeDayNum}`, 'true');
+                    }
                 }
                 
                 // Re-render Quick Nav with new tick states

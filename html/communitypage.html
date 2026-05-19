@@ -576,8 +576,8 @@
         <nav class="nav-menu">
             <div class="nav-top">
                 <a href="dashboard.html" class="nav-item" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-                <a href="dashboard.html" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
-                <a href="dashboard.html" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
+                <a href="dashboard.html?tab=mastery" class="nav-item" id="nav-mastery"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
+                <a href="dashboard.html?tab=mentorship" class="nav-item" id="nav-mentorship"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
                 <a href="executionjournal.html" class="nav-item" id="nav-journal"><i data-lucide="book-marked"></i> Execution Journal</a>
                 <a href="communitypage.html" class="nav-item active" id="nav-community"><i data-lucide="users"></i> PrimeVerse Community</a>
                 <a href="accountsetting.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
@@ -616,15 +616,7 @@
                         </div>
                         <div class="chat-channel-subtitle">
                             <span><span class="online-dot"></span> 1,357 Traders Enrolled</span>
-                            <span style="color: rgba(255,255,255,0.1);">|</span>
-                            <span>Official Broadcast Only</span>
                         </div>
-                    </div>
-
-                    <!-- Sleek Admin Identity Badge -->
-                    <div class="role-switcher-badge admin-active" style="cursor: default;">
-                        <i data-lucide="shield-check" style="width: 14px; height: 14px; color: var(--gold);"></i>
-                        <span>Admin Console: Ganesh Kumar ✔️</span>
                     </div>
                 </header>
 
@@ -738,11 +730,25 @@
             const selectedCourse = localStorage.getItem('selectedCourse');
             const navMastery = document.getElementById('nav-mastery');
             const navMentorship = document.getElementById('nav-mentorship');
-            if (selectedCourse) {
-                if (selectedCourse.includes('Mastery')) {
-                    if (navMastery) navMastery.style.display = 'flex';
-                } else if (selectedCourse.includes('Mentorship')) {
-                    if (navMentorship) navMentorship.style.display = 'flex';
+            if (navMastery) navMastery.style.display = 'flex';
+            if (navMentorship) {
+                navMentorship.style.display = 'flex';
+                // Lock icon evaluation for Pro Mentorship (locked until Day 18 complete / Day 19)
+                const enrollDateStr = localStorage.getItem('enrollDate');
+                if (enrollDateStr) {
+                    const enrollDate = new Date(enrollDateStr);
+                    const today = new Date();
+                    const diffTime = Math.abs(today - enrollDate);
+                    const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    const currentDay = daysSinceEnroll + 1;
+                    if (currentDay < 19) {
+                        navMentorship.innerHTML = '<i data-lucide="lock"></i> PrimeVerse Pro Mentorship';
+                    } else {
+                        navMentorship.innerHTML = '<i data-lucide="crown"></i> PrimeVerse Pro Mentorship';
+                    }
+                    if (window.lucide) {
+                        window.lucide.createIcons();
+                    }
                 }
             }
 

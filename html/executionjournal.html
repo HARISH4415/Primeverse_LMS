@@ -1063,8 +1063,8 @@
         <nav class="nav-menu">
             <div class="nav-top">
                 <a href="dashboard.html" class="nav-item" id="nav-dashboard-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-                <a href="dashboard.html" class="nav-item" id="nav-mastery" style="display: none;"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
-                <a href="dashboard.html" class="nav-item" id="nav-mentorship" style="display: none;"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
+                <a href="dashboard.html?tab=mastery" class="nav-item" id="nav-mastery"><i data-lucide="graduation-cap"></i> PrimeVerse Mastery Program</a>
+                <a href="dashboard.html?tab=mentorship" class="nav-item" id="nav-mentorship"><i data-lucide="crown"></i> PrimeVerse Pro Mentorship</a>
                 <a href="executionjournal.html" class="nav-item active" id="nav-journal"><i data-lucide="book-marked"></i> Execution Journal</a>
                 <a href="communitypage.html" class="nav-item" id="nav-community"><i data-lucide="users"></i> PrimeVerse Community</a>
                 <a href="accountsetting.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
@@ -1228,21 +1228,10 @@
                                 <!-- Visual Asset Container (Mock Video Player with High-Fidelity Interface) -->
                                 <div class="h-44 w-full rounded-2xl bg-[#05070C]/80 border border-white/5 flex items-center justify-center mb-6 relative overflow-hidden group/video cursor-pointer" onclick="openJournalVideoModal()">
                                     <!-- Walkthrough Thumbnail Picture -->
-                                    <img src="../assets/journal_walkthrough_thumb.png" alt="Guided Video Walkthrough" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover/video:opacity-75 transition-opacity duration-300">
+                                    <img src="../assets/journal_walkthrough_thumb.png" alt="Guided Video Walkthrough" class="absolute inset-0 w-full h-full object-contain opacity-95 group-hover/video:opacity-100 transition-opacity duration-300">
                                     
-                                    <!-- Simulated video background with gradient overlay and abstract graphs -->
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent z-10"></div>
-                                    
-                                    <!-- Stylized Chart Art in Background -->
-                                    <div class="absolute inset-0 opacity-20 group-hover/video:opacity-30 transition-opacity duration-300 flex items-end justify-between p-4 pointer-events-none">
-                                        <div class="h-16 w-3 bg-violet-500 rounded-sm"></div>
-                                        <div class="h-24 w-3 bg-indigo-500 rounded-sm"></div>
-                                        <div class="h-12 w-3 bg-violet-400 rounded-sm"></div>
-                                        <div class="h-20 w-3 bg-indigo-400 rounded-sm"></div>
-                                        <div class="h-32 w-3 bg-violet-600 rounded-sm"></div>
-                                        <div class="h-24 w-3 bg-emerald-500 rounded-sm"></div>
-                                        <div class="h-16 w-3 bg-teal-500 rounded-sm"></div>
-                                    </div>
+                                    <!-- Simulated video background with gradient overlay -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10"></div>
 
                                     <!-- Floating Play Overlay with Ripple Ring -->
                                     <div class="relative z-20 flex flex-col items-center gap-2">
@@ -1301,7 +1290,7 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <span class="text-[10px] text-amber-500 font-semibold uppercase tracking-wider bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/20">
-                                    Interactive Checklist
+                                    Setup Steps
                                 </span>
                                 <i data-lucide="chevron-down" id="chevron-icon" class="w-5 h-5 text-slate-400 group-hover:text-white transition-transform duration-300 transform"></i>
                             </div>
@@ -1317,7 +1306,6 @@
                                         <div class="text-left">
                                             <div class="flex justify-between items-center mb-3">
                                                 <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Step 01</span>
-                                                <input type="checkbox" id="chk-step-1" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 bg-[#05070C] cursor-pointer" onchange="updateProgress()">
                                             </div>
                                             <h4 class="font-bold text-sm text-white m-0">Download Template</h4>
                                             <p class="text-xs text-slate-400 mt-1 leading-relaxed m-0">Download and save the execution excel template onto your local workstation.</p>
@@ -1329,7 +1317,6 @@
                                         <div class="text-left">
                                             <div class="flex justify-between items-center mb-3">
                                                 <span class="text-[10px] font-black text-violet-400 uppercase tracking-widest">Step 02</span>
-                                                <input type="checkbox" id="chk-step-2" class="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500 bg-[#05070C] cursor-pointer" onchange="updateProgress()">
                                             </div>
                                             <h4 class="font-bold text-sm text-white m-0">Watch Walkthrough</h4>
                                             <p class="text-xs text-slate-400 mt-1 leading-relaxed m-0">Spend 18 minutes reviewing the layout, formulas, and parameters included inside the template.</p>
@@ -1341,29 +1328,12 @@
                                         <div class="text-left">
                                             <div class="flex justify-between items-center mb-3">
                                                 <span class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Step 03</span>
-                                                <input type="checkbox" id="chk-step-3" class="w-4 h-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500 bg-[#05070C] cursor-pointer" onchange="updateProgress()">
                                             </div>
                                             <h4 class="font-bold text-sm text-white m-0">Document Every Trade</h4>
                                             <p class="text-xs text-slate-400 mt-1 leading-relaxed m-0">Begin logging entry, targets, stop-losses, emotional indicators, and strategy details weekly.</p>
                                         </div>
                                     </div>
 
-                                </div>
-
-                                <!-- Progress Tracking Info -->
-                                <div class="bg-[#0B0F19]/80 rounded-2xl p-4 border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <div class="flex items-center gap-3 w-full sm:w-auto text-left">
-                                        <div class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xs font-black" id="progress-percent">
-                                            0%
-                                        </div>
-                                        <div>
-                                            <p class="text-xs font-bold text-white uppercase tracking-wider m-0">Your Setup Progress</p>
-                                            <p class="text-[11px] text-slate-400 m-0" id="progress-status-text">Select checkboxes to track your preparation journey.</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-center sm:text-right">
-                                        <p class="text-xs text-slate-300 italic font-medium m-0">"Consistency in journaling = Consistency in results."</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1481,11 +1451,25 @@
             const selectedCourse = localStorage.getItem('selectedCourse');
             const navMastery = document.getElementById('nav-mastery');
             const navMentorship = document.getElementById('nav-mentorship');
-            if (selectedCourse) {
-                if (selectedCourse.includes('Mastery')) {
-                    if (navMastery) navMastery.style.display = 'flex';
-                } else if (selectedCourse.includes('Mentorship')) {
-                    if (navMentorship) navMentorship.style.display = 'flex';
+            if (navMastery) navMastery.style.display = 'flex';
+            if (navMentorship) {
+                navMentorship.style.display = 'flex';
+                // Lock icon evaluation for Pro Mentorship (locked until Day 18 complete / Day 19)
+                const enrollDateStr = localStorage.getItem('enrollDate');
+                if (enrollDateStr) {
+                    const enrollDate = new Date(enrollDateStr);
+                    const today = new Date();
+                    const diffTime = Math.abs(today - enrollDate);
+                    const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    const currentDay = daysSinceEnroll + 1;
+                    if (currentDay < 19) {
+                        navMentorship.innerHTML = '<i data-lucide="lock"></i> PrimeVerse Pro Mentorship';
+                    } else {
+                        navMentorship.innerHTML = '<i data-lucide="crown"></i> PrimeVerse Pro Mentorship';
+                    }
+                    if (window.lucide) {
+                        window.lucide.createIcons();
+                    }
                 }
             }
 
@@ -1547,6 +1531,8 @@
             chk3 = document.getElementById('chk-step-3');
             progressPercent = document.getElementById('progress-percent');
             progressStatusText = document.getElementById('progress-status-text');
+
+            if (!chk1 || !chk2 || !chk3) return;
 
             let completed = 0;
             if (chk1 && chk1.checked) completed++;
