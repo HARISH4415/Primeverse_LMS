@@ -501,6 +501,50 @@
                 align-items: stretch;
             }
         }
+
+        @media (max-width: 768px) {
+            .player-header {
+                height: auto !important;
+                padding: 1rem !important;
+                flex-direction: column !important;
+                gap: 0.8rem !important;
+                align-items: center !important;
+            }
+
+            .player-header > div:first-child {
+                display: flex !important;
+                width: 100% !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                gap: 1rem !important;
+            }
+
+            .back-dashboard-btn {
+                padding: 0.5rem 0.8rem !important;
+                font-size: 0.75rem !important;
+                letter-spacing: 0.5px !important;
+            }
+
+            .player-logo-wrap {
+                gap: 8px !important;
+            }
+
+            .player-logo-wrap img {
+                height: 26px !important;
+            }
+
+            .player-logo-text {
+                font-size: 0.95rem !important;
+            }
+
+            .active-module-badge {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 0.4rem 1rem !important;
+                font-size: 0.68rem !important;
+                box-sizing: border-box !important;
+            }
+        }
     </style>
 </head>
 
