@@ -1158,7 +1158,6 @@
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 uppercase">
                                         Template File
                                     </span>
-                                    <span class="text-slate-500 text-xs font-semibold bg-white/5 px-2.5 py-1 rounded-lg">v2.4.1</span>
                                 </div>
 
                                 <!-- Visual Asset Container -->
@@ -1197,7 +1196,7 @@
                             </div>
 
                             <!-- Interactive Premium Button -->
-                            <a href="../video/Screen Recording 2025-09-04 202308.mp4" download="PrimeVerse_Execution_Journal_Template.xlsx" onclick="handleDownload()" id="downloadBtn" class="w-full relative py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm tracking-wide transition-all duration-300 shadow-[0_4px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_8px_30px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2 overflow-hidden group/btn active:scale-[0.98] text-decoration-none">
+                            <a href="../video/Screen Recording 2025-09-04 202308.mp4" download="PrimeVerse_Execution_Journal_Template.xlsx" onclick="handleDownload()" id="downloadBtn" class="w-full relative py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs tracking-wider transition-all duration-300 shadow-[0_4px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_8px_30px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2 overflow-hidden group/btn active:scale-[0.98]" style="text-decoration: none !important;">
                                 <div class="absolute inset-0 w-1/2 h-full bg-white/10 skew-x-12 -translate-x-full group-hover/btn:animate-[shimmer_1s_ease-in-out]"></div>
                                 <span id="downloadText" class="flex items-center gap-2">
                                     <i data-lucide="download" class="w-5 h-5"></i>
@@ -1224,13 +1223,15 @@
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider text-violet-400 bg-violet-500/10 border border-violet-500/20 uppercase">
                                         Guided Video
                                     </span>
-                                    <span class="text-slate-500 text-xs font-semibold bg-white/5 px-2.5 py-1 rounded-lg">18 min HD</span>
                                 </div>
 
                                 <!-- Visual Asset Container (Mock Video Player with High-Fidelity Interface) -->
                                 <div class="h-44 w-full rounded-2xl bg-[#05070C]/80 border border-white/5 flex items-center justify-center mb-6 relative overflow-hidden group/video cursor-pointer" onclick="openJournalVideoModal()">
+                                    <!-- Walkthrough Thumbnail Picture -->
+                                    <img src="../assets/journal_walkthrough_thumb.png" alt="Guided Video Walkthrough" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover/video:opacity-75 transition-opacity duration-300">
+                                    
                                     <!-- Simulated video background with gradient overlay and abstract graphs -->
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent z-10"></div>
                                     
                                     <!-- Stylized Chart Art in Background -->
                                     <div class="absolute inset-0 opacity-20 group-hover/video:opacity-30 transition-opacity duration-300 flex items-end justify-between p-4 pointer-events-none">
@@ -1275,7 +1276,7 @@
                             </div>
 
                             <!-- Interactive Premium Button -->
-                            <button onclick="openJournalVideoModal()" class="w-full relative py-4 px-6 rounded-2xl bg-[#0B0F19] hover:bg-[#111827] text-white font-bold text-sm tracking-wide transition-all duration-300 border border-white/10 hover:border-violet-500/30 flex items-center justify-center gap-2 group/btn active:scale-[0.98]">
+                            <button onclick="openJournalVideoModal()" class="w-full relative py-4 px-6 rounded-2xl bg-[#0B0F19] hover:bg-[#111827] text-white font-bold text-xs tracking-wider transition-all duration-300 border border-white/10 hover:border-violet-500/30 flex items-center justify-center gap-2 group/btn active:scale-[0.98]" style="text-decoration: none !important;">
                                 <span class="flex items-center gap-2 group-hover/btn:text-violet-400 transition-colors duration-200">
                                     <i data-lucide="play-circle" class="w-5 h-5 text-violet-400"></i>
                                     WATCH VIDEO WALKTHROUGH
