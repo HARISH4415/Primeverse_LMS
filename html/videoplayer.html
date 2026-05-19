@@ -818,9 +818,23 @@
         let activeDayNum = urlParams.has('day') ? parseInt(urlParams.get('day')) : 1;
         let activePartNum = parseInt(urlParams.get('part')) || 1;
 
-        // Force check locks
-        if (activeDayNum > 11) {
-            window.location.href = 'dashboard.html';
+        // Calculate current active Day dynamically based on cached database progression or enrollment date
+        let currentDay = parseInt(localStorage.getItem('currentDay')) || 11;
+        if (!localStorage.getItem('currentDay')) {
+            const enrollDateStr = localStorage.getItem('enrollDate');
+            if (enrollDateStr) {
+                const enrollDate = new Date(enrollDateStr);
+                const today = new Date();
+                const diffTime = Math.abs(today - enrollDate);
+                const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                currentDay = daysSinceEnroll + 1;
+            }
+        }
+
+        // Force check locks: if Day 1 is active, allow Day 0 (Intro) and Day 1. Otherwise, only allow activeDayNum <= currentDay.
+        const isDayAllowed = (activeDayNum <= currentDay);
+        if (!isDayAllowed) {
+            window.location.replace(`videoplayer.html?day=${currentDay}&part=1`);
         }
 
         const videoPlayer = document.getElementById('workspaceVideo');
@@ -991,7 +1005,8 @@
 
         // Jump Day/Part via quicknav
         window.jumpToLesson = function(dayNum) {
-            if (dayNum > 11) return; // Locked
+            const isItemUnlocked = (dayNum <= currentDay);
+            if (!isItemUnlocked) return; // Locked
             renderLesson(dayNum, 1);
         };
 
@@ -1011,7 +1026,8 @@
                 }
                 
                 // Locks mapping
-                if (i > 11) {
+                const isItemUnlocked = (i <= currentDay);
+                if (!isItemUnlocked) {
                     item.classList.add('locked');
                     item.href = 'javascript:void(0)';
                 } else {
@@ -1047,7 +1063,7 @@
                 const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
                 const videoCount = partKeys.length;
                 const videoLabel = videoCount === 1 ? '1 Video' : `${videoCount} Videos`;
-                subtitleSpan.innerText = i > 11 ? 'Locked' : `Available (${videoLabel})`;
+                subtitleSpan.innerText = !isItemUnlocked ? 'Locked' : `Available (${videoLabel})`;
                 infoDiv.appendChild(subtitleSpan);
 
                 leftDiv.appendChild(infoDiv);
@@ -1057,10 +1073,10 @@
                 const rightDiv = document.createElement('div');
                 rightDiv.className = 'status-indicator';
 
-                if (i > 11) {
+                if (!isItemUnlocked) {
                     rightDiv.className += ' status-locked';
                     rightDiv.innerHTML = '<i class="fa-solid fa-lock"></i>';
-                } else if (i === 11) {
+                } else if (i === currentDay) {
                     rightDiv.className += ' status-active';
                     rightDiv.innerHTML = '<i class="fa-solid fa-play"></i>';
                 } else {

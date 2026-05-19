@@ -73,16 +73,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let authState = 'login'; // 'login', 'signup', 'forgot'
+    let isSubmitting = false;
 
     const setAuthState = (state) => {
         authState = state;
         const passGroup = passwordInput ? passwordInput.closest('.input-group') : null;
         const loginMeta = document.getElementById('loginMeta');
+        const emailInput = document.getElementById('emailInput');
+        const emailGroup = emailInput ? emailInput.closest('.input-group') : null;
 
         if (state === 'login') {
             authTitle.innerText = 'Login Account';
             authSubtitle.innerHTML = "Don't Have an Account? <a href='javascript:void(0)' id='switchAuth'>Create Account</a>";
             if (signupFields) signupFields.style.display = 'none';
+            if (emailGroup) emailGroup.style.display = 'block';
+            if (emailInput) emailInput.required = true;
             if (passGroup) passGroup.style.display = 'block';
             if (passwordInput) passwordInput.required = true;
             if (loginMeta) loginMeta.style.display = 'block';
@@ -91,6 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
             authTitle.innerText = 'Create Account';
             authSubtitle.innerHTML = "Already Have an Account? <a href='javascript:void(0)' id='switchAuth'>Login Now</a>";
             if (signupFields) signupFields.style.display = 'block';
+            if (emailGroup) emailGroup.style.display = 'block';
+            if (emailInput) emailInput.required = true;
             if (passGroup) passGroup.style.display = 'block';
             if (passwordInput) passwordInput.required = true;
             if (loginMeta) loginMeta.style.display = 'none';
@@ -99,6 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
             authTitle.innerText = 'Reset Password';
             authSubtitle.innerHTML = "Remembered Password? <a href='javascript:void(0)' id='switchAuth'>Login Now</a>";
             if (signupFields) signupFields.style.display = 'none';
+            if (emailGroup) emailGroup.style.display = 'block';
+            if (emailInput) emailInput.required = true;
             if (passGroup) passGroup.style.display = 'none';
             if (passwordInput) passwordInput.required = false;
             if (loginMeta) loginMeta.style.display = 'none';
@@ -249,33 +258,165 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const authForm = document.getElementById('authForm');
     if (authForm) {
-        authForm.addEventListener('submit', (e) => {
+        authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (isSubmitting) return;
+            isSubmitting = true;
+
             const submitBtn = document.getElementById('authSubmitBtn');
+            const originalBtnText = submitBtn.innerText;
             submitBtn.innerText = 'Processing...';
-            
-            const emailInput = authForm.querySelector('input[type="email"]');
-            if (emailInput && emailInput.value) {
-                localStorage.setItem('userEmail', emailInput.value);
+            submitBtn.disabled = true;
+
+            const emailInput = document.getElementById('emailInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const fullNameInput = document.getElementById('fullNameInput');
+            const phoneInput = document.getElementById('phoneInput');
+            const otpInput = document.getElementById('otpInput');
+
+            const email = emailInput ? emailInput.value.trim() : '';
+            const password = passwordInput ? passwordInput.value : '';
+            const fullName = fullNameInput ? fullNameInput.value.trim() : '';
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+            const otpToken = otpInput ? otpInput.value.trim() : '';
+
+            // Obtain the Supabase client safely from window, falling back to local creation if needed
+            const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+
+            if (!supabase) {
+                showSnackbar("Supabase is not initialized. Please check connection.", "error");
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+                return;
             }
 
-            const phoneInput = authForm.querySelector('input[type="tel"]');
-            if (phoneInput && phoneInput.value) {
-                localStorage.setItem('userPhone', phoneInput.value);
-            }
-            
-            setTimeout(() => {
+            try {
                 if (authState === 'forgot') {
-                    showSnackbar("A password reset link has been sent to your email!", "success");
-                    setAuthState('login');
+                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                        redirectTo: window.location.origin + '/index.html'
+                    });
+
+                    if (error) {
+                        showSnackbar(error.message, "error");
+                    } else {
+                        showSnackbar("A password reset link has been sent to your email!", "success");
+                        setAuthState('login');
+                    }
+                } else if (authState === 'signup') {
+                    // Check if email already exists in profiles table
+                    const { data: existingUser, error: checkError } = await supabase
+                        .from('profiles')
+                        .select('email')
+                        .ilike('email', email)
+                        .maybeSingle();
+
+                    if (checkError) {
+                        showSnackbar(checkError.message, "error");
+                        return;
+                    }
+
+                    if (existingUser) {
+                        showSnackbar("An account with this email already exists.", "error");
+                        return;
+                    }
+
+                    // Insert the new user into profiles table
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .insert([
+                            {
+                                full_name: fullName,
+                                phone: phone,
+                                email: email,
+                                password: password,
+                                enroll_date: new Date().toISOString(),
+                                current_day: 1,
+                                modules_completed: 0,
+                                total_modules: 18,
+                                program_progress: 0,
+                                stage_title: 'Financial Market Foundations'
+                            }
+                        ])
+                        .select();
+
+                    if (error) {
+                        showSnackbar(error.message, "error");
+                    } else {
+                        isLoggedIn = true;
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userEmail', email);
+                        localStorage.setItem('userName', fullName);
+                        localStorage.setItem('userPhone', phone);
+                        localStorage.setItem('lastLogin', new Date().toISOString());
+                        localStorage.setItem('enrollDate', new Date().toISOString());
+                        localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+                        
+                        // Seed local storage with default database-driven progression metrics for a new user
+                        localStorage.setItem('currentDay', 1);
+                        localStorage.setItem('programProgress', 0);
+                        localStorage.setItem('stageTitle', 'Financial Market Foundations');
+                        localStorage.setItem('modulesCompleted', 0);
+                        localStorage.setItem('totalModules', 18);
+                        
+                        closeModal();
+                        updateAuthUI();
+                        showSnackbar("Registration successful! Welcome to PrimeVerse.", "success");
+                    }
                 } else {
-                    isLoggedIn = true;
-                    localStorage.setItem('isLoggedIn', 'true');
-                    closeModal();
-                    updateAuthUI();
-                    showSnackbar("Account verified! Welcome back.", "success");
+                    // Login state - verify credentials against profiles table
+                    const { data: user, error } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .ilike('email', email)
+                        .eq('password', password)
+                        .maybeSingle();
+
+                    if (error) {
+                        showSnackbar(error.message, "error");
+                    } else if (!user) {
+                        showSnackbar("Invalid email or password.", "error");
+                    } else {
+                        isLoggedIn = true;
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userEmail', user.email);
+                        localStorage.setItem('userName', user.full_name);
+                        if (user.phone) localStorage.setItem('userPhone', user.phone);
+                        localStorage.setItem('lastLogin', new Date().toISOString());
+                        localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+                        
+                        // Cache dynamic database-driven progression metrics
+                        const cDay = user.current_day !== undefined && user.current_day !== null ? parseInt(user.current_day) : 1;
+                        const mComp = user.modules_completed !== undefined && user.modules_completed !== null ? parseInt(user.modules_completed) : 0;
+                        const tMod = user.total_modules !== undefined && user.total_modules !== null ? parseInt(user.total_modules) : 18;
+                        let pProg = user.program_progress !== undefined && user.program_progress !== null ? parseInt(user.program_progress) : 0;
+                        if (pProg === 0 && tMod > 0) {
+                            pProg = Math.round((mComp / tMod) * 100);
+                        }
+                        const sTitle = user.stage_title || 'Financial Market Foundations';
+
+                        localStorage.setItem('currentDay', cDay);
+                        localStorage.setItem('programProgress', pProg);
+                        localStorage.setItem('stageTitle', sTitle);
+                        localStorage.setItem('modulesCompleted', mComp);
+                        localStorage.setItem('totalModules', tMod);
+                        
+                        // Load or default the enrollment date from Supabase
+                        const finalEnrollDate = user.enroll_date || user.created_at || new Date().toISOString();
+                        localStorage.setItem('enrollDate', finalEnrollDate);
+                        
+                        closeModal();
+                        updateAuthUI();
+                        showSnackbar("Welcome back to PrimeVerse!", "success");
+                    }
                 }
-            }, 1000);
+            } catch (err) {
+                console.error("Auth error:", err);
+                showSnackbar("Error: " + (err.message || err), "error");
+            } finally {
+                isSubmitting = false;
+                submitBtn.innerText = authState === 'signup' ? 'SIGN UP NOW' : (authState === 'login' ? 'LOGIN NOW' : 'RESET PASSWORD');
+                submitBtn.disabled = false;
+            }
         });
     }
 
@@ -324,13 +465,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (signupBtnNav) {
-        signupBtnNav.addEventListener('click', () => {
+        signupBtnNav.addEventListener('click', async () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('hasAccessToMastery');
                 localStorage.removeItem('hasAccessToMentorship');
                 localStorage.removeItem('selectedCourse');
                 localStorage.removeItem('enrollDate');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userPhone');
                 location.reload();
             } else {
                 setAuthState('signup');
@@ -399,11 +543,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    window.closeModalMentorship = () => {
+    window.closeModalMentorship = async () => {
         if (mentorshipOverlay) {
             mentorshipOverlay.style.display = 'none';
             document.body.style.overflow = '';
         }
+
+        // When closing the mentorship modal, update selectedCourse to PrimeVerse Mastery Program
+        // so that they can access the dashboard, and store it in their profile table in Supabase
+        localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+
+        const userEmail = localStorage.getItem('userEmail');
+        const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+        if (userEmail && supabase) {
+            try {
+                await supabase
+                    .from('profiles')
+                    .update({
+                        enroll_date: new Date().toISOString(),
+                        current_day: 1,
+                        modules_completed: 0,
+                        total_modules: 18,
+                        program_progress: 0,
+                        stage_title: 'Financial Market Foundations'
+                    })
+                    .ilike('email', userEmail.trim());
+                console.log("Successfully stored PrimeVerse Mastery Program in profile table on modal close!");
+            } catch (err) {
+                console.error("Error storing program in profile table on modal close:", err);
+            }
+        }
+
+        // Redirect to dashboard
+        window.location.href = 'html/dashboard.html';
     };
 
     if (closeMentorshipModal) {
@@ -502,13 +674,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (signupBtnNavMobile) {
-        signupBtnNavMobile.addEventListener('click', () => {
+        signupBtnNavMobile.addEventListener('click', async () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('hasAccessToMastery');
                 localStorage.removeItem('hasAccessToMentorship');
                 localStorage.removeItem('selectedCourse');
                 localStorage.removeItem('enrollDate');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userPhone');
                 location.reload();
             } else {
                 setAuthState('signup');

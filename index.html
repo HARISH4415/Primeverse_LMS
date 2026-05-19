@@ -722,17 +722,17 @@
                 <div id="signupFields" style="display: none;">
                     <div class="input-group">
                         <label>Full Name</label>
-                        <input type="text" placeholder="Enter Your Name">
+                        <input type="text" id="fullNameInput" placeholder="Enter Your Name">
                     </div>
                     <div class="input-group">
                         <label>Phone Number</label>
-                        <input type="tel" placeholder="Enter Phone Number">
+                        <input type="tel" id="phoneInput" placeholder="Enter Phone Number">
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="Enter Your Email" required>
+                    <input type="email" id="emailInput" placeholder="Enter Your Email" required>
                 </div>
 
                 <div class="input-group">
@@ -777,6 +777,9 @@
             </button>
         </div>
     </div>
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
     <script src="js/script.js"></script>
 </body>
 

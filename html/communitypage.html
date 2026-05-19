@@ -12,6 +12,8 @@
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
 
     <style>
         :root {
@@ -583,7 +585,7 @@
                 <a href="accountsetting.html" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
             </div>
             <div class="nav-bottom">
-                <a href="../index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i> Logout</a>
+                <a href="../index.html" class="nav-item" id="logoutBtnCommunity" style="color: var(--red);"><i data-lucide="log-out"></i> Logout</a>
             </div>
         </nav>
     </aside>
@@ -622,69 +624,6 @@
 
                 <!-- Message Feed container -->
                 <div class="chat-messages-container" id="chatFeed">
-                    <!-- Day Separator -->
-                    <div class="chat-day-separator">
-                        <span class="chat-day-text">Yesterday</span>
-                    </div>
-
-                    <!-- Message 1 -->
-                    <div class="message-bubble">
-                        <div class="sender-avatar-container">GK</div>
-                        <div class="message-content-wrapper">
-                            <div class="message-header-meta">
-                                <span class="sender-name">
-                                    <span>Ganesh Kumar</span>
-                                    <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
-                                </span>
-                                <span class="sender-title">Founder</span>
-                                <span class="message-timestamp">09:12 AM</span>
-                            </div>
-                            <div class="message-body-box">
-                                <p>Welcome to the official PrimeVerse announcements feed! All major trade guidelines, setups, and platform announcements will be posted directly here by myself and the support team. Make sure notifications are turned ON. Let's achieve consistency together. 🚀</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Message 2 -->
-                    <div class="message-bubble">
-                        <div class="sender-avatar-container">PA</div>
-                        <div class="message-content-wrapper">
-                            <div class="message-header-meta">
-                                <span class="sender-name">
-                                    <span>PrimeVerse Support</span>
-                                    <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
-                                </span>
-                                <span class="sender-title">Admin</span>
-                                <span class="message-timestamp">02:30 PM</span>
-                            </div>
-                            <div class="message-body-box">
-                                <p>💡 <strong>Quick Tip:</strong> Remember to download the updated **Execution Journal Excel Sheet** from the Execution Journal tab on your sidebar. Standardizing trade reviews is the fastest way to trace execution leaks!</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Day Separator -->
-                    <div class="chat-day-separator" id="todaySeparator">
-                        <span class="chat-day-text">Today</span>
-                    </div>
-
-                    <!-- Message 3 -->
-                    <div class="message-bubble">
-                        <div class="sender-avatar-container">GK</div>
-                        <div class="message-content-wrapper">
-                            <div class="message-header-meta">
-                                <span class="sender-name">
-                                    <span>Ganesh Kumar</span>
-                                    <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
-                                </span>
-                                <span class="sender-title">Founder</span>
-                                <span class="message-timestamp">09:05 AM</span>
-                            </div>
-                            <div class="message-body-box">
-                                <p>Morning traders. Nifty opened with a slight gap up, test-rejection at the daily key supply. I am sitting on my hands and wait for structured setups. Avoid chasing the morning noise. Patience pays. 📉📊</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Chat Input / Admin Broadcasting Console -->
@@ -739,12 +678,16 @@
                 navMentorship.style.display = 'flex';
                 // Lock icon evaluation for Pro Mentorship (locked until Day 18 complete / Day 19)
                 const enrollDateStr = localStorage.getItem('enrollDate');
-                if (enrollDateStr) {
-                    const enrollDate = new Date(enrollDateStr);
-                    const today = new Date();
-                    const diffTime = Math.abs(today - enrollDate);
-                    const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                    const currentDay = daysSinceEnroll + 1;
+                let currentDay = parseInt(localStorage.getItem('currentDay')) || 11;
+                if (!localStorage.getItem('currentDay')) {
+                    if (enrollDateStr) {
+                        const enrollDate = new Date(enrollDateStr);
+                        const today = new Date();
+                        const diffTime = Math.abs(today - enrollDate);
+                        const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        currentDay = daysSinceEnroll + 1;
+                    }
+                }
                     if (currentDay < 19) {
                         navMentorship.innerHTML = '<i data-lucide="lock"></i> PrimeVerse Pro Mentorship';
                     } else {
@@ -765,60 +708,53 @@
                         window.lucide.createIcons();
                     }
                 }
+
+            // Handle Sidebar Logout Action
+            const logoutBtnCommunity = document.getElementById('logoutBtnCommunity');
+            if (logoutBtnCommunity) {
+                logoutBtnCommunity.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('hasAccessToMastery');
+                    localStorage.removeItem('hasAccessToMentorship');
+                    localStorage.removeItem('selectedCourse');
+                    localStorage.removeItem('enrollDate');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userEmail');
+                    localStorage.removeItem('userPhone');
+                    localStorage.removeItem('lastLogin');
+                    
+                    // Clear custom live progression cache fields
+                    localStorage.removeItem('currentDay');
+                    localStorage.removeItem('programProgress');
+                    localStorage.removeItem('stageTitle');
+                    localStorage.removeItem('modulesCompleted');
+                    localStorage.removeItem('totalModules');
+                    
+                    window.location.replace('../index.html?login=true');
+                });
             }
 
-            // Active Admin Broadcasting Console Logic
-            const messageInput = document.getElementById('messageInput');
-            const sendBtn = document.getElementById('sendBtn');
+            // --- Supabase Announcement Broadcaster & Authentication Gate ---
+            const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+            const loggedInEmail = localStorage.getItem('userEmail');
+            const isAdmin = (loggedInEmail === 'harishramanan4415@gmail.com');
+
+            const chatInputArea = document.getElementById('chatInputArea');
             const chatFeed = document.getElementById('chatFeed');
 
-            // Function to post a message
-            const postMessage = () => {
-                const text = messageInput.value.trim();
-                if (!text) return;
-
-                // Format current time
-                const now = new Date();
-                let hours = now.getHours();
-                let minutes = now.getMinutes();
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12; // 12 instead of 0
-                minutes = minutes < 10 ? '0' + minutes : minutes;
-                const timeString = `${hours}:${minutes} ${ampm}`;
-
-                // Create message element
-                const msgBubble = document.createElement('div');
-                msgBubble.className = 'message-bubble';
-                msgBubble.innerHTML = `
-                    <div class="sender-avatar-container">GK</div>
-                    <div class="message-content-wrapper">
-                        <div class="message-header-meta">
-                            <span class="sender-name">
-                                <span>Ganesh Kumar</span>
-                                <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
-                            </span>
-                            <span class="sender-title">Founder</span>
-                            <span class="message-timestamp">${timeString}</span>
-                        </div>
-                        <div class="message-body-box">
-                            <p>${escapeHTML(text)}</p>
-                        </div>
+            // Apply Admin Gating Layout on input bar area
+            if (!isAdmin && chatInputArea) {
+                chatInputArea.innerHTML = `
+                    <div class="chat-lock-container">
+                        <i data-lucide="lock"></i>
+                        <span>Only verified Admins can broadcast announcements in this channel.</span>
                     </div>
                 `;
-
-                // Append and scroll
-                chatFeed.appendChild(msgBubble);
-                chatFeed.scrollTop = chatFeed.scrollHeight;
-
-                // Reset field
-                messageInput.value = '';
-
-                // Create Lucide icons for the new message
                 if (window.lucide) {
                     window.lucide.createIcons();
                 }
-            };
+            }
 
             const escapeHTML = (str) => {
                 return str.replace(/[&<>'"]/g, 
@@ -832,20 +768,121 @@
                 );
             };
 
-            // Input triggers
-            if (messageInput) {
-                messageInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        postMessage();
+            // Render a message in the chat feed
+            const renderMessage = (senderName, senderTitle, text, dateObj) => {
+                let hours = dateObj.getHours();
+                let minutes = dateObj.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                const timeString = `${hours}:${minutes} ${ampm}`;
+
+                const initials = senderName
+                    .split(' ')
+                    .filter(w => w.length > 0)
+                    .map(w => w[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2) || 'AD';
+
+                const msgBubble = document.createElement('div');
+                msgBubble.className = 'message-bubble dynamic-announcement';
+                msgBubble.innerHTML = `
+                    <div class="sender-avatar-container">${initials}</div>
+                    <div class="message-content-wrapper">
+                        <div class="message-header-meta">
+                            <span class="sender-name">
+                                <span>${escapeHTML(senderName)}</span>
+                                <span class="sender-badge-verified"><i data-lucide="check-circle-2"></i></span>
+                            </span>
+                            <span class="sender-title">${escapeHTML(senderTitle)}</span>
+                            <span class="message-timestamp">${timeString}</span>
+                        </div>
+                        <div class="message-body-box">
+                            <p>${escapeHTML(text)}</p>
+                        </div>
+                    </div>
+                `;
+                
+                chatFeed.appendChild(msgBubble);
+                chatFeed.scrollTop = chatFeed.scrollHeight;
+
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            };
+
+            // Fetch announcements from Supabase
+            if (supabase) {
+                supabase
+                    .from('community_messages')
+                    .select('*')
+                    .order('created_at', { ascending: true })
+                    .then(({ data: messages, error }) => {
+                        if (messages && !error) {
+                            // Remove any old dynamic messages to avoid duplicates on fast hot reload
+                            document.querySelectorAll('.dynamic-announcement').forEach(el => el.remove());
+                            messages.forEach(msg => {
+                                renderMessage(msg.sender_name, msg.sender_title, msg.message_text, new Date(msg.created_at));
+                            });
+                        } else {
+                            console.error("Error loading community messages:", error);
+                        }
+                    });
+            }
+
+            // Post announcement handler (Admin only)
+            if (isAdmin) {
+                const messageInput = document.getElementById('messageInput');
+                const sendBtn = document.getElementById('sendBtn');
+
+                const postMessage = async () => {
+                    const text = messageInput.value.trim();
+                    if (!text) return;
+
+                    const senderName = localStorage.getItem('userName') || 'Harish Ramanan';
+                    const senderTitle = 'Founder';
+
+                    // Save to Supabase
+                    if (supabase) {
+                        const { error } = await supabase
+                            .from('community_messages')
+                            .insert([
+                                {
+                                    sender_name: senderName,
+                                    sender_email: loggedInEmail,
+                                    sender_title: senderTitle,
+                                    message_text: text
+                                }
+                            ]);
+
+                        if (error) {
+                            console.error("Error saving message:", error);
+                            alert("Failed to broadcast message: " + error.message);
+                            return;
+                        }
                     }
-                });
+
+                    // Render locally
+                    renderMessage(senderName, senderTitle, text, new Date());
+                    messageInput.value = '';
+                };
+
+                if (messageInput) {
+                    messageInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            postMessage();
+                        }
+                    });
+                }
+
+                if (sendBtn) {
+                    sendBtn.addEventListener('click', postMessage);
+                }
             }
 
-            if (sendBtn) {
-                sendBtn.addEventListener('click', postMessage);
-            }
-
-            // Scroll chat feed to bottom on load
+            // Scroll feed to bottom initially
             if (chatFeed) {
                 chatFeed.scrollTop = chatFeed.scrollHeight;
             }

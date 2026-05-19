@@ -1500,12 +1500,16 @@
                 navMentorship.style.display = 'flex';
                 // Lock icon evaluation for Pro Mentorship and Execution Journal
                 const enrollDateStr = localStorage.getItem('enrollDate');
-                if (enrollDateStr) {
-                    const enrollDate = new Date(enrollDateStr);
-                    const today = new Date();
-                    const diffTime = Math.abs(today - enrollDate);
-                    const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                    const currentDay = daysSinceEnroll + 1;
+                let currentDay = parseInt(localStorage.getItem('currentDay')) || 11;
+                if (!localStorage.getItem('currentDay')) {
+                    if (enrollDateStr) {
+                        const enrollDate = new Date(enrollDateStr);
+                        const today = new Date();
+                        const diffTime = Math.abs(today - enrollDate);
+                        const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        currentDay = daysSinceEnroll + 1;
+                    }
+                }
                     
                     // Mentorship Sidebar Lock Icon Evaluation
                     if (currentDay < 19) {
@@ -1569,7 +1573,6 @@
                         window.lucide.createIcons();
                     }
                 }
-            }
 
             // Load saved user name dynamically for welcome header
             const welcomeUserName = document.getElementById('welcomeUserName');

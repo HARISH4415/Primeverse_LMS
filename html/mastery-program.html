@@ -613,7 +613,7 @@
             const loaderMessage = document.getElementById('loaderMessage');
 
             // Action Checkout Simulation Flow
-            buildSystemBtn.addEventListener('click', () => {
+            buildSystemBtn.addEventListener('click', async () => {
                 loaderOverlay.classList.add('active');
                 paymentSpinner.style.display = 'block';
                 paymentSuccessIcon.style.display = 'none';
@@ -623,6 +623,28 @@
                 localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
                 localStorage.setItem('enrollDate', new Date().toISOString());
                 
+                // Update Supabase profiles table for the current user to store PrimeVerse Mastery Program progress
+                const userEmail = localStorage.getItem('userEmail');
+                const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+                if (userEmail && supabase) {
+                    try {
+                        await supabase
+                            .from('profiles')
+                            .update({
+                                enroll_date: new Date().toISOString(),
+                                current_day: 1,
+                                modules_completed: 0,
+                                total_modules: 18,
+                                program_progress: 0,
+                                stage_title: 'Financial Market Foundations'
+                            })
+                            .ilike('email', userEmail.trim());
+                        console.log("Successfully stored PrimeVerse Mastery Program in profile table!");
+                    } catch (err) {
+                        console.error("Error storing program in profile table:", err);
+                    }
+                }
+
                 setTimeout(() => {
                     paymentSpinner.style.display = 'none';
                     paymentSuccessIcon.style.display = 'flex';

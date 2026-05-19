@@ -12,6 +12,8 @@
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
     <style>
         :root {
             --sidebar-width: 280px;
@@ -890,7 +892,7 @@
                 <a href="accountsetting.html" class="nav-item active" id="nav-settings"><i data-lucide="settings"></i> Account Settings</a>
             </div>
             <div class="nav-bottom">
-                <a href="../index.html" class="nav-item" style="color: var(--red);"><i data-lucide="log-out"></i> Logout</a>
+                <a href="../index.html" class="nav-item" id="logoutBtnSettings" style="color: var(--red);"><i data-lucide="log-out"></i> Logout</a>
             </div>
         </nav>
     </aside>
@@ -1115,12 +1117,16 @@
                 navMentorship.style.display = 'flex';
                 // Lock icon evaluation for Pro Mentorship (locked until Day 18 complete / Day 19)
                 const enrollDateStr = localStorage.getItem('enrollDate');
-                if (enrollDateStr) {
-                    const enrollDate = new Date(enrollDateStr);
-                    const today = new Date();
-                    const diffTime = Math.abs(today - enrollDate);
-                    const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                    const currentDay = daysSinceEnroll + 1;
+                let currentDay = parseInt(localStorage.getItem('currentDay')) || 11;
+                if (!localStorage.getItem('currentDay')) {
+                    if (enrollDateStr) {
+                        const enrollDate = new Date(enrollDateStr);
+                        const today = new Date();
+                        const diffTime = Math.abs(today - enrollDate);
+                        const daysSinceEnroll = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        currentDay = daysSinceEnroll + 1;
+                    }
+                }
                     if (currentDay < 19) {
                         navMentorship.innerHTML = '<i data-lucide="lock"></i> PrimeVerse Pro Mentorship';
                     } else {
@@ -1141,7 +1147,6 @@
                         window.lucide.createIcons();
                     }
                 }
-            }
 
             // --- Interactive Account Settings Logic ---
             const welcomeUserName = document.getElementById('welcomeUserName');
@@ -1151,16 +1156,74 @@
             const settingsNameInput = document.getElementById('settingsName');
             const settingsEmailInput = document.getElementById('settingsEmail');
             const settingsPhoneInput = document.getElementById('settingsPhone');
+            const settingsPasswordInput = document.getElementById('settingsPassword');
             const syncOverlay = document.getElementById('syncOverlay');
+
+            // Obtain Supabase client
+            const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+
+            // Handle Dynamic Last Login Timestamp
+            const securitySubtitle = document.querySelector('.security-subtitle');
+            if (securitySubtitle) {
+                let lastLoginTime = localStorage.getItem('lastLogin');
+                if (!lastLoginTime) {
+                    lastLoginTime = new Date().toISOString();
+                    localStorage.setItem('lastLogin', lastLoginTime);
+                }
+                
+                function formatLastLogin(dateStr) {
+                    const date = new Date(dateStr);
+                    const day = date.getDate();
+                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const month = months[date.getMonth()];
+                    const year = date.getFullYear();
+                    let hours = date.getHours();
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    return `Last login: ${day} ${month} ${year} • ${hours}:${minutes} ${ampm}`;
+                }
+                securitySubtitle.innerText = formatLastLogin(lastLoginTime);
+            }
+
+            // Handle Sidebar Logout Action
+            const logoutBtnSettings = document.getElementById('logoutBtnSettings');
+            if (logoutBtnSettings) {
+                logoutBtnSettings.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('hasAccessToMastery');
+                    localStorage.removeItem('hasAccessToMentorship');
+                    localStorage.removeItem('selectedCourse');
+                    localStorage.removeItem('enrollDate');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userEmail');
+                    localStorage.removeItem('userPhone');
+                    localStorage.removeItem('lastLogin');
+                    
+                    // Clear custom live progression cache fields
+                    localStorage.removeItem('currentDay');
+                    localStorage.removeItem('programProgress');
+                    localStorage.removeItem('stageTitle');
+                    localStorage.removeItem('modulesCompleted');
+                    localStorage.removeItem('totalModules');
+                    
+                    window.location.replace('../index.html?login=true');
+                });
+            }
 
             // Load saved user details or use defaults (matching Ganesh Kumar from design mockup)
             const savedName = localStorage.getItem('userName') || 'Ganesh Kumar';
             const savedEmail = localStorage.getItem('userEmail') || 'ganesh@primeverse.pro';
             const savedPhone = localStorage.getItem('userPhone') || '+91 9342995956';
 
-            // Calculate initials
+            // Calculate initials safely
             function getInitials(name) {
-                return name
+                if (!name || typeof name !== 'string') return 'PV';
+                const trimmed = name.trim();
+                if (!trimmed) return 'PV';
+                return trimmed
                     .split(' ')
                     .filter(w => w.length > 0)
                     .map(word => word[0])
@@ -1169,7 +1232,7 @@
                     .substring(0, 2);
             }
 
-            // Populate inputs & hub nodes
+            // Populate local storage values initially (before Supabase load finishes)
             if (settingsNameInput) settingsNameInput.value = savedName;
             if (settingsEmailInput) settingsEmailInput.value = savedEmail;
             if (settingsPhoneInput) settingsPhoneInput.value = savedPhone;
@@ -1177,6 +1240,33 @@
             if (welcomeUserName) welcomeUserName.innerText = savedName;
             if (profileSubName) profileSubName.innerText = savedName;
             if (avatarInitials) avatarInitials.innerText = getInitials(savedName);
+
+            // Fetch Real-time User Data directly from Supabase profiles table
+            if (savedEmail && supabase) {
+                supabase
+                    .from('profiles')
+                    .select('*')
+                    .ilike('email', savedEmail.trim())
+                    .maybeSingle()
+                    .then(({ data: user, error }) => {
+                        if (user && !error) {
+                            if (settingsNameInput) settingsNameInput.value = user.full_name || '';
+                            if (settingsEmailInput) settingsEmailInput.value = user.email || '';
+                            if (settingsPhoneInput) settingsPhoneInput.value = user.phone || '';
+                            if (settingsPasswordInput) settingsPasswordInput.value = user.password || '';
+                            
+                            if (welcomeUserName) welcomeUserName.innerText = user.full_name;
+                            if (profileSubName) profileSubName.innerText = user.full_name;
+                            if (avatarInitials) avatarInitials.innerText = getInitials(user.full_name);
+                            
+                            localStorage.setItem('userName', user.full_name);
+                            localStorage.setItem('userEmail', user.email);
+                            if (user.phone) localStorage.setItem('userPhone', user.phone);
+                        } else {
+                            console.error("Error fetching user from database:", error);
+                        }
+                    });
+            }
 
             // Populate active program name dynamically
             const activeProgramNameEl = document.getElementById('activeProgramName');
@@ -1189,23 +1279,18 @@
 
             // Settings password visibility toggle
             const toggleSettingsPassword = document.getElementById('toggleSettingsPassword');
-            const settingsPasswordInput = document.getElementById('settingsPassword');
-            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
             
             if (toggleSettingsPassword && settingsPasswordInput) {
                 toggleSettingsPassword.addEventListener('click', () => {
                     const isPassword = settingsPasswordInput.getAttribute('type') === 'password';
                     settingsPasswordInput.setAttribute('type', isPassword ? 'text' : 'password');
                     
-                    if (togglePasswordIcon) {
-                        if (isPassword) {
-                            togglePasswordIcon.setAttribute('data-lucide', 'eye-off');
-                        } else {
-                            togglePasswordIcon.setAttribute('data-lucide', 'eye');
-                        }
-                        if (window.lucide) {
-                            window.lucide.createIcons();
-                        }
+                    toggleSettingsPassword.innerHTML = isPassword 
+                        ? '<i data-lucide="eye-off" id="togglePasswordIcon"></i>' 
+                        : '<i data-lucide="eye" id="togglePasswordIcon"></i>';
+                        
+                    if (window.lucide) {
+                        window.lucide.createIcons();
                     }
                 });
             }
@@ -1227,19 +1312,42 @@
                 });
             }
 
-            // Handle Futuristic Save Changes Sequence
+            // Handle Save Changes Sequence writing directly back to Supabase profiles table
             if (settingsForm) {
-                settingsForm.addEventListener('submit', (e) => {
+                settingsForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     
                     const newName = settingsNameInput.value.trim();
                     const newEmail = settingsEmailInput.value.trim();
                     const newPhone = settingsPhoneInput.value.trim();
+                    const newPassword = settingsPasswordInput.value;
 
-                    if (newName && newEmail && newPhone) {
+                    if (newName && newEmail && newPhone && newPassword) {
                         // Activate cyber sync scanner
                         if (syncOverlay) syncOverlay.classList.add('active');
 
+                        const oldEmail = localStorage.getItem('userEmail') || newEmail;
+
+                        if (supabase) {
+                            const { error } = await supabase
+                                .from('profiles')
+                                .update({
+                                    full_name: newName,
+                                    email: newEmail,
+                                    phone: newPhone,
+                                    password: newPassword
+                                })
+                                .ilike('email', oldEmail.trim());
+
+                            if (error) {
+                                console.error("Error updating profile in Supabase:", error);
+                                alert("Failed to save settings: " + error.message);
+                                if (syncOverlay) syncOverlay.classList.remove('active');
+                                return;
+                            }
+                        }
+
+                        // Update localStorage session on success
                         localStorage.setItem('userName', newName);
                         localStorage.setItem('userEmail', newEmail);
                         localStorage.setItem('userPhone', newPhone);
@@ -1253,7 +1361,7 @@
                         setTimeout(() => {
                             if (syncOverlay) syncOverlay.classList.remove('active');
                             window.location.href = 'dashboard.html';
-                        }, 2500);
+                        }, 2000);
                     }
                 });
             }
