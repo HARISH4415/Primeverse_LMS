@@ -413,11 +413,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             // Populate new markers
                             completedList.forEach(key => {
-                                if (key) {
-                                    const parts = key.split('_part_');
+                                if (key && key.trim()) {
+                                    const cleanKey = key.trim();
+                                    const parts = cleanKey.split('_part_');
                                     if (parts.length === 2) {
-                                        const dNum = parseInt(parts[0]);
-                                        const pNum = parseInt(parts[1]);
+                                        const dNum = parseInt(parts[0].trim());
+                                        const pNum = parseInt(parts[1].trim());
                                         localStorage.setItem(`completed_day_${dNum}_part_${pNum}`, 'true');
                                     }
                                 }

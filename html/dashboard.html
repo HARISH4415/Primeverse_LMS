@@ -3755,12 +3755,64 @@
                     const dayNum = index === 0 ? 0 : index;
                     
                     const isItemUnlocked = (dayNum <= currentDay);
-                    const isItemCompleted = localStorage.getItem(`completed_day_${dayNum}`) === 'true';
+                    const partsMap = {
+                        0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+                    };
+                    const totalParts = partsMap[dayNum] || 2;
+                    let completedParts = 0;
+                    if (isItemUnlocked) {
+                        for (let p = 1; p <= totalParts; p++) {
+                            if (localStorage.getItem(`completed_day_${dayNum}_part_${p}`) === 'true') {
+                                completedParts++;
+                            }
+                        }
+                    }
+
+                    if (isItemUnlocked && completedParts === totalParts && totalParts > 0) {
+                        localStorage.setItem(`completed_day_${dayNum}`, 'true');
+                    }
+
+                    const isItemCompleted = isItemUnlocked && (completedParts === totalParts);
                     const isItemActive = isItemUnlocked && !isItemCompleted;
                     
                     const node = item.querySelector('.mastery-timeline-node');
                     const statusSpan = item.querySelector('.mastery-timeline-status');
                     
+                    // Dynamically update individual part badges inside details list
+                    const partRows = item.querySelectorAll('.mastery-part-row');
+                    partRows.forEach((row, pIdx) => {
+                        const partNum = pIdx + 1;
+                        const isPartCompleted = localStorage.getItem(`completed_day_${dayNum}_part_${partNum}`) === 'true';
+                        const badge = row.querySelector('.mastery-play-badge');
+                        const icon = row.querySelector('.mastery-part-title i');
+                        
+                        if (isPartCompleted) {
+                            row.classList.add('completed-part');
+                            if (icon) {
+                                icon.setAttribute('data-lucide', 'check-circle');
+                                icon.style.color = '#28a745';
+                            }
+                            if (badge) {
+                                badge.innerText = 'COMPLETED';
+                                badge.style.background = 'rgba(40, 167, 69, 0.15)';
+                                badge.style.color = '#28a745';
+                                badge.style.border = '1px solid rgba(40, 167, 69, 0.3)';
+                            }
+                        } else {
+                            row.classList.remove('completed-part');
+                            if (icon) {
+                                icon.setAttribute('data-lucide', 'play-circle');
+                                icon.style.color = 'var(--gold)';
+                            }
+                            if (badge) {
+                                badge.innerText = 'PLAY';
+                                badge.style.background = 'rgba(212, 175, 55, 0.1)';
+                                badge.style.color = 'var(--gold)';
+                                badge.style.border = '1px solid rgba(212, 175, 55, 0.2)';
+                            }
+                        }
+                    });
+
                     if (isItemUnlocked) {
                         item.classList.remove('locked-item');
                         item.style.opacity = '1';
@@ -3774,7 +3826,11 @@
                             }
                             if (statusSpan) {
                                 statusSpan.className = 'mastery-timeline-status active';
-                                statusSpan.innerText = 'ACTIVE';
+                                if (completedParts > 0) {
+                                    statusSpan.innerText = `${completedParts}/${totalParts} COMPLETED`;
+                                } else {
+                                    statusSpan.innerText = 'ACTIVE';
+                                }
                                 statusSpan.style.color = 'var(--gold)';
                             }
                         } else {
@@ -3882,43 +3938,78 @@
                         }
                     }
 
-                    // Parse and sync completed lessons from database
+                    // Parse and sync completed lessons from database (with two-way merge)
+                    const partsMap = {
+                        0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+                    };
+                    
                     if (user.completed_lessons) {
                         const completedList = user.completed_lessons.split(',');
-                        // Clean previous local markers
-                        for (let d = 0; d <= 18; d++) {
-                            localStorage.removeItem(`completed_day_${d}`);
-                            for (let p = 1; p <= 3; p++) {
-                                localStorage.removeItem(`completed_day_${d}_part_${p}`);
-                            }
-                        }
-                        // Populate new markers
+                        // Parse database items and add them to localStorage (without wiping out local progress)
                         completedList.forEach(key => {
-                            if (key) {
-                                const parts = key.split('_part_');
+                            if (key && key.trim()) {
+                                const cleanKey = key.trim();
+                                const parts = cleanKey.split('_part_');
                                 if (parts.length === 2) {
-                                    const dNum = parseInt(parts[0]);
-                                    const pNum = parseInt(parts[1]);
+                                    const dNum = parseInt(parts[0].trim());
+                                    const pNum = parseInt(parts[1].trim());
                                     localStorage.setItem(`completed_day_${dNum}_part_${pNum}`, 'true');
                                 }
                             }
                         });
-                        // Re-evaluate days
-                        const partsMap = {
-                            0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
-                        };
-                        for (let d = 0; d <= 18; d++) {
-                            const totalParts = partsMap[d] || 2;
-                            let allCompleted = true;
-                            for (let p = 1; p <= totalParts; p++) {
-                                if (localStorage.getItem(`completed_day_${d}_part_${p}`) !== 'true') {
-                                    allCompleted = false;
-                                    break;
-                                }
+                    }
+
+                    // Re-evaluate days based on merged parts in localStorage
+                    for (let d = 0; d <= 18; d++) {
+                        const totalParts = partsMap[d] || 2;
+                        let allCompleted = true;
+                        for (let p = 1; p <= totalParts; p++) {
+                            if (localStorage.getItem(`completed_day_${d}_part_${p}`) !== 'true') {
+                                allCompleted = false;
+                                break;
                             }
-                            if (allCompleted) {
-                                localStorage.setItem(`completed_day_${d}`, 'true');
+                        }
+                        if (allCompleted) {
+                            localStorage.setItem(`completed_day_${d}`, 'true');
+                        }
+                    }
+
+                    // Gather the full merged list of completed day-parts from localStorage
+                    const mergedList = [];
+                    for (let d = 0; d <= 18; d++) {
+                        const totalParts = partsMap[d] || 2;
+                        for (let p = 1; p <= totalParts; p++) {
+                            const key = `completed_day_${d}_part_${p}`;
+                            if (localStorage.getItem(key) === 'true') {
+                                mergedList.push(`${d}_part_${p}`);
                             }
+                        }
+                    }
+                    const mergedString = mergedList.join(',');
+
+                    // Calculate completed days (excluding intro)
+                    let localCompletedCount = 0;
+                    for (let d = 1; d <= 18; d++) {
+                        if (localStorage.getItem(`completed_day_${d}`) === 'true') {
+                            localCompletedCount++;
+                        }
+                    }
+                    const localProgPercent = Math.min(100, Math.round((localCompletedCount / 18) * 100));
+
+                    // If local has newer completions than the database, update Supabase
+                    if (mergedString !== (user.completed_lessons || '')) {
+                        console.log("📤 Supabase Sync Engine: Local storage has newer completions. Syncing back to database...", mergedString);
+                        try {
+                            await supabase
+                                .from('profiles')
+                                .update({
+                                    completed_lessons: mergedString,
+                                    modules_completed: localCompletedCount,
+                                    program_progress: localProgPercent
+                                })
+                                .ilike('email', userEmail.trim());
+                        } catch (err) {
+                            console.error("Error updating local progress to Supabase:", err);
                         }
                     }
 
