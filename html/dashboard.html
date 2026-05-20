@@ -1759,6 +1759,127 @@
             }
         }
 
+        /* --- Premium Alert Modal CSS --- */
+        .premium-alert-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 6, 12, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .premium-alert-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .premium-alert-box {
+            background: rgba(10, 15, 30, 0.7);
+            border: 1.5px solid rgba(212, 175, 55, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 50px rgba(212, 175, 55, 0.05);
+            transform: scale(0.85);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-alert-overlay.active .premium-alert-box {
+            transform: scale(1);
+        }
+
+        .premium-alert-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .premium-alert-icon-container {
+            width: 80px;
+            height: 80px;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1.5px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+            animation: pulse-gold-glow 2s infinite;
+        }
+
+        @keyframes pulse-gold-glow {
+            0% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); }
+            50% { box-shadow: 0 0 35px rgba(212, 175, 55, 0.35); }
+            100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); }
+        }
+
+        .premium-alert-icon {
+            width: 32px;
+            height: 32px;
+            color: var(--gold);
+        }
+
+        .premium-alert-title {
+            font-family: 'Satoshi', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .premium-alert-message {
+            font-size: 0.95rem;
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .premium-alert-btn {
+            background: linear-gradient(135deg, var(--gold) 0%, #bfa030 100%);
+            color: #000;
+            border: none;
+            padding: 0.9rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+
+        .premium-alert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #e5bd42 0%, #d4af37 100%);
+        }
+
+        .premium-alert-btn:active {
+            transform: translateY(0);
+        }
+
     </style>
 </head>
 
@@ -1818,7 +1939,7 @@
 
         <header class="dashboard-header-premium">
             <div class="header-left">
-                <div class="header-badge">
+                <div class="header-badge" id="dashboardHeaderBadge">
                     <i data-lucide="gem" style="width: 14px; height: 14px; color: #3b82f6;"></i>
                     <span>PRIMEVERSE DASHBOARD</span>
                 </div>
@@ -2697,86 +2818,224 @@
             </div>
 
             <!-- Premium Screenshot 1 Styled Glass checkout Card with Transparent Overlay support -->
-            <div class="mentorship-glass-card" style="position: relative; overflow: hidden;" id="mentorshipCard">
-                
-                <!-- Center Lock Glass Overlay (Visible when locked) -->
-                <div id="mentorshipLockOverlay" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(5, 7, 12, 0.98); backdrop-filter: blur(35px) saturate(100%); -webkit-backdrop-filter: blur(35px) saturate(100%); z-index: 20; padding: 2rem; border-radius: 20px;">
-                    <div style="width: 84px; height: 84px; background: rgba(212, 175, 55, 0.08); border: 1.5px solid rgba(212, 175, 55, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; box-shadow: 0 0 35px rgba(212, 175, 55, 0.25); animation: pulse-gold 2s infinite;">
-                        <i data-lucide="lock" style="width: 38px; height: 38px; color: var(--gold); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));"></i>
+            <div id="mentorshipOfferContent">
+                <div class="mentorship-glass-card" style="position: relative; overflow: hidden;" id="mentorshipCard">
+                    
+                    <!-- Center Lock Glass Overlay (Visible when locked) -->
+                    <div id="mentorshipLockOverlay" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(5, 7, 12, 0.98); backdrop-filter: blur(35px) saturate(100%); -webkit-backdrop-filter: blur(35px) saturate(100%); z-index: 20; padding: 2rem; border-radius: 20px;">
+                        <div style="width: 84px; height: 84px; background: rgba(212, 175, 55, 0.08); border: 1.5px solid rgba(212, 175, 55, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; box-shadow: 0 0 35px rgba(212, 175, 55, 0.25); animation: pulse-gold 2s infinite;">
+                            <i data-lucide="lock" style="width: 38px; height: 38px; color: var(--gold); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));"></i>
+                        </div>
+                        
+                        <div>
+                            <span class="mentorship-card-badge" style="background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.25); color: var(--gold); margin-bottom: 1rem; text-transform: uppercase; font-weight: 800; font-size: 0.75rem; letter-spacing: 1px;">
+                                 Day 18 Complete Requirement
+                            </span>
+                        </div>
+
+                        <h2 class="mentorship-card-title" style="font-size: 2rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0,0,0,0.5); color: var(--white);">MENTORSHIP LOCKED</h2>
+                        <p style="color: #cbd5e1; font-size: 0.92rem; font-weight: 600; text-align: center; max-width: 340px; margin-bottom: 1.5rem; line-height: 1.6; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">
+                            Unlock this advanced execution module after completing Day 18 of the Mastery Program.
+                        </p>
+                        
+                        <!-- Mini Progress bar inside overlay -->
+                        <div style="width: 100%; max-width: 260px; background: rgba(255,255,255,0.05); border-radius: 10px; height: 6px; overflow: hidden; margin-bottom: 0.75rem; border: 1px solid rgba(255,255,255,0.05);">
+                            <div id="mentorshipOverlayBar" style="width: 5.56%; height: 100%; background: linear-gradient(90deg, var(--gold), #f3e5ab); box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);"></div>
+                        </div>
+                        <p id="mentorshipOverlayText" style="color: #94a3b8; font-size: 0.8rem; font-weight: 700; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                            Day 1 of 18 (17 days remaining)
+                        </p>
+                    </div>
+
+                    <!-- Top highlight gold gradient bar -->
+                    <div class="mentorship-card-glow-bar"></div>
+                    
+                    <!-- Badge -->
+                    <span class="mentorship-card-badge">
+                        6-Month Premium Mentorship
+                    </span>
+                    
+                    <!-- Title & Subtitle -->
+                    <h2 class="mentorship-card-title">PrimeVerse Pro Mentorship</h2>
+                    <p class="mentorship-card-subtitle">Personalized Trading Guidance & Execution Support</p>
+
+                    <!-- Price tag -->
+                    <span class="mentorship-card-price">₹99,999</span>
+
+                    <!-- Description -->
+                    <p class="mentorship-card-desc">
+                        An advanced mentorship program designed for serious traders who want direct guidance, execution clarity, accountability, and structured trading improvement.
+                    </p>
+
+                    <!-- Checklist -->
+                    <div class="mentorship-benefits-list">
+                        <div class="mentorship-benefit-item">
+                            <i data-lucide="check"></i>
+                            <span class="mentorship-benefit-text">Direct Mentor WhatsApp Support</span>
+                        </div>
+                        <div class="mentorship-benefit-item">
+                            <i data-lucide="check"></i>
+                            <span class="mentorship-benefit-text">1:1 Trade Review & Clarity Guidance</span>
+                        </div>
+                        <div class="mentorship-benefit-item">
+                            <i data-lucide="check"></i>
+                            <span class="mentorship-benefit-text">Private Mentor Community Access</span>
+                        </div>
+                        <div class="mentorship-benefit-item">
+                            <i data-lucide="check"></i>
+                            <span class="mentorship-benefit-text">Live Market Condition Updates</span>
+                        </div>
+                        <div class="mentorship-benefit-item">
+                            <i data-lucide="check"></i>
+                            <span class="mentorship-benefit-text">Additional Structured Strategy Framework</span>
+                        </div>
+                        <div class="mentorship-benefit-item">
+                            <i data-lucide="check"></i>
+                            <span class="mentorship-benefit-text">Performance-Based Capital Access Support</span>
+                        </div>
+                    </div>
+
+                    <!-- Styled Apply Button -->
+                    <button class="mentorship-apply-btn" onclick="window.location.href='pro-mentorship.html'">
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Premium Active Mentorship Dashboard (Enrolled Users) -->
+            <div id="mentorshipActiveContent" style="display: none;">
+                <div class="mentorship-active-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+                    
+                    <!-- left col: Connection Hub -->
+                    <div class="mentorship-glass-card" style="padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 400px; position: relative; overflow: hidden; text-align: left;">
+                        <div class="mentorship-card-glow-bar" style="background: linear-gradient(90deg, #d4af37, #f3e5ab);"></div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <span class="mentorship-card-badge" style="background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.25); color: var(--gold);">PRO MEMBER STATUS</span>
+                                <div style="display: flex; align-items: center; gap: 6px; color: var(--gold); font-size: 0.85rem; font-weight: 800;">
+                                    <i data-lucide="crown" style="width: 18px; height: 18px;"></i> ELITE HUB
+                                </div>
+                            </div>
+                            <h2 style="font-family: 'Satoshi', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--white); margin-bottom: 0.5rem; text-align: left;">1:1 Private Mentorship</h2>
+                            <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem; text-align: left;">
+                                Welcome to your personal command center. As an elite member of the PrimeVerse Pro Mentorship, you have direct access to customized portfolio guidance, trade evaluations, and 1:1 strategy calls.
+                            </p>
+                            
+                            <!-- WhatsApp and community access -->
+                            <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                                <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">
+                                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(40, 167, 69, 0.1); display: flex; align-items: center; justify-content: center; color: #28a745;">
+                                        <i data-lucide="message-square" style="width: 22px; height: 22px;"></i>
+                                    </div>
+                                    <div style="text-align: left;">
+                                        <div style="font-size: 0.85rem; font-weight: 800; color: var(--white);">Direct Mentor WhatsApp</div>
+                                        <div style="font-size: 0.72rem; color: var(--gray);">Send trades directly for review (Active 24/7)</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">
+                                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(212, 175, 55, 0.1); display: flex; align-items: center; justify-content: center; color: var(--gold);">
+                                        <i data-lucide="users" style="width: 22px; height: 22px;"></i>
+                                    </div>
+                                    <div style="text-align: left;">
+                                        <div style="font-size: 0.85rem; font-weight: 800; color: var(--white);">Private Discord Server</div>
+                                        <div style="font-size: 0.72rem; color: var(--gray);">Connect with VIP mentors and elite alumni</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem;">
+                            <a href="https://wa.me/919999999999" target="_blank" class="mentorship-apply-btn" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; background: #28a745; border-color: #28a745; box-shadow: 0 4px 15px rgba(40,167,69,0.3);">
+                                <i data-lucide="message-circle"></i> Connect on WhatsApp
+                            </a>
+                            <a href="https://discord.gg/primeverse-vip" target="_blank" class="mentorship-apply-btn" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); color: var(--white); box-shadow: none;">
+                                Join Discord Server
+                            </a>
+                        </div>
                     </div>
                     
-                    <div>
-                        <span class="mentorship-card-badge" style="background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.25); color: var(--gold); margin-bottom: 1rem; text-transform: uppercase; font-weight: 800; font-size: 0.75rem; letter-spacing: 1px;">
-                             Day 18 Complete Requirement
-                        </span>
+                    <!-- right col: Booking and Strategy Resources -->
+                    <div class="mentorship-glass-card" style="padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 400px; position: relative; overflow: hidden; text-align: left;">
+                        <div class="mentorship-card-glow-bar" style="background: linear-gradient(90deg, #d4af37, #f3e5ab);"></div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <span class="mentorship-card-badge" style="background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.25); color: var(--gold);">EXERCISE BOOKING</span>
+                                <div style="display: flex; align-items: center; gap: 6px; color: var(--gray); font-size: 0.8rem; font-weight: 800;">
+                                     1 OF 2 MONTHLY CALLS LEFT
+                                </div>
+                            </div>
+                            <h2 style="font-family: 'Satoshi', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--white); margin-bottom: 0.5rem; text-align: left;">Schedule 1:1 Audit Session</h2>
+                            <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem; text-align: left;">
+                                Book your monthly live charting and journal review session with our senior trading mentors. We will audit your trades and fine-tune your entry filters.
+                            </p>
+                            
+                            <!-- Calendar simulation -->
+                            <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; background: rgba(5,10,18,0.3); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
+                                <div style="font-size: 0.78rem; font-weight: 800; color: var(--white); text-transform: uppercase; letter-spacing: 0.5px;">Next Available Mentor Slots:</div>
+                                <div style="display: flex; gap: 8px;">
+                                    <div style="flex: 1; border: 1px solid var(--gold); background: rgba(212,175,55,0.05); border-radius: 8px; padding: 8px; text-align: center; cursor: pointer;">
+                                        <div style="font-size: 0.7rem; color: var(--gold); font-weight: 800;">TOMORROW</div>
+                                        <div style="font-size: 0.8rem; color: var(--white); font-weight: 800; margin: 2px 0;">10:00 AM</div>
+                                    </div>
+                                    <div style="flex: 1; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.01); border-radius: 8px; padding: 8px; text-align: center; cursor: pointer;">
+                                        <div style="font-size: 0.7rem; color: var(--gray); font-weight: 800;">22 MAY</div>
+                                        <div style="font-size: 0.8rem; color: var(--white); font-weight: 800; margin: 2px 0;">03:30 PM</div>
+                                    </div>
+                                    <div style="flex: 1; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.01); border-radius: 8px; padding: 8px; text-align: center; cursor: pointer;">
+                                        <div style="font-size: 0.7rem; color: var(--gray); font-weight: 800;">23 MAY</div>
+                                        <div style="font-size: 0.8rem; color: var(--white); font-weight: 800; margin: 2px 0;">11:00 AM</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="mentorship-apply-btn" style="width: 100%;" onclick="showPremiumAlert('Slot Booked', 'Our trading mentors will reach out with your Zoom invitation details shortly.', 'calendar')">
+                            Book Live Charting Zoom Session
+                        </button>
                     </div>
-
-                    <h2 class="mentorship-card-title" style="font-size: 2rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0,0,0,0.5); color: var(--white);">MENTORSHIP LOCKED</h2>
-                    <p style="color: #cbd5e1; font-size: 0.92rem; font-weight: 600; text-align: center; max-width: 340px; margin-bottom: 1.5rem; line-height: 1.6; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">
-                        Unlock this advanced execution module after completing Day 18 of the Mastery Program.
-                    </p>
+                </div>
+                
+                <!-- Playbooks and Exclusive Guides -->
+                <div class="mentorship-glass-card" style="margin-top: 2rem; padding: 2rem; text-align: left; position: relative; overflow: hidden;">
+                    <div class="mentorship-card-glow-bar" style="background: linear-gradient(90deg, #d4af37, #f3e5ab);"></div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h2 style="font-family: 'Satoshi', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--white); margin: 0 0 0.5rem 0;">Pro Mentorship Blueprint & Playbooks</h2>
+                        <p style="color: var(--gray); font-size: 0.88rem; margin: 0;">Download high-probability setup resources and capital scaling matrices reserved only for elite members.</p>
+                    </div>
                     
-                    <!-- Mini Progress bar inside overlay -->
-                    <div style="width: 100%; max-width: 260px; background: rgba(255,255,255,0.05); border-radius: 10px; height: 6px; overflow: hidden; margin-bottom: 0.75rem; border: 1px solid rgba(255,255,255,0.05);">
-                        <div id="mentorshipOverlayBar" style="width: 5.56%; height: 100%; background: linear-gradient(90deg, var(--gold), #f3e5ab); box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);"></div>
-                    </div>
-                    <p id="mentorshipOverlayText" style="color: #94a3b8; font-size: 0.8rem; font-weight: 700; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
-                        Day 1 of 18 (17 days remaining)
-                    </p>
-                </div>
-
-                <!-- Top highlight gold gradient bar -->
-                <div class="mentorship-card-glow-bar"></div>
-                
-                <!-- Badge -->
-                <span class="mentorship-card-badge">
-                    6-Month Premium Mentorship
-                </span>
-                
-                <!-- Title & Subtitle -->
-                <h2 class="mentorship-card-title">PrimeVerse Pro Mentorship</h2>
-                <p class="mentorship-card-subtitle">Personalized Trading Guidance & Execution Support</p>
-
-                <!-- Price tag -->
-                <span class="mentorship-card-price">₹99,999</span>
-
-                <!-- Description -->
-                <p class="mentorship-card-desc">
-                    An advanced mentorship program designed for serious traders who want direct guidance, execution clarity, accountability, and structured trading improvement.
-                </p>
-
-                <!-- Checklist -->
-                <div class="mentorship-benefits-list">
-                    <div class="mentorship-benefit-item">
-                        <i data-lucide="check"></i>
-                        <span class="mentorship-benefit-text">Direct Mentor WhatsApp Support</span>
-                    </div>
-                    <div class="mentorship-benefit-item">
-                        <i data-lucide="check"></i>
-                        <span class="mentorship-benefit-text">1:1 Trade Review & Clarity Guidance</span>
-                    </div>
-                    <div class="mentorship-benefit-item">
-                        <i data-lucide="check"></i>
-                        <span class="mentorship-benefit-text">Private Mentor Community Access</span>
-                    </div>
-                    <div class="mentorship-benefit-item">
-                        <i data-lucide="check"></i>
-                        <span class="mentorship-benefit-text">Live Market Condition Updates</span>
-                    </div>
-                    <div class="mentorship-benefit-item">
-                        <i data-lucide="check"></i>
-                        <span class="mentorship-benefit-text">Additional Structured Strategy Framework</span>
-                    </div>
-                    <div class="mentorship-benefit-item">
-                        <i data-lucide="check"></i>
-                        <span class="mentorship-benefit-text">Performance-Based Capital Access Support</span>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+                        <!-- Item 1 -->
+                        <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; background: rgba(5,10,18,0.3); padding: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--white); margin: 0 0 4px 0;">Elite Institutional Order Flow</h3>
+                                <p style="font-size: 0.72rem; color: var(--gray); margin: 0;">Comprehensive entry guide and checklist</p>
+                            </div>
+                            <button style="border: 1px solid var(--gold); background: rgba(212,175,55,0.05); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--gold); cursor: pointer;" onclick="showPremiumAlert('Downloading Playbook', 'Starting download for your Institutional Order Flow guide...', 'download')">
+                                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                        <!-- Item 2 -->
+                        <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; background: rgba(5,10,18,0.3); padding: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--white); margin: 0 0 4px 0;">Prop Firm Capital Scaling Matrix</h3>
+                                <p style="font-size: 0.72rem; color: var(--gray); margin: 0;">Prop firm drawdown management spreadsheet</p>
+                            </div>
+                            <button style="border: 1px solid var(--gold); background: rgba(212,175,55,0.05); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--gold); cursor: pointer;" onclick="showPremiumAlert('Downloading Spreadsheet', 'Starting download for the Prop Firm Capital Scaling Matrix...', 'download')">
+                                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                        <!-- Item 3 -->
+                        <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; background: rgba(5,10,18,0.3); padding: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--white); margin: 0 0 4px 0;">1:1 Custom Strategy Playbook</h3>
+                                <p style="font-size: 0.72rem; color: var(--gray); margin: 0;">Personalised ruleset based on your stats</p>
+                            </div>
+                            <button style="border: 1px solid var(--gold); background: rgba(212,175,55,0.05); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--gold); cursor: pointer;" onclick="showPremiumAlert('Generating Strategy', 'Compiling and downloading your Custom Strategy Playbook PDF...', 'file-text')">
+                                <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Styled Apply Button -->
-                <button class="mentorship-apply-btn" onclick="window.location.href='pro-mentorship.html'">
-                    Apply Now
-                </button>
             </div>
         </div>
 
@@ -2792,11 +3051,57 @@
             window.location.replace('../index.html?login=true');
         } else if (!localStorage.getItem('selectedCourse')) {
             window.location.replace('../index.html');
-        } else if (localStorage.getItem('selectedCourse') === 'PrimeVerse Pro Mentorship') {
-            window.location.replace('../index.html?mentorshipModal=true');
         }
 
+        // Global Premium Alert System Function
+        window.showPremiumAlert = function (title, message, iconType = 'lock') {
+            const modal = document.getElementById('premiumAlertModal');
+            const titleEl = document.getElementById('premiumAlertTitle');
+            const messageEl = document.getElementById('premiumAlertMessage');
+            const iconContainer = document.querySelector('.premium-alert-icon-container');
+            
+            if (modal && titleEl && messageEl) {
+                titleEl.innerText = title;
+                messageEl.innerText = message;
+                
+                // Update icon dynamically
+                if (iconContainer) {
+                    iconContainer.innerHTML = `<i data-lucide="${iconType}" class="premium-alert-icon"></i>`;
+                }
+                
+                // Render Lucide icon
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+                
+                // Show modal with animation
+                modal.style.display = 'flex';
+                // Trigger transition
+                setTimeout(() => {
+                    modal.classList.add('active');
+                }, 10);
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Close Premium Alert Modal Listener
+            const alertModal = document.getElementById('premiumAlertModal');
+            const alertBtn = document.getElementById('premiumAlertBtn');
+            if (alertBtn && alertModal) {
+                const closeModal = () => {
+                    alertModal.classList.remove('active');
+                    setTimeout(() => {
+                        alertModal.style.display = 'none';
+                    }, 400); // match transition duration (0.4s)
+                };
+                alertBtn.addEventListener('click', closeModal);
+                // Also close on clicking the overlay background
+                alertModal.addEventListener('click', (e) => {
+                    if (e.target === alertModal) {
+                        closeModal();
+                    }
+                });
+            }
             const introVideoSrc = 'https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/sign/videos/intro/intro.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjcwNTM4MC1mYTdhLTRlODgtODg5Yi0zZjViNTkyYzcyZmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvaW50cm8vaW50cm8ubXA0IiwiaWF0IjoxNzc5MjE5NzQ3LCJleHAiOjE4MTA3NTU3NDd9.RWXhPSQiPALBAHlMuy1NJ9o65LnEiJ9CaPgzPMI05JY';
 
             const lessonsDatabase = {
@@ -3161,10 +3466,33 @@
             // Unified Dynamic Dashboard Update & Gating Logic
             window.updateDashboardUI = function () {
                 // --- Mentorship Lock/Unlock Overlay Controller Logic ---
-                const isMentorshipLocked = currentDay < 19;
+                const isMentorshipEnrolled = localStorage.getItem('selectedCourse') === 'PrimeVerse Pro Mentorship';
+                const isMentorshipLocked = !isMentorshipEnrolled && (currentDay < 19);
                 const lockOverlay = document.getElementById('mentorshipLockOverlay');
                 const overlayBar = document.getElementById('mentorshipOverlayBar');
                 const overlayText = document.getElementById('mentorshipOverlayText');
+                
+                const offerContent = document.getElementById('mentorshipOfferContent');
+                const activeContent = document.getElementById('mentorshipActiveContent');
+                const dashboardHeaderBadge = document.getElementById('dashboardHeaderBadge');
+
+                if (isMentorshipEnrolled) {
+                    if (offerContent) offerContent.style.display = 'none';
+                    if (activeContent) activeContent.style.display = 'block';
+                    if (dashboardHeaderBadge) {
+                        dashboardHeaderBadge.innerHTML = `<i data-lucide="crown" style="width: 14px; height: 14px; color: var(--gold); margin-right: 4px;"></i> <span>PRO MENTORSHIP ACTIVE</span>`;
+                        dashboardHeaderBadge.style.borderColor = 'rgba(212, 175, 55, 0.4)';
+                        dashboardHeaderBadge.style.background = 'rgba(212, 175, 55, 0.08)';
+                    }
+                } else {
+                    if (offerContent) offerContent.style.display = 'block';
+                    if (activeContent) activeContent.style.display = 'none';
+                    if (dashboardHeaderBadge) {
+                        dashboardHeaderBadge.innerHTML = `<i data-lucide="gem" style="width: 14px; height: 14px; color: #3b82f6; margin-right: 4px;"></i> <span>MASTERY PROGRAM ACTIVE</span>`;
+                        dashboardHeaderBadge.style.borderColor = '';
+                        dashboardHeaderBadge.style.background = '';
+                    }
+                }
                 
                 if (navMentorship) {
                     const card = document.getElementById('mentorshipCard');
@@ -3225,7 +3553,7 @@
                         navJournal.innerHTML = '<i data-lucide="lock"></i> Execution Journal';
                         navJournal.onclick = (e) => {
                             e.preventDefault();
-                            alert('Execution Journal is locked until Day 13!');
+                            showPremiumAlert('Execution Journal Locked', 'Your execution journal and trade trackers will unlock automatically on Day 13 of the Mastery Program.', 'lock');
                         };
                     } else {
                         navJournal.innerHTML = '<i data-lucide="book-marked"></i> Execution Journal';
@@ -3338,8 +3666,22 @@
                 roadmapItems.forEach((item, index) => {
                     const itemDay = index + 1;
                     
-                    const isItemActive = itemDay === currentDay;
-                    const isItemCompleted = itemDay < currentDay;
+                    const isItemUnlocked = (itemDay <= currentDay);
+                    const partsMap = {
+                        0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+                    };
+                    const totalParts = partsMap[itemDay] || 2;
+                    let completedParts = 0;
+                    if (isItemUnlocked) {
+                        for (let p = 1; p <= totalParts; p++) {
+                            if (localStorage.getItem(`completed_day_${itemDay}_part_${p}`) === 'true') {
+                                completedParts++;
+                            }
+                        }
+                    }
+                    const dayPercent = totalParts > 0 ? Math.round((completedParts / totalParts) * 100) : 0;
+                    const isItemCompleted = isItemUnlocked && (dayPercent === 100);
+                    const isItemActive = isItemUnlocked && !isItemCompleted;
                     
                     const circle = item.querySelector('.roadmap-circle-icon');
                     const percentSpan = item.querySelector('.roadmap-item-percent');
@@ -3362,18 +3704,18 @@
                         item.classList.add('active', 'active-module');
                         if (circle) {
                             circle.className = 'roadmap-circle-icon active';
-                            circle.innerHTML = '';
+                            circle.innerHTML = '<i data-lucide="play" style="width:6px; height:6px; fill:var(--gold); color:var(--gold);"></i>';
                         }
                         if (percentSpan) {
-                            percentSpan.innerText = '0%';
+                            percentSpan.innerText = dayPercent + '%';
                             percentSpan.style.color = 'var(--gold)';
                         }
-                        if (progressBar) progressBar.style.width = '0%';
+                        if (progressBar) progressBar.style.width = dayPercent + '%';
                     } else {
                         item.classList.add('locked');
                         if (circle) {
                             circle.className = 'roadmap-circle-icon locked';
-                            circle.innerHTML = '';
+                            circle.innerHTML = '<i data-lucide="lock" style="width:10px; height:10px;"></i>';
                         }
                         if (percentSpan) {
                             percentSpan.innerText = 'LOCKED';
@@ -3389,8 +3731,8 @@
                     const dayNum = index === 0 ? 0 : index;
                     
                     const isItemUnlocked = (dayNum <= currentDay);
-                    const isItemCompleted = (dayNum < currentDay);
-                    const isItemActive = (dayNum === currentDay);
+                    const isItemCompleted = localStorage.getItem(`completed_day_${dayNum}`) === 'true';
+                    const isItemActive = isItemUnlocked && !isItemCompleted;
                     
                     const node = item.querySelector('.mastery-timeline-node');
                     const statusSpan = item.querySelector('.mastery-timeline-status');
@@ -3487,6 +3829,13 @@
 
                     if (user.full_name) localStorage.setItem('userName', user.full_name);
                     if (user.enroll_date) localStorage.setItem('enrollDate', user.enroll_date);
+                    if (user.selected_course) {
+                        localStorage.setItem('selectedCourse', user.selected_course);
+                        const currentCourseNameEl = document.getElementById('currentCourseName');
+                        if (currentCourseNameEl) {
+                            currentCourseNameEl.innerText = user.selected_course;
+                        }
+                    }
                     
                     // Map progression state variables directly from user's custom database columns
                     currentDay = user.current_day !== null && user.current_day !== undefined ? parseInt(user.current_day) : currentDay;
@@ -3506,6 +3855,46 @@
                         const lessonInfo = lessonsDatabase[currentDay] || lessonsDatabase[1];
                         if (lessonInfo) {
                             stageTitle = lessonInfo.title;
+                        }
+                    }
+
+                    // Parse and sync completed lessons from database
+                    if (user.completed_lessons) {
+                        const completedList = user.completed_lessons.split(',');
+                        // Clean previous local markers
+                        for (let d = 0; d <= 18; d++) {
+                            localStorage.removeItem(`completed_day_${d}`);
+                            for (let p = 1; p <= 3; p++) {
+                                localStorage.removeItem(`completed_day_${d}_part_${p}`);
+                            }
+                        }
+                        // Populate new markers
+                        completedList.forEach(key => {
+                            if (key) {
+                                const parts = key.split('_part_');
+                                if (parts.length === 2) {
+                                    const dNum = parseInt(parts[0]);
+                                    const pNum = parseInt(parts[1]);
+                                    localStorage.setItem(`completed_day_${dNum}_part_${pNum}`, 'true');
+                                }
+                            }
+                        });
+                        // Re-evaluate days
+                        const partsMap = {
+                            0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+                        };
+                        for (let d = 0; d <= 18; d++) {
+                            const totalParts = partsMap[d] || 2;
+                            let allCompleted = true;
+                            for (let p = 1; p <= totalParts; p++) {
+                                if (localStorage.getItem(`completed_day_${d}_part_${p}`) !== 'true') {
+                                    allCompleted = false;
+                                    break;
+                                }
+                            }
+                            if (allCompleted) {
+                                localStorage.setItem(`completed_day_${d}`, 'true');
+                            }
                         }
                     }
 
@@ -3605,6 +3994,18 @@
 
         });
     </script>
+
+    <!-- Premium Glassmorphic Alert Modal -->
+    <div id="premiumAlertModal" class="premium-alert-overlay" style="display: none;">
+        <div class="premium-alert-box">
+            <div class="premium-alert-icon-container">
+                <i data-lucide="lock" class="premium-alert-icon"></i>
+            </div>
+            <h3 class="premium-alert-title" id="premiumAlertTitle">Module Locked</h3>
+            <p class="premium-alert-message" id="premiumAlertMessage">This module is currently locked.</p>
+            <button class="premium-alert-btn" id="premiumAlertBtn">Understood</button>
+        </div>
+    </div>
 </body>
 
 </html>

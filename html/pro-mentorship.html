@@ -670,9 +670,7 @@
     <script>
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.replace('../index.html?login=true');
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
+        }        document.addEventListener('DOMContentLoaded', () => {
             const displayPrice = document.getElementById('displayPrice');
             const totalAmount = document.getElementById('totalAmount');
             const buildSystemBtn = document.getElementById('buildSystemBtn');
@@ -681,47 +679,55 @@
             const paymentSuccessIcon = document.getElementById('paymentSuccessIcon');
             const loaderTitle = document.getElementById('loaderTitle');
             const loaderMessage = document.getElementById('loaderMessage');
-
-            // Action Checkout Razorpay Gateway Routing
+ 
+            // Action Checkout Simulated Payment & Database Update
             buildSystemBtn.addEventListener('click', async () => {
                 loaderOverlay.classList.add('active');
                 paymentSpinner.style.display = 'block';
                 paymentSuccessIcon.style.display = 'none';
-                loaderTitle.innerText = "Redirecting to Razorpay";
-                loaderMessage.innerText = "Connecting to the secure Razorpay payment gateway. Please do not close or refresh this page...";
+                loaderTitle.innerText = "Processing Payment";
+                loaderMessage.innerText = "Securing your premium mentorship node. Please do not close or refresh this page...";
                 
-                // Track user selection parameters
+                // Track user selection parameters in localStorage
                 localStorage.setItem('selectedCourse', 'PrimeVerse Pro Mentorship');
                 localStorage.setItem('enrollDate', new Date().toISOString());
                 
-                // Update Supabase profiles table for the current user to store PrimeVerse Mastery Program progress
+                // Update Supabase profiles table for the current user to store PrimeVerse Pro Mentorship selection
                 const userEmail = localStorage.getItem('userEmail');
                 const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+                
                 if (userEmail && supabase) {
                     try {
-                        await supabase
+                        const { error } = await supabase
                             .from('profiles')
                             .update({
                                 enroll_date: new Date().toISOString(),
-                                current_day: 1,
-                                modules_completed: 0,
-                                total_modules: 18,
-                                program_progress: 0,
-                                stage_title: 'Financial Market Foundations'
+                                selected_course: 'PrimeVerse Pro Mentorship'
                             })
                             .ilike('email', userEmail.trim());
-                        console.log("Successfully stored PrimeVerse Mastery Program in profile table!");
+                        
+                        if (error) throw error;
+                        console.log("Successfully stored PrimeVerse Pro Mentorship in profile table!");
                     } catch (err) {
                         console.error("Error storing program in profile table:", err);
                     }
+                } else {
+                    console.warn("User email or supabase client not found, saved to localStorage only.");
                 }
 
-                // Redirect directly to the Razorpay link
+                // Simulate payment processing delay, show success state, then redirect to dashboard
                 setTimeout(() => {
-                    window.location.href = 'https://rzp.io/rzp/F89qkMo8';
-                }, 1000);
+                    paymentSpinner.style.display = 'none';
+                    paymentSuccessIcon.style.display = 'block';
+                    loaderTitle.innerText = "Payment Successful";
+                    loaderMessage.innerText = "Welcome to PrimeVerse Pro Mentorship! Redirecting to your dashboard...";
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                }, 2000);
             });
-        });
+        }); });
     </script>
 </body>
 

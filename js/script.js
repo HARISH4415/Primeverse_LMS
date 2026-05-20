@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Program Action Buttons Green Color
             if (viewProgramBtn) {
-                if (selectedCourse === 'PrimeVerse Mastery Program') {
+                if (selectedCourse === 'PrimeVerse Mastery Program' || selectedCourse === 'PrimeVerse Pro Mentorship') {
                     viewProgramBtn.innerText = 'ACTIVE';
                 } else {
                     viewProgramBtn.innerText = 'View Program';
@@ -334,7 +334,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 modules_completed: 0,
                                 total_modules: 18,
                                 program_progress: 0,
-                                stage_title: 'Financial Market Foundations'
+                                stage_title: 'Financial Market Foundations',
+                                selected_course: 'PrimeVerse Mastery Program'
                             }
                         ])
                         .select();
@@ -382,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem('userName', user.full_name);
                         if (user.phone) localStorage.setItem('userPhone', user.phone);
                         localStorage.setItem('lastLogin', new Date().toISOString());
-                        localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+                        localStorage.setItem('selectedCourse', user.selected_course || 'PrimeVerse Mastery Program');
                         
                         // Cache dynamic database-driven progression metrics
                         const cDay = user.current_day !== undefined && user.current_day !== null ? parseInt(user.current_day) : 1;
@@ -399,6 +400,46 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem('stageTitle', sTitle);
                         localStorage.setItem('modulesCompleted', mComp);
                         localStorage.setItem('totalModules', tMod);
+
+                        // Parse and sync completed lessons from database
+                        if (user.completed_lessons) {
+                            const completedList = user.completed_lessons.split(',');
+                            // Clean previous local markers
+                            for (let d = 0; d <= 18; d++) {
+                                localStorage.removeItem(`completed_day_${d}`);
+                                for (let p = 1; p <= 3; p++) {
+                                    localStorage.removeItem(`completed_day_${d}_part_${p}`);
+                                }
+                            }
+                            // Populate new markers
+                            completedList.forEach(key => {
+                                if (key) {
+                                    const parts = key.split('_part_');
+                                    if (parts.length === 2) {
+                                        const dNum = parseInt(parts[0]);
+                                        const pNum = parseInt(parts[1]);
+                                        localStorage.setItem(`completed_day_${dNum}_part_${pNum}`, 'true');
+                                    }
+                                }
+                            });
+                            // Re-evaluate days
+                            const partsMap = {
+                                0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+                            };
+                            for (let d = 0; d <= 18; d++) {
+                                const totalParts = partsMap[d] || 2;
+                                let allCompleted = true;
+                                for (let p = 1; p <= totalParts; p++) {
+                                    if (localStorage.getItem(`completed_day_${d}_part_${p}`) !== 'true') {
+                                        allCompleted = false;
+                                        break;
+                                    }
+                                }
+                                if (allCompleted) {
+                                    localStorage.setItem(`completed_day_${d}`, 'true');
+                                }
+                            }
+                        }
                         
                         // Load or default the enrollment date from Supabase
                         const finalEnrollDate = user.enroll_date || user.created_at || new Date().toISOString();
@@ -452,9 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginBtnNav.addEventListener('click', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 const selectedCourse = localStorage.getItem('selectedCourse');
-                if (selectedCourse === 'PrimeVerse Pro Mentorship') {
-                    openMentorshipModal();
-                } else if (selectedCourse) {
+                if (selectedCourse) {
                     window.location.href = 'html/dashboard.html';
                 }
             } else {
@@ -549,9 +588,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = '';
         }
 
-        // When closing the mentorship modal, update selectedCourse to PrimeVerse Mastery Program
+        // When closing the mentorship modal, update selectedCourse to PrimeVerse Pro Mentorship
         // so that they can access the dashboard, and store it in their profile table in Supabase
-        localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+        localStorage.setItem('selectedCourse', 'PrimeVerse Pro Mentorship');
 
         const userEmail = localStorage.getItem('userEmail');
         const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
@@ -560,15 +599,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 await supabase
                     .from('profiles')
                     .update({
-                        enroll_date: new Date().toISOString(),
-                        current_day: 1,
-                        modules_completed: 0,
-                        total_modules: 18,
-                        program_progress: 0,
-                        stage_title: 'Financial Market Foundations'
+                        selected_course: 'PrimeVerse Pro Mentorship'
                     })
                     .ilike('email', userEmail.trim());
-                console.log("Successfully stored PrimeVerse Mastery Program in profile table on modal close!");
+                console.log("Successfully stored PrimeVerse Pro Mentorship in profile table on modal close!");
             } catch (err) {
                 console.error("Error storing program in profile table on modal close:", err);
             }
@@ -660,9 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginBtnNavMobile.addEventListener('click', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 const selectedCourse = localStorage.getItem('selectedCourse');
-                if (selectedCourse === 'PrimeVerse Pro Mentorship') {
-                    openMentorshipModal();
-                } else if (selectedCourse) {
+                if (selectedCourse) {
                     window.location.href = 'html/dashboard.html';
                 }
             } else {

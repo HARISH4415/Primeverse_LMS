@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
 
     <style>
         :root {
@@ -192,11 +194,13 @@
             border: none !important;
             background: #000000 !important;
         }
+
         .cinematic-player-wrap:fullscreen .custom-video {
             width: 100% !important;
             height: 100% !important;
             object-fit: contain !important;
         }
+
         .cinematic-player-wrap:-webkit-full-screen {
             width: 100vw !important;
             height: 100vh !important;
@@ -206,6 +210,7 @@
             border: none !important;
             background: #000000 !important;
         }
+
         .cinematic-player-wrap:-webkit-full-screen .custom-video {
             width: 100% !important;
             height: 100% !important;
@@ -475,6 +480,12 @@
             height: 20px;
             border-radius: 50%;
             flex-shrink: 0;
+            position: relative;
+        }
+
+        .status-partial {
+            background: rgba(212, 175, 55, 0.05);
+            color: var(--gold);
         }
 
         .status-completed {
@@ -504,9 +515,11 @@
             0% {
                 box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
             }
+
             70% {
                 box-shadow: 0 0 0 6px rgba(212, 175, 55, 0);
             }
+
             100% {
                 box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
             }
@@ -517,16 +530,19 @@
             .workspace {
                 flex-direction: column;
             }
+
             .quick-nav-sidebar {
                 width: 100%;
                 height: 300px;
                 border-left: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.04);
             }
+
             .player-context-box {
                 flex-direction: column;
                 align-items: stretch;
             }
+
             .context-right {
                 align-items: stretch;
             }
@@ -541,7 +557,7 @@
                 align-items: center !important;
             }
 
-            .player-header > div:first-child {
+            .player-header>div:first-child {
                 display: flex !important;
                 width: 100% !important;
                 justify-content: space-between !important;
@@ -599,6 +615,7 @@
             transform: translateZ(0);
             will-change: transform;
         }
+
         .custom-fullscreen-btn:hover {
             background: rgba(212, 175, 55, 0.2);
             border-color: var(--gold);
@@ -606,6 +623,7 @@
             transform: scale(1.1) translateZ(0);
             box-shadow: 0 6px 25px rgba(212, 175, 55, 0.25);
         }
+
         .custom-fullscreen-btn:active {
             transform: scale(0.95) translateZ(0);
         }
@@ -629,6 +647,7 @@
             pointer-events: none;
             transition: all 0.3s ease;
         }
+
         .video-loader-spinner {
             width: 56px;
             height: 56px;
@@ -638,8 +657,11 @@
             animation: spin-loader 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
         }
+
         @keyframes spin-loader {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Custom Quality/Resolution Selector Styling */
@@ -768,6 +790,26 @@
         .quality-toast.visible {
             opacity: 1;
         }
+
+        /* --- Anti-Screenshot / Anti-Recording Security CSS --- */
+        .anti-screenshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: #000000 !important;
+            z-index: 2147483647 !important;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            pointer-events: auto;
+        }
+
+        .anti-screenshot-overlay.active {
+            display: flex !important;
+        }
     </style>
 </head>
 
@@ -797,11 +839,27 @@
 
             <div class="video-frame-container">
                 <!-- Cinematic Player Block -->
-                <div class="cinematic-player-wrap">                    <!-- Custom MP4 Video Player -->
-                    <video id="workspaceVideo" class="custom-video" controls controlslist="nodownload nofullscreen" disablepictureinpicture oncontextmenu="return false;" preload="auto" playsinline>
-                        <source src="https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/public/videos/intro/intro.mp4" type="video/mp4">
+                <div class="cinematic-player-wrap"> <!-- Custom MP4 Video Player -->
+                    <video id="workspaceVideo" class="custom-video" controls controlslist="nodownload nofullscreen"
+                        disablepictureinpicture oncontextmenu="return false;" preload="auto" playsinline>
+                        <source
+                            src="https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/public/videos/intro/intro.mp4"
+                            type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
+
+                    <!-- Anti-Screenshot / Anti-Record Overlay -->
+                    <div id="screenSecurityOverlay" class="anti-screenshot-overlay">
+                        <i class="fa-solid fa-shield-halved"
+                            style="font-size: 3.5rem; color: #ff3333; margin-bottom: 1.5rem; filter: drop-shadow(0 0 15px rgba(255, 51, 51, 0.4));"></i>
+                        <h2
+                            style="font-family: 'Satoshi', sans-serif; font-weight: 900; font-size: 1.6rem; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 0.8rem 0;">
+                            Screen Security Active</h2>
+                        <p
+                            style="font-size: 0.95rem; color: var(--gray); max-width: 320px; line-height: 1.5; margin: 0;">
+                            Screenshots and screen recordings are strictly prohibited to protect intellectual property.
+                        </p>
+                    </div>
 
                     <!-- Glassmorphic Loading Spinner -->
                     <div id="videoLoader" class="video-loader-overlay">
@@ -827,7 +885,8 @@
                     </button>
 
                     <!-- Play Overlay Poster -->
-                    <div class="player-cover-overlay" id="playerOverlay" style="z-index: 2147483645; transform: translateZ(0); will-change: transform;">
+                    <div class="player-cover-overlay" id="playerOverlay"
+                        style="z-index: 2147483645; transform: translateZ(0); will-change: transform;">
                         <div class="large-play-icon">
                             <i class="fa-solid fa-play"></i>
                         </div>
@@ -838,7 +897,8 @@
 
 
                     <!-- Dynamic Anti-Piracy Watermark -->
-                    <div id="videoWatermark" style="position: absolute; pointer-events: none; z-index: 2147483646; color: rgba(255, 255, 255, 0.22); font-size: 0.85rem; font-weight: 700; font-family: 'Satoshi', sans-serif; white-space: nowrap; background: rgba(0, 0, 0, 0.35); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 5s ease-in-out; top: 20%; left: 20%; backdrop-filter: blur(2px); transform: translateZ(0); will-change: transform;">
+                    <div id="videoWatermark"
+                        style="position: absolute; pointer-events: none; z-index: 2147483646; color: rgba(255, 255, 255, 0.22); font-size: 0.85rem; font-weight: 700; font-family: 'Satoshi', sans-serif; white-space: nowrap; background: rgba(0, 0, 0, 0.35); padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 5s ease-in-out; top: 20%; left: 20%; backdrop-filter: blur(2px); transform: translateZ(0); will-change: transform;">
                         harish.primeverse@gmail.com
                     </div>
                 </div>
@@ -849,7 +909,9 @@
                         <div class="context-badge" id="contextDayTag">Day 01 — Module 01</div>
                         <h1 class="context-title" id="contextLessonTitle">Financial Market Foundations Intro</h1>
                         <p class="context-desc">
-                            Begin your study by mastering the essential core architectures of financial markets, liquidity structures, trend definitions, and professional execution behaviors. Take thorough notes.
+                            Begin your study by mastering the essential core architectures of financial markets,
+                            liquidity structures, trend definitions, and professional execution behaviors. Take thorough
+                            notes.
                         </p>
                     </div>
 
@@ -886,8 +948,6 @@
             window.location.replace('../index.html?login=true');
         } else if (!localStorage.getItem('selectedCourse')) {
             window.location.replace('../index.html');
-        } else if (localStorage.getItem('selectedCourse') === 'PrimeVerse Pro Mentorship') {
-            window.location.replace('../index.html?mentorshipModal=true');
         }
 
         const introVideoSrc = 'https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/sign/videos/intro/intro.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjcwNTM4MC1mYTdhLTRlODgtODg5Yi0zZjViNTkyYzcyZmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvaW50cm8vaW50cm8ubXA0IiwiaWF0IjoxNzc5MjE5NzQ3LCJleHAiOjE4MTA3NTU3NDd9.RWXhPSQiPALBAHlMuy1NJ9o65LnEiJ9CaPgzPMI05JY';
@@ -898,93 +958,93 @@
                 part1: { title: "YOUR FUTURE IS HERE , INTRODUCTION", src: introVideoSrc }
             },
             1: {
-                    title: "Financial Market Foundations",
-                    part1: { title: "Day 01 - Part 1: Introduction to Trading & Financial Markets", src: "https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/sign/videos/day-1/module1.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjcwNTM4MC1mYTdhLTRlODgtODg5Yi0zZjViNTkyYzcyZmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvZGF5LTEvbW9kdWxlMS5tcDQiLCJpYXQiOjE3NzkyMTk2MDEsImV4cCI6MTgxMDc1NTYwMX0.HqGTu6X-AZMSymgnWxsp_n7HUDRAWD8GaHvBmUh5A94" },
-                    part2: { title: "Day 01 - Part 2: Forex Market & Currency Pair Fundamentals", src: "https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/sign/videos/day-1/module%202.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjcwNTM4MC1mYTdhLTRlODgtODg5Yi0zZjViNTkyYzcyZmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvZGF5LTEvbW9kdWxlIDIubXA0IiwiaXQiOjE3NzkyMTk2NDcsImV4cCI6MTgxMDc1NTY0N30.V2BqPxHBQ_dyEi7ARjSCfDr_rQqSU84ailq4SCYbwqY" }
-                },
+                title: "Financial Market Foundations",
+                part1: { title: "Day 01 - Part 1: Introduction to Trading & Financial Markets", src: "https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/sign/videos/day-1/module1.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjcwNTM4MC1mYTdhLTRlODgtODg5Yi0zZjViNTkyYzcyZmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvZGF5LTEvbW9kdWxlMS5tcDQiLCJpYXQiOjE3NzkyMTk2MDEsImV4cCI6MTgxMDc1NTYwMX0.HqGTu6X-AZMSymgnWxsp_n7HUDRAWD8GaHvBmUh5A94" },
+                part2: { title: "Day 01 - Part 2: Forex Market & Currency Pair Fundamentals", src: "https://sljcqcksrqzanyivtdld.supabase.co/storage/v1/object/sign/videos/day-1/module%202.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjcwNTM4MC1mYTdhLTRlODgtODg5Yi0zZjViNTkyYzcyZmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvZGF5LTEvbW9kdWxlIDIubXA0IiwiaWF0IjoxNzc5MjQ3NDAxLCJleHAiOjMxNzEzOTI0NzQwMX0.Tw1RXnXrIUgPB9hhHrZzkUipLiQEqb8oX3QRuK_xyCc" }
+            },
             2: {
-                    title: "Charting & Trading Fundamentals",
-                    part1: { title: "Day 02 - Part 1: TradingView Platform & Candlestick Chart Basics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 02 - Part 2: Timeframe Analysis & Types of Traders", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Charting & Trading Fundamentals",
+                part1: { title: "Day 02 - Part 1: TradingView Platform & Candlestick Chart Basics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 02 - Part 2: Timeframe Analysis & Types of Traders", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             3: {
-                    title: "Trading Execution Essentials",
-                    part1: { title: "Day 03 - Part 1: Understanding Pips & Lot Size Management", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 03 - Part 2: Broker Mechanics, Spread & Leverage Basics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part3: { title: "Day 03 - Part 3: Market Order & Pending Order Types", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Trading Execution Essentials",
+                part1: { title: "Day 03 - Part 1: Understanding Pips & Lot Size Management", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 03 - Part 2: Broker Mechanics, Spread & Leverage Basics", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part3: { title: "Day 03 - Part 3: Market Order & Pending Order Types", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             4: {
-                    title: "Trade Management & Market Analysis",
-                    part1: { title: "Day 04 - Part 1: Stop Loss, Take Profit & Trading Sessions", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 04 - Part 2: Technical & Fundamental Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Trade Management & Market Analysis",
+                part1: { title: "Day 04 - Part 1: Stop Loss, Take Profit & Trading Sessions", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 04 - Part 2: Technical & Fundamental Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             5: {
-                    title: "Market Structure",
-                    part1: { title: "Day 05 - Part 1: Understanding Market Structure Fundamentals", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Market Structure",
+                part1: { title: "Day 05 - Part 1: Understanding Market Structure Fundamentals", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             6: {
-                    title: "Trend Analysis & Market Direction",
-                    part1: { title: "Day 06 - Part 1: Understanding Market Trends", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 06 - Part 2: Live Trend Analysis & Market Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Trend Analysis & Market Direction",
+                part1: { title: "Day 06 - Part 1: Understanding Market Trends", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 06 - Part 2: Live Trend Analysis & Market Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             7: {
-                    title: "Key Levels & Market Reaction Zone",
-                    part1: { title: "Day 07 - Part 1: Understanding Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 07 - Part 2: How to Draw Accurate Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part3: { title: "Day 07 - Part 3: Live Key Level Market Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Key Levels & Market Reaction Zone",
+                part1: { title: "Day 07 - Part 1: Understanding Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 07 - Part 2: How to Draw Accurate Key Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part3: { title: "Day 07 - Part 3: Live Key Level Market Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             8: {
-                    title: "Expansion & Retracement ,  Internal & External Market Structure",
-                    part1: { title: "Day 08 - Part 1: Understanding Expansion & Retracing", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 08 - Part 2: Internal & External Market Structure", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Expansion & Retracement ,  Internal & External Market Structure",
+                part1: { title: "Day 08 - Part 1: Understanding Expansion & Retracing", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 08 - Part 2: Internal & External Market Structure", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             9: {
-                    title: "Fibonacci Framework & Market Strength Analysis",
-                    part1: { title: "Day 09 - Part 1: Understanding the Fibonacci Tool", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 09 - Part 2: Strong & Weak Highs & Lows", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Fibonacci Framework & Market Strength Analysis",
+                part1: { title: "Day 09 - Part 1: Understanding the Fibonacci Tool", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 09 - Part 2: Strong & Weak Highs & Lows", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             10: {
-                    title: "Fibonacci Optimal Trade Entry (OTE)",
-                    part1: { title: "Day 10 - Part 1: Understanding Fibonacci OTE Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Fibonacci Optimal Trade Entry (OTE)",
+                part1: { title: "Day 10 - Part 1: Understanding Fibonacci OTE Levels", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             11: {
-                    title: "Structure Break, Liquidity, Stop Hunt & Failure Swing",
-                    part1: { title: "Day 11 - Part 1: Structure Break & Liquidity Concepts", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 11 - Part 2: Stop Hunt & Failure Swing Framework", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Structure Break, Liquidity, Stop Hunt & Failure Swing",
+                part1: { title: "Day 11 - Part 1: Structure Break & Liquidity Concepts", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 11 - Part 2: Stop Hunt & Failure Swing Framework", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             12: {
-                    title: "Power of Two Confirmation Patterns",
-                    part1: { title: "Day 12 - Part 1: SH + SB &  FS + SB (Confirmation Model)", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 12 - Part 2: Live Market Apply", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Power of Two Confirmation Patterns",
+                part1: { title: "Day 12 - Part 1: SH + SB &  FS + SB (Confirmation Model)", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 12 - Part 2: Live Market Apply", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             13: {
-                    title: "Risk Management & Trading Journal Framework",
-                    part1: { title: "Day 13 - Part 1: Professional Risk Management Principles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 13 - Part 2: Trading Journal & Performance Tracking", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Risk Management & Trading Journal Framework",
+                part1: { title: "Day 13 - Part 1: Professional Risk Management Principles", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 13 - Part 2: Trading Journal & Performance Tracking", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             14: {
-                    title: "Trading Psychology & Emotional Discipline",
-                    part1: { title: "Day 14 - Part 1: Understanding Trading Psychology and Emotional Control & Discipline Framework", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Trading Psychology & Emotional Discipline",
+                part1: { title: "Day 14 - Part 1: Understanding Trading Psychology and Emotional Control & Discipline Framework", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             15: {
-                    title: "Capital Growth & Compounding Methoad",
-                    part1: { title: "Day 15 - Part 1: Capital Growth Formula & Risk Scaling", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 15 - Part 2: Compounding Strategy & Long-Term Growth", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Capital Growth & Compounding Methoad",
+                part1: { title: "Day 15 - Part 1: Capital Growth Formula & Risk Scaling", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 15 - Part 2: Compounding Strategy & Long-Term Growth", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             16: {
-                    title: "Market Recap & Complete Market Flow",
-                    part1: { title: "Day 16 - Part 1: Full Recap and Complete Market Flow", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "Market Recap & Complete Market Flow",
+                part1: { title: "Day 16 - Part 1: Full Recap and Complete Market Flow", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             17: {
-                    title: "- Real-Time Trade Execution Examples",
-                    part1: { title: "Day 17 - Part 1: Live Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 17 - Part 2: Real-Time Trade Execution Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                },
+                title: "- Real-Time Trade Execution Examples",
+                part1: { title: "Day 17 - Part 1: Live Market Analysis", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 17 - Part 2: Real-Time Trade Execution Examples", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            },
             18: {
-                    title: "Key Takeaways For Confident Trading",
-                    part1: { title: "Day 18 - Part 1: Core Trading Principles & Execution Review", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
-                    part2: { title: "Day 18 - Part 2: Building Confidence & Long-Term Consistency", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
-                }
+                title: "Key Takeaways For Confident Trading",
+                part1: { title: "Day 18 - Part 1: Core Trading Principles & Execution Review", src: "../video/Screen Recording 2025-09-04 202308.mp4" },
+                part2: { title: "Day 18 - Part 2: Building Confidence & Long-Term Consistency", src: "../video/Screen Recording 2025-09-04 202308.mp4" }
+            }
         };
 
         // Parse search params
@@ -1021,14 +1081,14 @@
             const userEmail = localStorage.getItem('userEmail') || 'harish.primeverse@gmail.com';
             const userPhone = localStorage.getItem('userPhone') || '+91 9999999999';
             watermarkEl.innerHTML = `<div style="text-decoration: none !important; border-bottom: none !important; display: block;">${userEmail}</div><div style="font-weight: 800; color: rgba(255, 255, 255, 0.38); margin-top: 3px; display: block;">${userPhone}</div>`;
-            
+
             function moveWatermark() {
                 const randomTop = Math.floor(Math.random() * 65) + 15; // Between 15% and 80% height
                 const randomLeft = Math.floor(Math.random() * 45) + 15; // Between 15% and 60% width
                 watermarkEl.style.top = randomTop + '%';
                 watermarkEl.style.left = randomLeft + '%';
             }
-            
+
             // Initiate immediately
             moveWatermark();
             // Drift dynamically every 5 seconds
@@ -1039,19 +1099,19 @@
 
         // 4. Custom Fullscreen Redirection to preserve Watermark Sibling Visibility
         const playerWrap = document.querySelector('.cinematic-player-wrap');
-        
+
         // Monkeypatch requestFullscreen calls on the video element (native zoom/fullscreen control button)
         // so that it transparently requests fullscreen on the parent container instead.
         // This is 100% compliant with browser transient user gesture restrictions!
         if (videoPlayer) {
-            videoPlayer.requestFullscreen = function(options) {
+            videoPlayer.requestFullscreen = function (options) {
                 if (playerWrap && playerWrap.requestFullscreen) {
                     return playerWrap.requestFullscreen(options);
                 }
                 return Promise.reject(new Error("Fullscreen wrap element not found"));
             };
-            
-            videoPlayer.webkitRequestFullscreen = function(options) {
+
+            videoPlayer.webkitRequestFullscreen = function (options) {
                 if (playerWrap) {
                     if (playerWrap.webkitRequestFullscreen) {
                         playerWrap.webkitRequestFullscreen(options);
@@ -1061,7 +1121,7 @@
                 }
             };
         }
-        
+
         // Custom Fullscreen Toggle Helper
         function toggleFullscreen() {
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
@@ -1128,7 +1188,7 @@
                 e.stopPropagation();
                 qualityContainer.classList.toggle('open');
             });
-            
+
             // Close dropdown when clicking outside
             document.addEventListener('click', () => {
                 qualityContainer.classList.remove('open');
@@ -1144,10 +1204,10 @@
                 toast.className = 'quality-toast';
                 playerWrap.appendChild(toast);
             }
-            toast.innerHTML = isError 
+            toast.innerHTML = isError
                 ? `<i class="fa-solid fa-circle-exclamation" style="color: #ef4444;"></i> ${message}`
                 : `<i class="fa-solid fa-circle-check"></i> ${message}`;
-            
+
             if (isError) {
                 toast.style.borderColor = 'rgba(239, 68, 68, 0.4)';
                 toast.style.color = '#f87171';
@@ -1155,7 +1215,7 @@
                 toast.style.borderColor = 'rgba(212, 175, 55, 0.4)';
                 toast.style.color = 'var(--gold)';
             }
-            
+
             toast.classList.add('visible');
             setTimeout(() => {
                 toast.classList.remove('visible');
@@ -1167,10 +1227,10 @@
         // Apply Resolution to player
         function applyResolution(res, skipReplay = false) {
             if (!videoPlayer) return;
-            
+
             const originalUrl = lessonsDatabase[activeDayNum]['part' + activePartNum]?.src || lessonsDatabase[activeDayNum].part1.src;
             let targetUrl = originalUrl;
-            
+
             if (res !== 'auto') {
                 targetUrl = originalUrl.replace(/\.mp4$/i, `-${res}.mp4`);
             }
@@ -1185,26 +1245,26 @@
             const isPaused = videoPlayer.paused;
 
             // Define dynamic error recovery callback
-            const handleLoadError = function() {
+            const handleLoadError = function () {
                 console.warn(`Resolution ${res} file not found at ${targetUrl}. Reverting to original quality.`);
                 // Clean up error listener to prevent infinite loop
                 videoPlayer.removeEventListener('error', handleLoadError);
-                
+
                 // Fall back to original
                 videoPlayer.src = originalUrl;
                 videoPlayer.load();
-                
+
                 // Revert UI selection
                 selectedResolution = 'auto';
                 updateQualityUIActiveState('auto');
-                
+
                 // Seek back to position
                 videoPlayer.addEventListener('loadedmetadata', function revertSeek() {
                     videoPlayer.currentTime = currentTime;
                     if (!isPaused) videoPlayer.play();
                     videoPlayer.removeEventListener('loadedmetadata', revertSeek);
                 });
-                
+
                 showQualityToast("Resolution not available. Playing original quality.", true);
             };
 
@@ -1219,12 +1279,12 @@
             videoPlayer.addEventListener('loadedmetadata', function successSeek() {
                 // Remove error listener since load succeeded
                 videoPlayer.removeEventListener('error', handleLoadError);
-                
+
                 videoPlayer.currentTime = currentTime;
                 if (!isPaused && !skipReplay) videoPlayer.play();
-                
+
                 videoPlayer.removeEventListener('loadedmetadata', successSeek);
-                
+
                 if (res === 'auto') {
                     showQualityToast("Switched to Original Quality");
                 } else {
@@ -1286,16 +1346,16 @@
                 document.getElementById('contextDayTag').innerText = `Day 0${dayNum} — Module 0${dayNum}`;
                 document.getElementById('contextLessonTitle').innerText = partData.title;
             }
-            
+
             // Set source (applying user resolution preference with self-healing fallback)
             let finalSrc = partData.src;
             if (selectedResolution !== 'auto') {
                 finalSrc = partData.src.replace(/\.mp4$/i, `-${selectedResolution}.mp4`);
             }
-            
+
             videoPlayer.src = finalSrc;
-            
-            const handleLessonResError = function() {
+
+            const handleLessonResError = function () {
                 videoPlayer.removeEventListener('error', handleLessonResError);
                 videoPlayer.src = partData.src;
                 videoPlayer.load();
@@ -1304,7 +1364,7 @@
             videoPlayer.addEventListener('error', handleLessonResError);
 
             videoPlayer.load();
-            
+
             // Ensure UI is kept in sync
             updateQualityUIActiveState(selectedResolution);
 
@@ -1316,7 +1376,7 @@
             if (partSelector) {
                 let buttonsHTML = '';
                 const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
-                partKeys.sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+                partKeys.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
                 partKeys.forEach((key, index) => {
                     const pNum = index + 1;
                     const isActive = pNum === partNum ? 'active' : '';
@@ -1330,13 +1390,13 @@
                 partSelector.innerHTML = buttonsHTML;
             }
 
-            
+
             // Update Quick Navigation Sidebar
             buildQuickNavSidebar();
         }
 
         // Trigger Switch Parts on-page
-        window.triggerSwitchPart = function(partNum) {
+        window.triggerSwitchPart = function (partNum) {
             renderLesson(activeDayNum, partNum);
             // Auto play immediately on toggle
             playerOverlay.style.display = 'none';
@@ -1344,7 +1404,7 @@
         };
 
         // Jump Day/Part via quicknav
-        window.jumpToLesson = function(dayNum) {
+        window.jumpToLesson = function (dayNum) {
             const isItemUnlocked = (dayNum <= currentDay);
             if (!isItemUnlocked) return; // Locked
             renderLesson(dayNum, 1);
@@ -1364,7 +1424,7 @@
                 if (i === activeDayNum) {
                     item.classList.add('active');
                 }
-                
+
                 // Locks mapping
                 const isItemUnlocked = (i <= currentDay);
                 if (!isItemUnlocked) {
@@ -1403,7 +1463,9 @@
                 const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
                 const videoCount = partKeys.length;
                 const videoLabel = videoCount === 1 ? '1 Video' : `${videoCount} Videos`;
-                subtitleSpan.innerText = !isItemUnlocked ? 'Locked' : `Available (${videoLabel})`;
+                
+                const isDayCompleted = (localStorage.getItem(`completed_day_${i}`) === 'true');
+                subtitleSpan.innerText = !isItemUnlocked ? 'Locked' : (isDayCompleted ? 'Completed' : `Available (${videoLabel})`);
                 infoDiv.appendChild(subtitleSpan);
 
                 leftDiv.appendChild(infoDiv);
@@ -1413,15 +1475,41 @@
                 const rightDiv = document.createElement('div');
                 rightDiv.className = 'status-indicator';
 
+                const partsMap = {
+                    0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+                };
+                const totalParts = partsMap[i] || 2;
+                let completedParts = 0;
+                if (isItemUnlocked) {
+                    for (let p = 1; p <= totalParts; p++) {
+                        if (localStorage.getItem(`completed_day_${i}_part_${p}`) === 'true') {
+                            completedParts++;
+                        }
+                    }
+                }
+                const dayPercent = Math.round((completedParts / totalParts) * 100);
+
                 if (!isItemUnlocked) {
                     rightDiv.className += ' status-locked';
                     rightDiv.innerHTML = '<i class="fa-solid fa-lock"></i>';
-                } else if (i === currentDay) {
-                    rightDiv.className += ' status-active';
-                    rightDiv.innerHTML = '<i class="fa-solid fa-play"></i>';
-                } else {
+                } else if (isDayCompleted || dayPercent === 100) {
                     rightDiv.className += ' status-completed';
                     rightDiv.innerHTML = '<i class="fa-solid fa-check"></i>';
+                } else if (completedParts > 0) {
+                    rightDiv.className += ' status-partial';
+                    const circumference = 2 * Math.PI * 9; // 56.54
+                    const offset = circumference - (circumference * (dayPercent / 100));
+                    rightDiv.innerHTML = `
+                        <svg class="progress-ring" width="20" height="20" style="transform: rotate(-90deg); position: absolute; top:0; left:0; width: 20px; height: 20px;">
+                            <circle class="progress-ring-bg" cx="10" cy="10" r="9" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1.5"/>
+                            <circle class="progress-ring-bar" cx="10" cy="10" r="9" fill="none" stroke="var(--gold)" stroke-width="1.5"
+                                    stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/>
+                        </svg>
+                        <i class="fa-solid fa-play" style="font-size: 8px; position: absolute; color: var(--gold);"></i>
+                    `;
+                } else {
+                    rightDiv.className += ' status-active';
+                    rightDiv.innerHTML = '<i class="fa-solid fa-play"></i>';
                 }
 
                 item.appendChild(rightDiv);
@@ -1429,36 +1517,229 @@
             }
         }
 
+        // Supabase Live Progression Sync Functions
+        async function fetchLiveCompletionFromSupabase() {
+            const userEmail = localStorage.getItem('userEmail');
+            if (!userEmail) return;
+
+            const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+            if (!supabase) return;
+
+            try {
+                const { data: user, error } = await supabase
+                    .from('profiles')
+                    .select('completed_lessons, current_day')
+                    .ilike('email', userEmail.trim())
+                    .maybeSingle();
+
+                if (!error && user) {
+                    if (user.current_day) {
+                        currentDay = parseInt(user.current_day);
+                        localStorage.setItem('currentDay', currentDay);
+                    }
+                    if (user.completed_lessons) {
+                        const completedList = user.completed_lessons.split(',');
+                        // Clear existing
+                        for (let d = 0; d <= 18; d++) {
+                            localStorage.removeItem(`completed_day_${d}`);
+                            for (let p = 1; p <= 3; p++) {
+                                localStorage.removeItem(`completed_day_${d}_part_${p}`);
+                            }
+                        }
+
+                        // Populate new
+                        completedList.forEach(key => {
+                            if (key) {
+                                const parts = key.split('_part_');
+                                if (parts.length === 2) {
+                                    const dNum = parseInt(parts[0]);
+                                    const pNum = parseInt(parts[1]);
+                                    localStorage.setItem(`completed_day_${dNum}_part_${pNum}`, 'true');
+                                }
+                            }
+                        });
+
+                        // Re-evaluate day completions
+                        const partsMap = {
+                            0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+                        };
+                        for (let d = 0; d <= 18; d++) {
+                            const totalParts = partsMap[d] || 2;
+                            let allCompleted = true;
+                            for (let p = 1; p <= totalParts; p++) {
+                                if (localStorage.getItem(`completed_day_${d}_part_${p}`) !== 'true') {
+                                    allCompleted = false;
+                                    break;
+                                }
+                            }
+                            if (allCompleted) {
+                                localStorage.setItem(`completed_day_${d}`, 'true');
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("❌ Supabase Live Sync Error:", err);
+            }
+            
+            // Re-render sidebar after fetching
+            buildQuickNavSidebar();
+        }
+
+        async function syncCompletionToSupabase() {
+            const userEmail = localStorage.getItem('userEmail');
+            if (!userEmail) return;
+
+            const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+            if (!supabase) return;
+
+            // Gather all completed day-parts
+            const completedList = [];
+            const partsMap = {
+                0: 1, 1: 2, 2: 2, 3: 3, 4: 2, 5: 1, 6: 2, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 2, 13: 2, 14: 1, 15: 2, 16: 1, 17: 2, 18: 2
+            };
+            for (let d = 0; d <= 18; d++) {
+                const totalParts = partsMap[d] || 2;
+                for (let p = 1; p <= totalParts; p++) {
+                    const key = `completed_day_${d}_part_${p}`;
+                    if (localStorage.getItem(key) === 'true') {
+                        completedList.push(`${d}_part_${p}`);
+                    }
+                }
+            }
+
+            const completedString = completedList.join(',');
+
+            // Calculate modules completed (total completed days)
+            let completedDaysCount = 0;
+            for (let d = 0; d <= 18; d++) {
+                if (localStorage.getItem(`completed_day_${d}`) === 'true') {
+                    completedDaysCount++;
+                }
+            }
+
+            const progPercent = Math.min(100, Math.round((completedDaysCount / 18) * 100));
+
+            try {
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({
+                        completed_lessons: completedString,
+                        modules_completed: completedDaysCount,
+                        program_progress: progPercent
+                    })
+                    .ilike('email', userEmail.trim());
+
+                if (error) {
+                    console.error("❌ Supabase completion update error:", error);
+                } else {
+                    console.log("✅ Supabase completion updated:", completedString);
+                }
+            } catch (err) {
+                console.error("❌ Supabase sync exception:", err);
+            }
+
+            // Keep UI updated
+            buildQuickNavSidebar();
+        }
+
         // Completion Watcher
         videoPlayer.addEventListener('timeupdate', () => {
             const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100;
 
             if (percentage >= 98) {
-                // Save Completion Node
-                localStorage.setItem(`completed_day_${activeDayNum}_part_${activePartNum}`, 'true');
+                const key = `completed_day_${activeDayNum}_part_${activePartNum}`;
+                if (localStorage.getItem(key) !== 'true') {
+                    localStorage.setItem(key, 'true');
 
-                const lesson = lessonsDatabase[activeDayNum];
-                if (lesson) {
-                    const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
-                    let allCompleted = true;
-                    for (let pIdx = 1; pIdx <= partKeys.length; pIdx++) {
-                        if (localStorage.getItem(`completed_day_${activeDayNum}_part_${pIdx}`) !== 'true') {
-                            allCompleted = false;
-                            break;
+                    // Evaluate Day completion
+                    const lesson = lessonsDatabase[activeDayNum];
+                    if (lesson) {
+                        const partKeys = Object.keys(lesson).filter(k => k.startsWith('part'));
+                        let allCompleted = true;
+                        for (let pIdx = 1; pIdx <= partKeys.length; pIdx++) {
+                            if (localStorage.getItem(`completed_day_${activeDayNum}_part_${pIdx}`) !== 'true') {
+                                allCompleted = false;
+                                break;
+                            }
+                        }
+                        if (allCompleted) {
+                            localStorage.setItem(`completed_day_${activeDayNum}`, 'true');
                         }
                     }
-                    if (allCompleted) {
-                        localStorage.setItem(`completed_day_${activeDayNum}`, 'true');
-                    }
+
+                    // Sync completion progress to database
+                    syncCompletionToSupabase();
                 }
-                
-                // Re-render Quick Nav with new tick states
-                buildQuickNavSidebar();
             }
         });
 
         // Initialize Page Load
         document.addEventListener('DOMContentLoaded', () => {
+            // Anti-screenshot & recording focus security
+            const securityOverlay = document.getElementById('screenSecurityOverlay');
+            const videoElement = document.getElementById('workspaceVideo');
+
+            let securityTimeout;
+            const activateSecurityBlackout = () => {
+                if (securityOverlay) {
+                    securityOverlay.classList.add('active');
+                }
+                if (videoElement && !videoElement.paused) {
+                    videoElement.pause();
+                }
+            };
+
+            const deactivateSecurityBlackout = () => {
+                clearTimeout(securityTimeout);
+                securityTimeout = setTimeout(() => {
+                    if (securityOverlay) {
+                        securityOverlay.classList.remove('active');
+                    }
+                }, 1200); // 1.2s delay to cover screenshot snapshot actions
+            };
+
+            // Detect window focus shifts (Snipping tool activation, Tab switching, OBS focus, browser devtools inspector)
+            window.addEventListener('blur', activateSecurityBlackout);
+            window.addEventListener('focus', deactivateSecurityBlackout);
+            document.addEventListener('mouseleave', activateSecurityBlackout);
+            document.addEventListener('mouseenter', deactivateSecurityBlackout);
+
+            // Intercept OS-level PrtScn key and devtools shortcut keys
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                    activateSecurityBlackout();
+                    deactivateSecurityBlackout();
+                    e.preventDefault();
+                }
+                // Stop developer inspection shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+                if (e.keyCode === 123 ||
+                    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+                    (e.ctrlKey && e.keyCode === 85)) {
+                    e.preventDefault();
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                    activateSecurityBlackout();
+                    deactivateSecurityBlackout();
+                    e.preventDefault();
+                }
+            });
+
+            // Prevent Copy / Cut / Context menu
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+
+            document.addEventListener('copy', (e) => {
+                e.preventDefault();
+            });
+
+            // Sync live watch progress in background
+            fetchLiveCompletionFromSupabase();
+
             renderLesson(activeDayNum, activePartNum);
             if (window.lucide) window.lucide.createIcons();
 
