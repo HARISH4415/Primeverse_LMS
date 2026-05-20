@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 total_modules: 18,
                                 program_progress: 0,
                                 stage_title: 'Financial Market Foundations',
-                                selected_course: 'PrimeVerse Mastery Program'
+                                selected_course: ''
                             }
                         ])
                         .select();
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem('userPhone', phone);
                         localStorage.setItem('lastLogin', new Date().toISOString());
                         localStorage.setItem('enrollDate', new Date().toISOString());
-                        localStorage.setItem('selectedCourse', 'PrimeVerse Mastery Program');
+                        localStorage.setItem('selectedCourse', '');
                         
                         // Seed local storage with default database-driven progression metrics for a new user
                         localStorage.setItem('currentDay', 1);
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem('userName', user.full_name);
                         if (user.phone) localStorage.setItem('userPhone', user.phone);
                         localStorage.setItem('lastLogin', new Date().toISOString());
-                        localStorage.setItem('selectedCourse', user.selected_course || 'PrimeVerse Mastery Program');
+                        localStorage.setItem('selectedCourse', user.selected_course || '');
                         
                         // Cache dynamic database-driven progression metrics
                         const cDay = user.current_day !== undefined && user.current_day !== null ? parseInt(user.current_day) : 1;
