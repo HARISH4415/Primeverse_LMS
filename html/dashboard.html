@@ -3575,8 +3575,32 @@
                     }
                 }
 
-                // Dynamically update stats cards
-                const completedCount = modulesCompleted;
+                // Dynamically update stats cards by counting completed days in localStorage (excluding Intro Day 0)
+                let completedCount = 0;
+                for (let d = 1; d <= 18; d++) {
+                    if (localStorage.getItem(`completed_day_${d}`) === 'true') {
+                        completedCount++;
+                    }
+                }
+                
+                if (completedCount !== modulesCompleted) {
+                    modulesCompleted = completedCount;
+                    localStorage.setItem('modulesCompleted', modulesCompleted);
+                    programProgress = Math.round((modulesCompleted / 18) * 100);
+                    localStorage.setItem('programProgress', programProgress);
+                    
+                    // Sync dynamically to Supabase in the background
+                    const userEmail = localStorage.getItem('userEmail');
+                    const supabase = window.supabaseClient || (window.supabase ? window.supabase.createClient("https://sljcqcksrqzanyivtdld.supabase.co", "sb_publishable_0gsZlqZga8nHuyueFk_9pA_zjqH73dP") : null);
+                    if (supabase && userEmail) {
+                        supabase.from('profiles').update({
+                            modules_completed: modulesCompleted,
+                            program_progress: programProgress
+                        }).ilike('email', userEmail.trim()).then(({error}) => {
+                            if (error) console.error("Error sync dashboard modules completed count:", error);
+                        });
+                    }
+                }
                 const progressPercent = programProgress;
                 
                 // Program Progress Card

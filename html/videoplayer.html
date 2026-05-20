@@ -1610,9 +1610,9 @@
 
             const completedString = completedList.join(',');
 
-            // Calculate modules completed (total completed days)
+            // Calculate modules completed (total completed days, excluding intro Day 0)
             let completedDaysCount = 0;
-            for (let d = 0; d <= 18; d++) {
+            for (let d = 1; d <= 18; d++) {
                 if (localStorage.getItem(`completed_day_${d}`) === 'true') {
                     completedDaysCount++;
                 }
